@@ -1,0 +1,29 @@
+plugins {
+    id 'java'
+    id 'application'
+}
+
+group = 'com.unicamp.mc322'
+version = '1.0.0'
+sourceCompatibility = '11'
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    // JUnit para testes
+    testImplementation 'junit:junit:4.13.2'
+    
+    // SLF4J para logging (opcional)
+    // implementation 'org.slf4j:slf4j-api:1.7.36'
+    // implementation 'org.slf4j:slf4j-simple:1.7.36'
+}
+
+tasks.named('test') {
+    useJUnit()
+}
+
+application {
+    mainClass = 'sistema.GameManager'
+}
