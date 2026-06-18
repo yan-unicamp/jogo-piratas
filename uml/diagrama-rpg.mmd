@@ -1,0 +1,119 @@
+---
+title: UML do RPG simplificado
+---
+classDiagram
+    direction LR
+
+    class TipoHabilidade <<enumeration>> {
+        DANO
+        DEFESA
+        CURA
+    }
+
+    class Habilidade {
+        -String nome
+        -TipoHabilidade tipo
+        -int valorPoder
+        +executarAcao(Personagem alvo)
+    }
+
+    class Personagem <<abstract>> {
+        -String nome
+        -int vidaAtual
+        -int vidaMaxima
+        -int defesa
+        -int iniciativa
+        -List~Habilidade~ habilidades
+        +receberDano(int valor)
+        +curar(int valor)
+        +aumentarDefesaTemporaria(int valor)
+    }
+
+    class Aliado {
+        -int nivel
+        -int experiencia
+    }
+
+    class Inimigo {
+        -Recompensa recompensa
+    }
+
+    class Recompensa {
+        -int dinheiroGanhado
+        -int experienciaGanhada
+    }
+
+    class Loja {
+        +exibirCatalogo()
+        +comprarMelhoria(Tripulacao cliente)
+    }
+
+    class Mapa {
+        -int etapaAtual
+        -NoMapa noAtual
+        +gerarProximosNos()
+        +avancarParaNo(NoMapa proximo)
+    }
+
+    class NoMapa <<interface>> {
+        +entrarNo(GameManager controle)
+    }
+
+    class NoBatalha {
+        +entrarNo(GameManager controle)
+    }
+
+    class NoEvento {
+        +entrarNo(GameManager controle)
+    }
+
+    class NoDescanso {
+        +entrarNo(GameManager controle)
+    }
+
+    class Tripulacao {
+        -int dinheiro
+        -List~Aliado~ aliados
+        +receberRecompensa(Recompensa loot)
+        +gastarDinheiro(int valor)
+    }
+
+    class FilaDeTurnos {
+        -List~Personagem~ fila
+        +ordenarPorIniciativa()
+        +obterProximoPersonagem()
+    }
+
+    class GerenciadorDeBatalha {
+        +iniciarCombate()
+        +executarTurno()
+        +verificarVitoriaOuDerrota()
+    }
+
+    class GameManager {
+        +iniciarJogo()
+        +loopPrincipal()
+        +encerrarJogo()
+    }
+
+    Personagem *-- Habilidade : habilidades
+    Habilidade --> TipoHabilidade : tipo
+    Aliado --|> Personagem
+    Inimigo --|> Personagem
+    Inimigo *-- Recompensa : recompensa
+    Tripulacao *-- Aliado : aliados
+    FilaDeTurnos o-- Personagem : fila
+    GerenciadorDeBatalha *-- FilaDeTurnos
+    GerenciadorDeBatalha --> Aliado
+    GerenciadorDeBatalha --> Inimigo
+    Mapa o-- NoMapa : noAtual
+    NoMapa <|.. NoBatalha
+    NoMapa <|.. NoEvento
+    NoMapa <|.. NoDescanso
+    NoBatalha ..> GerenciadorDeBatalha
+    NoEvento ..> Loja
+    NoDescanso ..> Aliado
+    Loja ..> Tripulacao
+    GameManager *-- Mapa
+    GameManager *-- Tripulacao
+    GameManager *-- GerenciadorDeBatalha
