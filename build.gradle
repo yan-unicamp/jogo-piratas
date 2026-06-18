@@ -3,12 +3,16 @@ plugins {
     id 'application'
 }
 
-group = 'com.unicamp.mc322'
+group = 'jogo-piratas'
 version = '1.0.0'
-sourceCompatibility = '11'
 
 repositories {
     mavenCentral()
+}
+
+java {
+    sourceCompatibility = JavaVersion.VERSION_11
+    targetCompatibility = JavaVersion.VERSION_11
 }
 
 dependencies {

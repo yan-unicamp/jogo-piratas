@@ -1,6 +1,6 @@
 # jogo-piratas
 
-Projeto de programação orientada a objetos (MC322) - Implementação de um sistema RPG em Java com Gradle.
+Projeto de programação orientada a objetos - Implementação de um sistema RPG em Java com Gradle.
 
 ## Estrutura do Projeto
 
@@ -154,7 +154,7 @@ Execute os testes com:
 ./gradlew test
 ```
 
-Adicione testes em `src/test/java/com/unicamp/mc322/jogo/`.
+ Adicione testes em `src/test/java/entidades/`, `src/test/java/progressao/` e `src/test/java/sistema/`.
 
 ## Construir distribution
 
@@ -182,4 +182,4 @@ java -jar build/libs/jogo-piratas-1.0.0.jar
 
 ## Licença
 
-Projeto acadêmico da Unicamp (MC322).
+Projeto acadêmico.
