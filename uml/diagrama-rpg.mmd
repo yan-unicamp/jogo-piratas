@@ -114,6 +114,7 @@ classDiagram
     NoEvento ..> Loja
     NoDescanso ..> Aliado
     Loja ..> Tripulacao
+    Mapa *-- NoMapa : noAtual
     GameManager *-- Mapa
     GameManager *-- Tripulacao
     GameManager *-- GerenciadorDeBatalha
