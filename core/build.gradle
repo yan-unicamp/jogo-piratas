@@ -1,0 +1,5 @@
+// Módulo core — lógica do jogo + libGDX core API
+
+dependencies {
+    implementation "com.badlogicgames.gdx:gdx:$gdxVersion"
+}

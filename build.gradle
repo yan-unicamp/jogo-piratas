@@ -1,33 +1,27 @@
-plugins {
-    id 'java'
-    id 'application'
+// Root build.gradle — configuração compartilhada entre todos os módulos
+
+allprojects {
+    group = 'jogo-piratas'
+    version = '1.0.0'
+
+    repositories {
+        mavenCentral()
+    }
 }
 
-group = 'jogo-piratas'
-version = '1.0.0'
+subprojects {
+    apply plugin: 'java'
 
-repositories {
-    mavenCentral()
-}
+    java {
+        sourceCompatibility = JavaVersion.VERSION_11
+        targetCompatibility = JavaVersion.VERSION_11
+    }
 
-java {
-    sourceCompatibility = JavaVersion.VERSION_11
-    targetCompatibility = JavaVersion.VERSION_11
-}
+    dependencies {
+        testImplementation 'junit:junit:4.13.2'
+    }
 
-dependencies {
-    // JUnit para testes
-    testImplementation 'junit:junit:4.13.2'
-    
-    // SLF4J para logging (opcional)
-    // implementation 'org.slf4j:slf4j-api:1.7.36'
-    // implementation 'org.slf4j:slf4j-simple:1.7.36'
-}
-
-tasks.named('test') {
-    useJUnit()
-}
-
-application {
-    mainClass = 'sistema.GameManager'
+    tasks.named('test') {
+        useJUnit()
+    }
 }
