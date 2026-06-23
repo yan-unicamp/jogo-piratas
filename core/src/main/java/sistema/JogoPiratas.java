@@ -1,12 +1,10 @@
 package sistema;
 
 import com.badlogic.gdx.Game;
-import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import com.badlogic.gdx.utils.ScreenUtils;
 
 /**
  * Classe principal do jogo que estende Game do libGDX.
@@ -27,7 +25,7 @@ public class JogoPiratas extends Game {
         font.setColor(Color.WHITE);
 
         // Inicia com a tela de teste
-        setScreen(new TelaInicial(this));
+        setScreen(new TelaMenu(this));
     }
 
     @Override
