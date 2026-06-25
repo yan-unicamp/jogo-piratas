@@ -12,4 +12,9 @@ public class Aliado extends Personagem {
 
     public int getNivel() { return nivel; }
     public int getExperiencia() { return experiencia; }
+
+    public void ganharExperiencia(int xp) {
+        this.experiencia += xp;
+        System.out.println(getNome() + " ganhou " + xp + " de experiência! Total: " + this.experiencia);
+    }
 }
