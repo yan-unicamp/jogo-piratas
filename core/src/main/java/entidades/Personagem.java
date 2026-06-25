@@ -26,10 +26,28 @@ public abstract class Personagem {
 
     public void aumentarDefesaTemporaria(int valor) { }
 
-    public String getNome() { return nome; }
-    public int getVidaAtual() { return vidaAtual; }
-    public int getVidaMaxima() { return vidaMaxima; }
-    public int getDefesa() { return defesa; }
-    public int getIniciativa() { return iniciativa; }
-    public List<Habilidade> getHabilidades() { return habilidades; }
+    public String getNome() { 
+
+        return nome; 
+    }
+    public int getVidaAtual() { 
+
+        return vidaAtual; 
+    }
+    public int getVidaMaxima() { 
+        
+        return vidaMaxima; 
+    }
+    public int getDefesa() { 
+        
+        return defesa; 
+    }
+    public int getIniciativa() { 
+        
+        return iniciativa; 
+    }
+    public List<Habilidade> getHabilidades() { 
+        
+        return habilidades; 
+    }
 }
