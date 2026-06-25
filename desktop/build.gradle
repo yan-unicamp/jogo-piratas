@@ -1,0 +1,32 @@
+// Módulo desktop — launcher para rodar no PC
+
+apply plugin: 'application'
+
+dependencies {
+    implementation project(':core')
+    implementation "com.badlogicgames.gdx:gdx-backend-lwjgl3:$gdxVersion"
+    implementation "com.badlogicgames.gdx:gdx-platform:$gdxVersion:natives-desktop"
+}
+
+application {
+    mainClass = 'sistema.DesktopLauncher'
+}
+
+// Garantir que os assets sejam encontrados ao rodar
+run {
+    workingDir = rootProject.file('assets')
+}
+
+// Criar a pasta assets se não existir ao rodar
+tasks.register('createAssetsDir') {
+    doLast {
+        def dir = rootProject.file('assets')
+        if (!dir.exists()) {
+            dir.mkdirs()
+        }
+    }
+}
+
+tasks.named('run') {
+    dependsOn 'createAssetsDir'
+}
