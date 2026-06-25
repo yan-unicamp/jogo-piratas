@@ -14,13 +14,11 @@ import com.badlogic.gdx.utils.ScreenUtils;
 public class TelaInicial implements Screen {
 
     private final JogoPiratas jogo;
-    private Texture imgLuffy;
+    private final Texture imgLuffy;
         private float luffyX = 100;
         private float luffyY = 100;
-        private float largura = 150;
-        private float altura = 150;
-
-    private float tempoDecorrido = 0;
+        private final float largura = 150;
+        private final float altura = 150;
 
     public TelaInicial(JogoPiratas jogo) {
         this.jogo = jogo;
