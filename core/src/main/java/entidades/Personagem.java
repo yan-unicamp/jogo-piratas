@@ -5,14 +5,14 @@ import java.util.List;
 
 public abstract class Personagem {
     private String nome;
-    private int vidaAtual;
+    private float vidaAtual;
     private int vidaMaxima;
-    private int defesa;
-    private int defesaAtual; 
+    private float defesa;
+    private float defesaAtual; 
     private int iniciativa;
     private List<Habilidade> habilidades;
 
-    public Personagem(String nome, int vidaMaxima, int defesa, int iniciativa) {
+    public Personagem(String nome, int vidaMaxima, float defesa, int iniciativa) {
         this.nome = nome;
         this.vidaMaxima = vidaMaxima;
         this.vidaAtual = vidaMaxima;
@@ -23,9 +23,9 @@ public abstract class Personagem {
     }
 
     public void receberDano(int valor) {
-        int dano = valor * defesaAtual; 
+        float dano = valor * defesaAtual; 
         this.vidaAtual -= dano;
-        if (this.vidaAtual < 0) this.vidaAtual = 0; 
+        if (this.vidaAtual < 1) this.vidaAtual = 0; 
      }
 
     public void curar(int valor) {
@@ -35,8 +35,8 @@ public abstract class Personagem {
         }
      }
 
-    public void aumentarDefesaTemporaria(int valor) { 
-        int novadefesa = defesa + valor;
+    public void aumentarDefesaTemporaria(float valor) { 
+        float novadefesa = defesa - valor;
         this.defesaAtual = novadefesa;
     }
 
