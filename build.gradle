@@ -13,8 +13,8 @@ subprojects {
     apply plugin: 'java'
 
     java {
-        sourceCompatibility = JavaVersion.VERSION_11
-        targetCompatibility = JavaVersion.VERSION_11
+        sourceCompatibility = '25'
+        targetCompatibility = '25'
     }
 
     dependencies {
