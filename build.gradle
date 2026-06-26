@@ -13,8 +13,9 @@ subprojects {
     apply plugin: 'java'
 
     java {
-        sourceCompatibility = '25'
-        targetCompatibility = '25'
+        toolchain {
+            languageVersion = JavaLanguageVersion.of(25)
+        }
     }
 
     dependencies {
