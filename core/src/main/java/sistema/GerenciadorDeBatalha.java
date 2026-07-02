@@ -33,7 +33,7 @@ public class GerenciadorDeBatalha {
                 combateIniciado = false;
             }
         }
-     }
+    }
 
     public void acoesTurno() {
         // Implementar logica de pegar ações no turno
@@ -43,5 +43,8 @@ public class GerenciadorDeBatalha {
         // Implementar logica de depois das ações serem feitas pelo jogador
     }
 
-    public boolean verificarVitoriaOuDerrota() { }
+    public boolean verificarVitoriaOuDerrota() {
+        // Implementar logica de verificar se o combate acabou
+        return false;
+    }
 }
