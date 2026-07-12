@@ -21,18 +21,28 @@ public abstract class Personagem {
     }
 
     /**
-     * Aplica dano ao personagem, respeitando a defesa.
-     * Implementação: Membro 1 (Fase 2).
+     * Aplica dano ao personagem, descontando a defesa.
+     * O dano mínimo por golpe é 1 (evita que alta defesa negue todo dano).
      */
-    public void receberDano(int valor) { }
+    public void receberDano(int valor) {
+        int danoEfetivo = Math.max(1, valor - this.defesa);
+        setVidaAtual(this.vidaAtual - danoEfetivo);
+    }
 
     /**
-     * Cura o personagem, limitado à vidaMaxima.
-     * Implementação: Membro 1 (Fase 2).
+     * Cura o personagem pelo valor indicado, limitado à vidaMaxima.
      */
-    public void curar(int valor) { }
+    public void curar(int valor) {
+        setVidaAtual(this.vidaAtual + valor);
+    }
 
-    public void aumentarDefesaTemporaria(int valor) { }
+    /**
+     * Aumenta a defesa temporariamente pelo valor indicado.
+     * Útil para habilidades de escudo e itens de defesa.
+     */
+    public void aumentarDefesaTemporaria(int valor) {
+        this.defesa += valor;
+    }
 
     /** @return true se o personagem ainda está com vida. */
     public boolean estaVivo() {

@@ -51,6 +51,14 @@ public class SkinPadrao {
         return skin;
     }
 
+    /**
+     * Cria uma Texture 1×1 de cor sólida.
+     * Alias público para uso por outras classes (ex: TelaBatalha).
+     */
+    public static Texture textura1x1(float r, float g, float b, float a) {
+        return textura(r, g, b, a);
+    }
+
     /** Cria uma Texture 1×1 de cor sólida (liberada pelo Skin no dispose()). */
     private static Texture textura(float r, float g, float b, float a) {
         Pixmap px = new Pixmap(1, 1, Pixmap.Format.RGBA8888);

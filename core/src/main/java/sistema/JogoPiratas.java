@@ -3,60 +3,60 @@ package sistema;
 import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.Color;
-import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.graphics.g2d.BitmapFont;
 
 /**
- * Classe principal do jogo que estende Game do libGDX.
+ * Classe principal do jogo — estende Game do LibGDX.
  *
  * Responsabilidades:
- *  - Instanciar e manter o GameManager (máquina de estados).
- *  - Prover recursos globais compartilhados entre Screens (batch, font).
- *  - Delegar a renderização para a Screen ativa via super.render().
- *
- * NÃO chame jogo.setScreen() diretamente fora desta classe.
- * Use gameManager.mudarEstado(EstadoJogo) para transitar entre telas.
+ *  - Instanciar Assets (antes do GameManager, para que o contexto GL já exista).
+ *  - Instanciar e manter o GameManager.
+ *  - Prover SpriteBatch e BitmapFont compartilhados entre Screens.
  */
 public class JogoPiratas extends Game {
 
-    /** SpriteBatch compartilhado entre todas as telas (caro de criar, use um só). */
+    /** SpriteBatch compartilhado (caro de criar — use apenas um). */
     public SpriteBatch batch;
 
     /** Fonte padrão compartilhada entre telas. */
     public BitmapFont font;
 
-    /** Máquina de estados central — único ponto de controle do fluxo do jogo. */
+    /** Carregador/cache de texturas. */
+    private Assets assets;
+
+    /** Máquina de estados central. */
     private GameManager gameManager;
 
     @Override
     public void create() {
         batch = new SpriteBatch();
-        font = new BitmapFont();
+        font  = new BitmapFont();
         font.setColor(Color.WHITE);
 
-        // GameManager recebe referência ao jogo para poder chamar setScreen()
-        gameManager = new GameManager(this);
+        // Assets precisa ser inicializado APÓS o contexto OpenGL estar pronto
+        assets = new Assets();
+        assets.inicializar();
 
-        // Ponto de entrada: sempre começa no Menu
+        // GameManager recebe referência ao jogo e ao sistema de assets
+        gameManager = new GameManager(this, assets);
         gameManager.mudarEstado(EstadoJogo.MENU);
     }
 
     @Override
     public void render() {
-        // Game.render() delega automaticamente para a Screen ativa
-        super.render();
+        super.render(); // delega para a Screen ativa
     }
 
     @Override
     public void dispose() {
         batch.dispose();
         font.dispose();
+        assets.dispose();
         Screen currentScreen = getScreen();
-        if (currentScreen != null) {
-            currentScreen.dispose();
-        }
+        if (currentScreen != null) currentScreen.dispose();
     }
 
-    /** @return O GameManager — acessado pelo DesktopLauncher se necessário. */
+    public Assets     getAssets()     { return assets; }
     public GameManager getGameManager() { return gameManager; }
 }
