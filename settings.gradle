@@ -1,0 +1,4 @@
+rootProject.name = 'jogo-piratas'
+
+include 'core'
+include 'desktop'

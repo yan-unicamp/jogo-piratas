@@ -1,0 +1,28 @@
+// Root build.gradle — configuração compartilhada entre todos os módulos
+
+allprojects {
+    group = 'jogo-piratas'
+    version = '1.0.0'
+
+    repositories {
+        mavenCentral()
+    }
+}
+
+subprojects {
+    apply plugin: 'java'
+
+    java {
+        toolchain {
+            languageVersion = JavaLanguageVersion.of(25)
+        }
+    }
+
+    dependencies {
+        testImplementation 'junit:junit:4.13.2'
+    }
+
+    tasks.named('test') {
+        useJUnit()
+    }
+}
