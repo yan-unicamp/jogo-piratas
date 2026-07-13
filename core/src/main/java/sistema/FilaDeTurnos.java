@@ -19,7 +19,7 @@ public class FilaDeTurnos {
     }
 
     public void ordenarPorIniciativa() {
-        fila.sort(Comparator.comparing(Personagem::getIniciativa));
+        fila.sort(Comparator.comparing(Personagem::getIniciativa).reversed());
     }
 
     /**
