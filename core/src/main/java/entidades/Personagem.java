@@ -22,18 +22,18 @@ public abstract class Personagem {
         this.habilidades = new ArrayList<>();
     }
 
-    public void receberDano(int valor) {
+    public void receberDano(float valor) {
         float dano = valor * defesaAtual; 
         this.vidaAtual -= dano;
         if (this.vidaAtual < 1) this.vidaAtual = 0; 
-     }
+    }
 
-    public void curar(int valor) {
+    public void curar(float valor) {
         this.vidaAtual += valor;
         if (this.vidaAtual > this.vidaMaxima) {
             this.vidaAtual = this.vidaMaxima;
         }
-     }
+    }
 
     public void aumentarDefesaTemporaria(float valor) { 
         float novadefesa = defesa - valor;
@@ -44,15 +44,15 @@ public abstract class Personagem {
 
         return nome; 
     }
-    public int getVidaAtual() { 
+    public float getVidaAtual() { 
 
         return vidaAtual; 
     }
-    public int getVidaMaxima() { 
+    public float getVidaMaxima() { 
         
         return vidaMaxima; 
     }
-    public int getDefesa() { 
+    public float getDefesa() { 
         
         return defesa; 
     }

@@ -12,16 +12,12 @@ public class Habilidade {
     }
 
     public void executarAcao(Personagem alvo) {
-        if (this.tipo == TipoHabilidade.DANO){
-            alvo.receberDano(this.valorPoder);
+        switch (tipo) {
+            case DANO -> alvo.receberDano(valorPoder);
+            case CURA -> alvo.curar(valorPoder);
+            case DEFESA -> alvo.aumentarDefesaTemporaria(valorPoder);
         }
-        else if (this.tipo == TipoHabilidade.CURA){
-            alvo.curar(this.valorPoder);
-        }
-        else if (this.tipo == TipoHabilidade.DEFESA){
-            alvo.aumentarDefesaTemporaria(this.valorPoder);
-        }
-     }
+    }
 
     public String getNome() { 
         return nome; 
@@ -29,7 +25,7 @@ public class Habilidade {
     public TipoHabilidade getTipo() { 
         return tipo; 
     }
-    public int getValorPoder() { 
+    public float getValorPoder() { 
         return valorPoder; 
     }
 }
