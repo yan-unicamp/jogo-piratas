@@ -25,7 +25,7 @@ public class PersonagemFactory {
     }
 
     public static Aliado criarNami() {
-        Aliado nami = new Aliado("Nami", 70, 0, 6, 1, 0);
+        Aliado nami = new Aliado("Nami", 70, 1, 6, 1, 0);
         nami.adicionarHabilidade(HabilidadeFactory.criarAtaqueBasico(nami));
         nami.adicionarHabilidade(HabilidadeFactory.criarEspecialNami(nami));
         nami.adicionarHabilidade(HabilidadeFactory.criarCurarAliadosBandagem());
@@ -40,6 +40,32 @@ public class PersonagemFactory {
         sanji.adicionarHabilidade(HabilidadeFactory.criarEspecialSanji(sanji));
         
         return sanji;
+    }
+
+
+    public static Aliado criarRobin() {
+        Aliado robin = new Aliado("Nico Robin", 80, 1, 7, 1, 0);
+        robin.adicionarHabilidade(HabilidadeFactory.criarAtaqueBasico(robin));
+        robin.adicionarHabilidade(HabilidadeFactory.criarEspecialRobin(robin));
+        
+        return robin;
+    }
+
+    public static Aliado criarUsopp() {
+        Aliado usopp = new Aliado("Usopp", 70, 1, 5, 1, 0);
+        usopp.adicionarHabilidade(HabilidadeFactory.criarAtaqueBasico(usopp));
+        usopp.adicionarHabilidade(HabilidadeFactory.criarEspecialUsopp(usopp));
+        
+        return usopp;
+    }
+
+    public static Aliado criarChopper() {
+        Aliado chopper = new Aliado("Chopper", 60, 1, 6, 1, 0);
+        chopper.adicionarHabilidade(HabilidadeFactory.criarAtaqueBasico(chopper));
+        chopper.adicionarHabilidade(HabilidadeFactory.criarCuraChopper(chopper));
+        chopper.adicionarHabilidade(HabilidadeFactory.criarEspecialChopper(chopper));
+        
+        return chopper;
     }
 
     

@@ -38,5 +38,21 @@ public class HabilidadeFactory {
         return new Habilidade("Diable Jambe", TipoHabilidade.DANO, p.getVidaMaxima()*0.3f);
     }
 
+    public static Habilidade criarEspecialRobin(Aliado p){
+        return new Habilidade("Tres Fleur", TipoHabilidade.DANO, p.getVidaMaxima()*0.3f);
+    }
+
+    public static Habilidade criarEspecialUsopp(Aliado p){
+        return new Habilidade("Hissatsu: Midori Boshi", TipoHabilidade.DANO, p.getVidaMaxima()*0.3f);
+    }
+
+    public static Habilidade criarEspecialChopper(Aliado p){
+        return new Habilidade("Monster Point", TipoHabilidade.DANO, p.getVidaMaxima()*0.3f);
+    }
+
+    public static Habilidade criarCuraChopper(Aliado p){
+        return new Habilidade("Cura do Chopper", TipoHabilidade.CURA, p.getVidaMaxima()*0.3f); //ele cura equivalente a 30% da vida maxima dele
+    }
+
     
 }
