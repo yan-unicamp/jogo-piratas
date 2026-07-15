@@ -68,6 +68,31 @@ public class PersonagemFactory {
         return chopper;
     }
 
+    public static Aliado criarBrook() {
+        Aliado brook = new Aliado("Brook", 80, 1, 7, 1, 0);
+        brook.adicionarHabilidade(HabilidadeFactory.criarAtaqueBasico(brook));
+        brook.adicionarHabilidade(HabilidadeFactory.criarEspecialBrook(brook));
+        
+        return brook;
+    }
+
+    public static Aliado criarFranky() {
+        Aliado franky = new Aliado("Franky", 90, 1, 7, 1, 0);
+        franky.adicionarHabilidade(HabilidadeFactory.criarAtaqueBasico(franky));
+        franky.adicionarHabilidade(HabilidadeFactory.criarEspecialFranky(franky));
+        
+        return franky;
+    }
+
+    public static Aliado criarJinbe() {
+        Aliado jinbe = new Aliado("Jinbe", 100, 0.9f, 9, 1, 0);
+        jinbe.adicionarHabilidade(HabilidadeFactory.criarAtaqueBasico(jinbe));
+        jinbe.adicionarHabilidade(HabilidadeFactory.criarDefesaHaki());
+        jinbe.adicionarHabilidade(HabilidadeFactory.criarEspecialJinbe(jinbe));
+        
+        return jinbe;
+    }
+
     
     public static Inimigo criarMarinheiro(int nivel) { // (ta escalonando com o nivel atual, pode trocar dps)
         Recompensa loot = new Recompensa(10 * nivel, 5 * nivel); // dinheiro, xp 

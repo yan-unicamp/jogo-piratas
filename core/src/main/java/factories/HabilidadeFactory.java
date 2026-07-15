@@ -54,5 +54,17 @@ public class HabilidadeFactory {
         return new Habilidade("Cura do Chopper", TipoHabilidade.CURA, p.getVidaMaxima()*0.3f); //ele cura equivalente a 30% da vida maxima dele
     }
 
+    public static Habilidade criarEspecialBrook(Aliado p){
+        return new Habilidade("Yubi Barry", TipoHabilidade.DANO, p.getVidaMaxima()*0.3f);
+    }
+
+    public static Habilidade criarEspecialJinbe(Aliado p){
+        return new Habilidade("Gyojin Karate", TipoHabilidade.DANO, p.getVidaMaxima()*0.3f);
+    }
+
+    public static Habilidade criarEspecialFranky(Aliado p){
+        return new Habilidade("Coupe de Vent", TipoHabilidade.DANO, p.getVidaMaxima()*0.3f);
+    }
+
     
 }
