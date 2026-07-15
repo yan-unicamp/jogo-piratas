@@ -11,8 +11,9 @@ public abstract class Personagem {
     private float defesaAtual; 
     private int iniciativa;
     private List<Habilidade> habilidades;
+    private String caminhoImagem;
 
-    public Personagem(String nome, int vidaMaxima, float defesa, int iniciativa) {
+    public Personagem(String nome, int vidaMaxima, float defesa, int iniciativa, String caminhoImagem) {
         this.nome = nome;
         this.vidaMaxima = vidaMaxima;
         this.vidaAtual = vidaMaxima;
@@ -20,6 +21,7 @@ public abstract class Personagem {
         this.defesaAtual = defesa;
         this.iniciativa = iniciativa;
         this.habilidades = new ArrayList<>();
+        this.caminhoImagem = caminhoImagem;
     }
 
     public void receberDano(float valor) {
@@ -73,6 +75,10 @@ public abstract class Personagem {
     public List<Habilidade> getHabilidades() { 
         
         return habilidades; 
+    }
+
+    public String getCaminhoImagem() { 
+        return caminhoImagem; 
     }
 
     public void adicionarHabilidade(Habilidade habilidade) { 
