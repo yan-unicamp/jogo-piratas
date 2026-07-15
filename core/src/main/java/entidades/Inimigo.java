@@ -13,18 +13,7 @@ import progressao.Recompensa;
  */
 public class Inimigo extends Personagem {
 
-    private final Recompensa recompensa;
-    private final String     spriteKey;
-    private final boolean    boss;
-
-    /**
-     * Construtor completo.
-     *
-     * @param spriteKey  Caminho relativo em assets/, ex: "inimigos/bosses/buggy.png"
-     * @param boss       true se for o boss da ilha
-     */
-    public Inimigo(String nome, int vidaMaxima, int defesa, int iniciativa,
-                   Recompensa recompensa, String spriteKey, boolean boss) {
+    public Inimigo(String nome, int vidaMaxima, float defesa, int iniciativa, Recompensa recompensa) {
         super(nome, vidaMaxima, defesa, iniciativa);
         this.recompensa = recompensa;
         this.spriteKey  = spriteKey;
