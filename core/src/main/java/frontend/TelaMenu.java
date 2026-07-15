@@ -19,11 +19,11 @@ import sistema.JogoPiratas;
  * Tela de Menu Principal — funcional com botões Scene2D.
  *
  * Botões:
- *   "Novo Jogo" → gameManager.iniciarJogo()  → muda para MAPA
- *   "Sair"      → gameManager.encerrarJogo() → fecha o app
+ * "Novo Jogo" → gameManager.iniciarJogo() → muda para MAPA
+ * "Sair" → gameManager.encerrarJogo() → fecha o app
  *
  * TODO Fase 5: Substituir SkinPadrao por skin temático (piratas),
- *              adicionar logo animado, música de fundo, efeitos de hover.
+ * adicionar logo animado, música de fundo, efeitos de hover.
  */
 public class TelaMenu implements Screen {
 
@@ -59,7 +59,7 @@ public class TelaMenu implements Screen {
 
         // Botões
         TextButton btnNovoJogo = new TextButton("  Novo Jogo  ", skin);
-        TextButton btnSair     = new TextButton("     Sair    ", skin);
+        TextButton btnSair = new TextButton("     Sair    ", skin);
 
         btnNovoJogo.addListener(new ClickListener() {
             @Override
@@ -97,9 +97,17 @@ public class TelaMenu implements Screen {
         stage.getViewport().update(width, height, true);
     }
 
-    @Override public void pause() {}
-    @Override public void resume() {}
-    @Override public void hide() {}
+    @Override
+    public void pause() {
+    }
+
+    @Override
+    public void resume() {
+    }
+
+    @Override
+    public void hide() {
+    }
 
     @Override
     public void dispose() {

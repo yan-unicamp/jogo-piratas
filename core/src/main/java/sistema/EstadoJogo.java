@@ -7,8 +7,8 @@ package sistema;
  * qual Screen do LibGDX está ativa em cada momento.
  *
  * Fluxo típico:
- *   MENU → MAPA → BATALHA → MAPA → LOJA → MAPA → ... → GAME_OVER
- *                         ↘ DESCANSO ↗
+ * MENU → MAPA → BATALHA → MAPA → LOJA → MAPA → ... → GAME_OVER
+ * ↘ DESCANSO ↗
  */
 public enum EstadoJogo {
     MENU,

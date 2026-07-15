@@ -26,37 +26,37 @@ import progressao.Rodada;
  * É o elo entre o backend (lógica pura) e o frontend (LibGDX Screens).
  *
  * Fluxo principal:
- *   JogoPiratas.create() → new GameManager(jogo, assets) → mudarEstado(MENU)
- *   TelaMenu: "Novo Jogo" → iniciarJogo() → mudarEstado(MAPA)
- *   TelaMapa: clique ilha → entrarIlha(ilha) → mudarEstado(BATALHA)
- *   TelaBatalha: vitória → avancarRodada():
- *       false → mais rodadas → mudarEstado(BATALHA) [mesma ilha, nova rodada]
- *       true  → ilha concluída → mudarEstado(MAPA)
- *   TelaBatalha: derrota → mudarEstado(GAME_OVER)
+ * JogoPiratas.create() → new GameManager(jogo, assets) → mudarEstado(MENU)
+ * TelaMenu: "Novo Jogo" → iniciarJogo() → mudarEstado(MAPA)
+ * TelaMapa: clique ilha → entrarIlha(ilha) → mudarEstado(BATALHA)
+ * TelaBatalha: vitória → avancarRodada():
+ * false → mais rodadas → mudarEstado(BATALHA) [mesma ilha, nova rodada]
+ * true → ilha concluída → mudarEstado(MAPA)
+ * TelaBatalha: derrota → mudarEstado(GAME_OVER)
  */
 public class GameManager {
 
     private final JogoPiratas jogo;
-    private final Assets      assets;
-    private EstadoJogo        estadoAtual;
+    private final Assets assets;
+    private EstadoJogo estadoAtual;
 
     // Subsistemas de backend
-    private final Mapa                 mapa;
-    private final Tripulacao           tripulacao;
+    private final Mapa mapa;
+    private final Tripulacao tripulacao;
     private final GerenciadorDeBatalha gerenciadorDeBatalha;
-    private final Loja                 loja;
+    private final Loja loja;
 
     // Contexto de batalha atual
     private List<Inimigo> inimigosAtivos;
 
     public GameManager(JogoPiratas jogo, Assets assets) {
-        this.jogo                 = jogo;
-        this.assets               = assets;
-        this.mapa                 = new Mapa();
-        this.tripulacao           = new Tripulacao();
+        this.jogo = jogo;
+        this.assets = assets;
+        this.mapa = new Mapa();
+        this.tripulacao = new Tripulacao();
         this.gerenciadorDeBatalha = new GerenciadorDeBatalha();
-        this.loja                 = new Loja();
-        this.estadoAtual          = EstadoJogo.MENU;
+        this.loja = new Loja();
+        this.estadoAtual = EstadoJogo.MENU;
     }
 
     // ──────────────────────────────────────────────────────────────────────────
@@ -75,19 +75,19 @@ public class GameManager {
         // Luffy — tanque / atacante pesado
         Aliado luffy = new Aliado("Luffy", 150, 8, 14, 1, 0);
         luffy.adicionarHabilidade(new Habilidade("Gomu Gomu no Pistol", TipoHabilidade.DANO, 38));
-        luffy.adicionarHabilidade(new Habilidade("Gear 2 — Red Hawk",   TipoHabilidade.DANO, 58));
+        luffy.adicionarHabilidade(new Habilidade("Gear 2 — Red Hawk", TipoHabilidade.DANO, 58));
         tripulacao.adicionarAliado(luffy);
 
         // Zoro — atacante equilibrado
         Aliado zoro = new Aliado("Zoro", 130, 10, 12, 1, 0);
-        zoro.adicionarHabilidade(new Habilidade("Oni Giri",   TipoHabilidade.DANO, 42));
+        zoro.adicionarHabilidade(new Habilidade("Oni Giri", TipoHabilidade.DANO, 42));
         zoro.adicionarHabilidade(new Habilidade("Santoryu — Tora Gari", TipoHabilidade.DANO, 62));
         tripulacao.adicionarAliado(zoro);
 
         // Nami — suporte / curandeira
         Aliado nami = new Aliado("Nami", 90, 5, 18, 1, 0);
         nami.adicionarHabilidade(new Habilidade("Clima-Tact — Thunderbolt Tempo", TipoHabilidade.DANO, 28));
-        nami.adicionarHabilidade(new Habilidade("Curar Aliados",                   TipoHabilidade.CURA, 35));
+        nami.adicionarHabilidade(new Habilidade("Curar Aliados", TipoHabilidade.CURA, 35));
         tripulacao.adicionarAliado(nami);
 
         mudarEstado(EstadoJogo.MAPA);
@@ -160,17 +160,39 @@ public class GameManager {
     }
 
     /** Fecha a aplicação. */
-    public void encerrarJogo() { Gdx.app.exit(); }
+    public void encerrarJogo() {
+        Gdx.app.exit();
+    }
 
     // ──────────────────────────────────────────────────────────────────────────
     // Getters
     // ──────────────────────────────────────────────────────────────────────────
 
-    public Assets               getAssets()               { return assets; }
-    public Mapa                 getMapa()                  { return mapa; }
-    public Tripulacao           getTripulacao()            { return tripulacao; }
-    public GerenciadorDeBatalha getGerenciadorDeBatalha()  { return gerenciadorDeBatalha; }
-    public Loja                 getLoja()                  { return loja; }
-    public List<Inimigo>        getInimigosAtivos()        { return inimigosAtivos; }
-    public EstadoJogo           getEstadoAtual()           { return estadoAtual; }
+    public Assets getAssets() {
+        return assets;
+    }
+
+    public Mapa getMapa() {
+        return mapa;
+    }
+
+    public Tripulacao getTripulacao() {
+        return tripulacao;
+    }
+
+    public GerenciadorDeBatalha getGerenciadorDeBatalha() {
+        return gerenciadorDeBatalha;
+    }
+
+    public Loja getLoja() {
+        return loja;
+    }
+
+    public List<Inimigo> getInimigosAtivos() {
+        return inimigosAtivos;
+    }
+
+    public EstadoJogo getEstadoAtual() {
+        return estadoAtual;
+    }
 }

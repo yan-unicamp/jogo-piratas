@@ -38,14 +38,15 @@ import sistema.JogoPiratas;
 import sistema.Tripulacao;
 
 /**
- * Tela de Batalha — exibe fundo da ilha, sprites dos personagens e UI de combate.
+ * Tela de Batalha — exibe fundo da ilha, sprites dos personagens e UI de
+ * combate.
  *
  * Layout em camadas (Stack):
- *   [0] Background da ilha (fill screen)
- *   [1] UI Table:
- *         Topo   → HUD (island label, rodada, HP inimigos)
- *         Centro → Sprite Luffy (esq.) | Sprite Inimigo (dir.)
- *         Baixo  → HP aliados | Botões de habilidade | Log
+ * [0] Background da ilha (fill screen)
+ * [1] UI Table:
+ * Topo → HUD (island label, rodada, HP inimigos)
+ * Centro → Sprite Luffy (esq.) | Sprite Inimigo (dir.)
+ * Baixo → HP aliados | Botões de habilidade | Log
  */
 public class TelaBatalha implements Screen {
 
@@ -53,19 +54,19 @@ public class TelaBatalha implements Screen {
     private final GameManager gameManager;
 
     private Stage stage;
-    private Skin  skin;
+    private Skin skin;
 
     // Referências atualizáveis
-    private Table  painelAliadosHP;
-    private Table  painelInimigosHP;
-    private Table  painelHabilidades;
-    private Table  logTable;
+    private Table painelAliadosHP;
+    private Table painelInimigosHP;
+    private Table painelHabilidades;
+    private Table logTable;
     private ScrollPane logScroll;
-    private Label  labelTurno;
-    private Image  spriteInimigo;
+    private Label labelTurno;
+    private Image spriteInimigo;
 
     public TelaBatalha(JogoPiratas jogo, GameManager gameManager) {
-        this.jogo        = jogo;
+        this.jogo = jogo;
         this.gameManager = gameManager;
     }
 
@@ -80,9 +81,9 @@ public class TelaBatalha implements Screen {
         skin = SkinPadrao.criar();
         adicionarEstilosExtra(skin);
 
-        Assets assets       = gameManager.getAssets();
+        Assets assets = gameManager.getAssets();
         GerenciadorDeBatalha gb = gameManager.getGerenciadorDeBatalha();
-        Ilha ilhaAtual      = gameManager.getMapa().getIlhaAtual();
+        Ilha ilhaAtual = gameManager.getMapa().getIlhaAtual();
 
         // ── Stack: background + UI sobrepostos ──────────────────────────────
         Stack stack = new Stack();
@@ -125,7 +126,7 @@ public class TelaBatalha implements Screen {
         String infoRodada = "";
         boolean isBossRodada = false;
         if (ilhaAtual != null && ilhaAtual.getRodadaAtual() != null) {
-            infoRodada   = "  —  " + ilhaAtual.getRodadaAtual().getDescricao();
+            infoRodada = "  —  " + ilhaAtual.getRodadaAtual().getDescricao();
             isBossRodada = ilhaAtual.getRodadaAtual().isBoss();
         }
 
@@ -156,7 +157,8 @@ public class TelaBatalha implements Screen {
 
         // Sprite do inimigo principal (direita) — atualizado conforme a batalha
         Inimigo primoInimigo = (gb.getInimigos() != null && !gb.getInimigos().isEmpty())
-                ? gb.getInimigos().get(0) : null;
+                ? gb.getInimigos().get(0)
+                : null;
         Texture iniTex = (primoInimigo != null)
                 ? assets.getTextura(primoInimigo.getSpriteKey())
                 : assets.getPlaceholder();
@@ -182,7 +184,7 @@ public class TelaBatalha implements Screen {
         rodape.add(scrollHab).width(260).expandY().fillY().padRight(12);
 
         // Coluna direita: log de combate
-        logTable  = new Table();
+        logTable = new Table();
         logTable.top().left();
         logScroll = new ScrollPane(logTable, skin);
         logScroll.setFadeScrollBars(false);
@@ -219,10 +221,12 @@ public class TelaBatalha implements Screen {
     }
 
     private void atualizarSpritePrincipalInimigo(GerenciadorDeBatalha gb) {
-        if (spriteInimigo == null) return;
+        if (spriteInimigo == null)
+            return;
         // Mostra sprite do primeiro inimigo vivo
         Inimigo vivo = (gb.getInimigosVivos() != null && !gb.getInimigosVivos().isEmpty())
-                ? gb.getInimigosVivos().get(0) : null;
+                ? gb.getInimigosVivos().get(0)
+                : null;
         if (vivo != null) {
             Texture t = gameManager.getAssets().getTextura(vivo.getSpriteKey());
             spriteInimigo.setDrawable(new TextureRegionDrawable(new TextureRegion(t)));
@@ -231,12 +235,13 @@ public class TelaBatalha implements Screen {
 
     private void atualizarPainelInimigos(GerenciadorDeBatalha gb) {
         painelInimigosHP.clear();
-        if (gb.getInimigos() == null) return;
+        if (gb.getInimigos() == null)
+            return;
         for (Inimigo ini : gb.getInimigos()) {
             Label lbl = new Label(
-                (ini.isBoss() ? "👑 " : "") + ini.getNome()
-                + "  " + ini.getVidaAtual() + "/" + ini.getVidaMaxima() + " HP",
-                skin);
+                    (ini.isBoss() ? "👑 " : "") + ini.getNome()
+                            + "  " + ini.getVidaAtual() + "/" + ini.getVidaMaxima() + " HP",
+                    skin);
             lbl.setColor(ini.estaVivo() ? new Color(1f, 0.5f, 0.5f, 1f) : Color.DARK_GRAY);
             painelInimigosHP.add(lbl).padLeft(10);
         }
@@ -244,16 +249,18 @@ public class TelaBatalha implements Screen {
 
     private void atualizarPainelAliados(GerenciadorDeBatalha gb) {
         painelAliadosHP.clear();
-        if (gb.getAliados() == null) return;
+        if (gb.getAliados() == null)
+            return;
         for (Aliado ali : gb.getAliados()) {
             float ratio = ali.getVidaMaxima() > 0
-                    ? (float) ali.getVidaAtual() / ali.getVidaMaxima() : 0f;
+                    ? (float) ali.getVidaAtual() / ali.getVidaMaxima()
+                    : 0f;
             Color corHP = ratio > 0.5f ? new Color(0.3f, 1f, 0.3f, 1f)
                     : ratio > 0.25f ? Color.ORANGE : Color.RED;
 
             Label lbl = new Label(
-                ali.getNome() + "  " + ali.getVidaAtual() + "/" + ali.getVidaMaxima(),
-                skin);
+                    ali.getNome() + "  " + ali.getVidaAtual() + "/" + ali.getVidaMaxima(),
+                    skin);
             lbl.setColor(ali.estaVivo() ? corHP : Color.DARK_GRAY);
             painelAliadosHP.add(lbl).left().row();
         }
@@ -347,18 +354,21 @@ public class TelaBatalha implements Screen {
 
     private Color corPorTipo(TipoHabilidade tipo) {
         switch (tipo) {
-            case DANO:   return new Color(1f, 0.45f, 0.45f, 1f);
-            case CURA:   return new Color(0.4f, 1f, 0.45f, 1f);
-            case DEFESA: return new Color(0.4f, 0.75f, 1f, 1f);
-            default:     return Color.WHITE;
+            case DANO:
+                return new Color(1f, 0.45f, 0.45f, 1f);
+            case CURA:
+                return new Color(0.4f, 1f, 0.45f, 1f);
+            case DEFESA:
+                return new Color(0.4f, 0.75f, 1f, 1f);
+            default:
+                return Color.WHITE;
         }
     }
 
     private void adicionarEstilosExtra(Skin s) {
-        com.badlogic.gdx.scenes.scene2d.ui.ProgressBar.ProgressBarStyle hpStyle =
-                new com.badlogic.gdx.scenes.scene2d.ui.ProgressBar.ProgressBarStyle();
+        com.badlogic.gdx.scenes.scene2d.ui.ProgressBar.ProgressBarStyle hpStyle = new com.badlogic.gdx.scenes.scene2d.ui.ProgressBar.ProgressBarStyle();
         hpStyle.background = new TextureRegionDrawable(SkinPadrao.textura1x1(0.15f, 0.15f, 0.15f, 1f));
-        hpStyle.knob       = new TextureRegionDrawable(SkinPadrao.textura1x1(0f, 0f, 0f, 0f));
+        hpStyle.knob = new TextureRegionDrawable(SkinPadrao.textura1x1(0f, 0f, 0f, 0f));
         hpStyle.knobBefore = new TextureRegionDrawable(SkinPadrao.textura1x1(0.2f, 0.8f, 0.2f, 1f));
         s.add("hp", hpStyle);
     }
@@ -380,9 +390,17 @@ public class TelaBatalha implements Screen {
         stage.getViewport().update(width, height, true);
     }
 
-    @Override public void pause()  {}
-    @Override public void resume() {}
-    @Override public void hide()   {}
+    @Override
+    public void pause() {
+    }
+
+    @Override
+    public void resume() {
+    }
+
+    @Override
+    public void hide() {
+    }
 
     @Override
     public void dispose() {
