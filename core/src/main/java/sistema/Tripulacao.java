@@ -18,6 +18,7 @@ public class Tripulacao {
     public void receberRecompensa(Recompensa loot) { }
 
     public void gastarDinheiro(int valor) { }
+    public void receberDinheiro(int valor) { this.dinheiro += valor; }
 
     public int getDinheiro() { return dinheiro; }
     public List<Aliado> getAliados() { return aliados; }
