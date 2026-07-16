@@ -295,15 +295,23 @@ public class TelaBatalha implements Screen {
         
         uiTable.add(battleArea).expand().fill().row();
         
-        uiTable.add(logLabel).pad(10).row();
+        Table logBox = new Table();
+        logBox.setBackground(new com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable(SkinPadrao.textura1x1(0.1f, 0.1f, 0.15f, 0.8f)));
+        logBox.add(logLabel).pad(15);
+        uiTable.add(logBox).expandX().fillX().pad(10).padLeft(20).padRight(20).row();
         
         Table controlPanel = new Table();
+        controlPanel.setBackground(new com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable(SkinPadrao.textura1x1(0.05f, 0.05f, 0.08f, 0.9f)));
         if (desenharBotoes) {
             Personagem aliadoVez = gerenciador.getAliadoAguardandoAcao();
             if (aliadoVez != null) {
                 int buttonCount = 0;
                 if (!escolhendoAlvo) {
                     Table optionsTable = new Table();
+                    Label lblTurno = new Label("Vez de: " + aliadoVez.getNome(), skin);
+                    lblTurno.setFontScale(1.3f);
+                    lblTurno.setColor(Color.GOLD);
+                    optionsTable.add(lblTurno).colspan(2).padBottom(15).center().row();
                     for (final Habilidade hab : aliadoVez.getHabilidades()) {
                         String poderFormatado = (hab.getTipo() == TipoHabilidade.DEFESA) 
                             ? String.format("%.1f", hab.getValorPoder()) 
@@ -359,6 +367,11 @@ public class TelaBatalha implements Screen {
                     logLabel.setText("Selecione alvo para " + habilidadeSelecionada.getNome());
                     
                     Table optionsTable = new Table();
+                    Label lblTurno = new Label("Vez de: " + aliadoVez.getNome(), skin);
+                    lblTurno.setFontScale(1.3f);
+                    lblTurno.setColor(Color.GOLD);
+                    optionsTable.add(lblTurno).padBottom(15).center().row();
+
                     for (final Personagem alvo : possiveisAlvos) {
                         if (alvo.estaVivo()) {
                             TextButton btnAlvo = new TextButton("Alvo: " + alvo.getNome(), skin);
@@ -479,6 +492,16 @@ public class TelaBatalha implements Screen {
                     Label xpLabel = new Label("Experiencia Ganha: " + gerenciador.getXpGanho(), skin);
                     Label coinLabel = new Label("Moedas Ganhas: " + gerenciador.getDinheiroGanho(), skin);
                     
+                    winTable.add(title).padBottom(30).row();
+                    winTable.add(xpLabel).padBottom(10).row();
+                    winTable.add(coinLabel).padBottom(20).row();
+                    
+                    for (String rec : gerenciador.getRecompensasExtras()) {
+                        Label recLabel = new Label(rec, skin);
+                        recLabel.setColor(Color.GREEN);
+                        winTable.add(recLabel).padBottom(10).row();
+                    }
+                    
                     TextButton btnSair = new TextButton("Continuar", skin);
                     btnSair.addListener(new ClickListener() {
                         @Override
@@ -500,10 +523,7 @@ public class TelaBatalha implements Screen {
                         }
                     });
                     
-                    winTable.add(title).padBottom(60).row();
-                    winTable.add(xpLabel).padBottom(20).row();
-                    winTable.add(coinLabel).padBottom(60).row();
-                    winTable.add(btnSair).size(400, 80);
+                    winTable.add(btnSair).size(400, 80).padTop(20);
                     
                     uiTable.add(winTable).expand().center();
                     
