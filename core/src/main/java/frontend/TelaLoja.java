@@ -88,7 +88,31 @@ public class TelaLoja implements Screen {
                 }
             }
         });
-        root.add(btnReviver).width(600).height(50).padBottom(30).row();
+        root.add(btnReviver).width(600).height(50).padBottom(10).row();
+
+        TextButton btnXP = new TextButton("Comprar Manual de Treino (+100 XP) - 80 Ouro", skin);
+        btnXP.addListener(new ClickListener() {
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
+                if (gameManager.gastarOuro(80)) {
+                    java.util.List<sistema.HabilidadePendente> pendentes = new java.util.ArrayList<>();
+                    for (Aliado aliado : gameManager.getTripulacao().getAliadosAtivos()) {
+                        java.util.List<entidades.Habilidade> destravadas = aliado.ganharExperiencia(100);
+                        for (entidades.Habilidade h : destravadas) {
+                            pendentes.add(new sistema.HabilidadePendente(aliado, h));
+                        }
+                    }
+                    atualizarOuro();
+                    System.out.println("XP comprado para os ativos!");
+                    
+                    if (!pendentes.isEmpty()) {
+                        Runnable onComplete = () -> jogo.setScreen(new frontend.TelaLoja(jogo, gameManager, ilhaAtual));
+                        jogo.setScreen(new frontend.TelaAprenderHabilidade(jogo, gameManager, pendentes, onComplete));
+                    }
+                }
+            }
+        });
+        root.add(btnXP).width(600).height(50).padBottom(30).row();
 
         TextButton btnSair = new TextButton("Sair da Loja", skin);
         btnSair.getLabel().setColor(Color.LIGHT_GRAY);
