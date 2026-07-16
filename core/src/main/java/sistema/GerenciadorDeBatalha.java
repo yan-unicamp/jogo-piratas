@@ -151,14 +151,21 @@ public class GerenciadorDeBatalha {
         if (estadoAtual != EstadoBatalha.EXECUCAO_TURNOS)
             return null;
 
-        Personagem personagemDaVez = filaDeTurnos.obterProximoPersonagem();
-
-        if (personagemDaVez == null) {
-            verificarVitoriaOuDerrota();
-            if (estadoAtual != EstadoBatalha.VITORIA && estadoAtual != EstadoBatalha.DERROTA) {
-                iniciarNovoTurno();
+        Personagem personagemDaVez = null;
+        
+        // Pula os turnos de quem já morreu
+        while (true) {
+            personagemDaVez = filaDeTurnos.obterProximoPersonagem();
+            if (personagemDaVez == null) {
+                verificarVitoriaOuDerrota();
+                if (estadoAtual != EstadoBatalha.VITORIA && estadoAtual != EstadoBatalha.DERROTA) {
+                    iniciarNovoTurno();
+                }
+                return null;
             }
-            return null;
+            if (personagemDaVez.getVidaAtual() > 0) {
+                break; // Achou o próximo vivo!
+            }
         }
 
         if (personagemDaVez.getVidaAtual() > 0) {

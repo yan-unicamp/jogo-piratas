@@ -6,6 +6,7 @@ import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import frontend.TelaMenu;
+import frontend.TelaBatalha;
 
 /**
  * Classe principal do jogo que estende Game do libGDX.
@@ -25,8 +26,8 @@ public class JogoPiratas extends Game {
         font = new BitmapFont(); // fonte padrão do libGDX
         font.setColor(Color.WHITE);
 
-        // Inicia com a tela de menu do pacote frontend
-        setScreen(new TelaMenu(this));
+        // Inicia com a tela de batalha para testes
+        setScreen(new TelaBatalha(this));
     }
 
     @Override

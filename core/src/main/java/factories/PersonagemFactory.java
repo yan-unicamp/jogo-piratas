@@ -96,7 +96,7 @@ public class PersonagemFactory {
     
     public static Inimigo criarMarinheiro(int nivel) { // (ta escalonando com o nivel atual, pode trocar dps)
         Recompensa loot = new Recompensa(10 * nivel, 5 * nivel); // dinheiro, xp 
-        Inimigo marinheiro = new Inimigo("Marinheiro Who", 30 * nivel, 0, 5, loot, "marinheiro.png");// nome, vida, defesa, iniciativa, recompensa
+        Inimigo marinheiro = new Inimigo("Marinheiro Who", 30 * nivel, 1.0f, 5, loot, "marinheiro.png");// nome, vida, defesa, iniciativa, recompensa
         marinheiro.adicionarHabilidade(HabilidadeFactory.criarAtaqueBasicoInimigo(nivel));
         
         return marinheiro;
@@ -104,7 +104,7 @@ public class PersonagemFactory {
 
     public static Inimigo criarPirataInimigo(int nivel) { // (ta escalonando com o nivel atual, pode trocar dps)
         Recompensa loot = new Recompensa(10 * nivel, 5 * nivel); // dinheiro, xp 
-        Inimigo pirata = new Inimigo("Pirata Who", 30 * nivel, 0, 5, loot, "pirata.png");// nome, vida, defesa, iniciativa, recompensa
+        Inimigo pirata = new Inimigo("Pirata Who", 30 * nivel, 1.0f, 5, loot, "pirata.png");// nome, vida, defesa, iniciativa, recompensa
         pirata.adicionarHabilidade(HabilidadeFactory.criarAtaqueBasicoInimigo(nivel));
         
         return pirata;
