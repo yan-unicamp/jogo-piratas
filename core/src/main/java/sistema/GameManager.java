@@ -28,6 +28,7 @@ public class GameManager {
     private GerenciadorDeBatalha gerenciadorDeBatalha;
     private boolean jogoRodando;
     private Scanner scanner;
+    private progressao.Ilha ilhaAtual;
     private List<String> bossesCap1;
     private List<String> bossesCap2;
     private List<String> bossesCap3;
@@ -227,6 +228,7 @@ public class GameManager {
     }
 
     public void entrarIlha(progressao.Ilha ilha) {
+        this.ilhaAtual = ilha;
         progressao.Rodada rodada = ilha.getRodadaAtual();
         if (rodada != null) {
             System.out.println("Entrando na ilha " + ilha.getNome() + " - " + rodada.getDescricao());
@@ -235,5 +237,25 @@ public class GameManager {
         } else {
             System.out.println("A ilha " + ilha.getNome() + " já está concluída!");
         }
+    }
+
+    public void batalhaConcluida(boolean vitoria, JogoPiratas jogo) {
+        if (vitoria) {
+            boolean ilhaVencida = ilhaAtual.avancarRodada();
+            if (ilhaVencida) {
+                System.out.println("Ilha " + ilhaAtual.getNome() + " completada!");
+                mapa.entrarIlha(ilhaAtual); // Destrava proxima etapa no Mapa
+            }
+        } else {
+            System.out.println("Derrota na batalha. A ilha será resetada.");
+            ilhaAtual.resetar();
+            // Cura todos os aliados apos a derrota para o jogador tentar de novo
+            for (entidades.Personagem a : tripulacao.getAliadosAtivos()) {
+                a.curar(a.getVidaMaxima());
+            }
+        }
+        
+        // Retorna para a tela do mapa
+        jogo.setScreen(new frontend.TelaMapa(jogo, this));
     }
 }

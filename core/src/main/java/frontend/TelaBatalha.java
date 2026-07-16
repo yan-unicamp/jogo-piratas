@@ -153,7 +153,20 @@ public class TelaBatalha implements Screen {
         
         // Painel inferior (botões)
         Table controlPanel = new Table();
-        if (desenharBotoes) {
+        if (gerenciador.getEstadoAtual() == sistema.GerenciadorDeBatalha.EstadoBatalha.VITORIA || 
+            gerenciador.getEstadoAtual() == sistema.GerenciadorDeBatalha.EstadoBatalha.DERROTA) {
+            
+            TextButton btnContinuar = new TextButton("Continuar", skin);
+            btnContinuar.addListener(new ClickListener() {
+                @Override
+                public void clicked(InputEvent event, float x, float y) {
+                    boolean vitoria = (gerenciador.getEstadoAtual() == sistema.GerenciadorDeBatalha.EstadoBatalha.VITORIA);
+                    gameManager.batalhaConcluida(vitoria, jogo);
+                }
+            });
+            controlPanel.add(btnContinuar).size(250, 60).pad(10);
+            
+        } else if (desenharBotoes) {
             Personagem aliadoVez = gerenciador.getAliadoAguardandoAcao();
             if (aliadoVez != null) {
                 int buttonCount = 0;
@@ -245,12 +258,16 @@ public class TelaBatalha implements Screen {
                 
             case VITORIA:
                 logLabel.setText("Vitoria! XP e Dinheiro ganhos.");
-                atualizarUI(false);
+                if (uiTable.getChildren().size <= 2) { // Evita recriar a UI toda hora
+                    atualizarUI(true); // Redesenha a UI pra mostrar o botão de Continuar
+                }
                 break;
                 
             case DERROTA:
-                logLabel.setText("Derrota... Game Over.");
-                atualizarUI(false);
+                logLabel.setText("Derrota! O bando foi aniquilado.");
+                if (uiTable.getChildren().size <= 2) {
+                    atualizarUI(true); // Redesenha a UI pra mostrar o botão de Continuar
+                }
                 break;
                 
             default:
