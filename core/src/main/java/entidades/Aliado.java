@@ -23,4 +23,13 @@ public class Aliado extends Personagem {
         return false;
     }
 
+    public void subirStatus() {
+        vidaMaxima += 10;
+        defesa -= 0.05f;
+        iniciativa += 2;
+        vidaAtual = vidaMaxima;
+        defesaAtual = defesa;
+    }
+
+
 }
