@@ -32,6 +32,8 @@ public class ArvoreNaoBinaria {
 
     public enum TipoNo {
         BATALHA,
+        BATALHA_CANONICA,
+        BATALHA_FINAL,
         EVENTO,
         DESCANSO
         // Pode adicionar LOJA no futuro
@@ -39,11 +41,13 @@ public class ArvoreNaoBinaria {
 
     private int quantidadeFilhos; // n
     private int profundidadeMax;  // p
+    private int capitulo;
     private Random random;
 
-    public ArvoreNaoBinaria(int quantidadeFilhos, int profundidadeMax) {
+    public ArvoreNaoBinaria(int quantidadeFilhos, int profundidadeMax, int capitulo) {
         this.quantidadeFilhos = quantidadeFilhos;
         this.profundidadeMax = profundidadeMax;
+        this.capitulo = capitulo;
         this.random = new Random();
     }
 
@@ -61,33 +65,34 @@ public class ArvoreNaoBinaria {
     public List<TipoNo> escolherEvento(int profundidadeAtual) {
         List<TipoNo> opcoes = new ArrayList<>();
 
-        // Andares predefinidos
-        if (profundidadeAtual == 0) {
-            // Primeiro andar: Batalha
+        if (profundidadeAtual == 3 || profundidadeAtual == 6) {
+            opcoes.add(TipoNo.BATALHA_CANONICA);
+        } else if (profundidadeAtual == 9) {
+            opcoes.add(TipoNo.BATALHA_FINAL);
+        } else if (profundidadeAtual == 0) {
             opcoes.add(TipoNo.BATALHA);
         } else if (profundidadeAtual == profundidadeMax) {
-            // Último andar: Boss (Batalha final)
-            opcoes.add(TipoNo.BATALHA);
+            // Se profundidadeMax for 9, já cai acima, mas mantendo para outros tamanhos
+            opcoes.add(TipoNo.BATALHA_FINAL);
         } else if (profundidadeAtual == profundidadeMax - 1) {
-            // Andar antes do Boss: Descanso / Fogueira
             opcoes.add(TipoNo.DESCANSO);
-        } 
-        // Andares intermediários
-        else if (profundidadeAtual < profundidadeMax / 2) {
-            // Mais batalhas e eventos comuns no começo
+        } else if (profundidadeAtual < profundidadeMax / 2) {
             opcoes.addAll(Arrays.asList(TipoNo.BATALHA, TipoNo.BATALHA, TipoNo.EVENTO));
         } else {
-            // Mistura maior na reta final
             opcoes.addAll(Arrays.asList(TipoNo.BATALHA, TipoNo.EVENTO, TipoNo.DESCANSO));
         }
 
         return opcoes;
     }
 
-    private NoMapa instanciarNo(TipoNo tipo) {
+    private NoMapa instanciarNo(TipoNo tipo, int profundidade) {
         switch (tipo) {
             case BATALHA:
                 return new NoBatalha();
+            case BATALHA_CANONICA:
+                return new NoBatalhaCanonica(capitulo, profundidade + 1);
+            case BATALHA_FINAL:
+                return new NoBatalhaFinal(capitulo, profundidade + 1);
             case EVENTO:
                 return new NoEvento();
             case DESCANSO:
@@ -101,7 +106,7 @@ public class ArvoreNaoBinaria {
      * Cria a árvore completa recursivamente, distribuindo os nós pelas regras.
      */
     public NoDaArvore criarArvore(int profundidade, TipoNo tipoAtual) {
-        NoMapa noMapa = instanciarNo(tipoAtual);
+        NoMapa noMapa = instanciarNo(tipoAtual, profundidade);
         NoDaArvore node = new NoDaArvore(noMapa);
 
         // Caso base

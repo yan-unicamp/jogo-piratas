@@ -3,6 +3,8 @@ package sistema;
 import progressao.Mapa;
 import progressao.NoMapa;
 import progressao.NoBatalha;
+import progressao.NoBatalhaCanonica;
+import progressao.NoBatalhaFinal;
 import progressao.NoDescanso;
 import progressao.NoEvento;
 import entidades.Personagem;
@@ -88,6 +90,18 @@ public class GameManager {
                 ArrayList<Personagem> aliados = new ArrayList<>(tripulacao.getAliadosAtivos());
                 ArrayList<Personagem> inimigos = new ArrayList<>();
                 inimigos.add(PersonagemFactory.criarMarinheiro(mapa.getEtapaAtual()));
+                
+                gerenciadorDeBatalha.iniciarCombate(aliados, inimigos, tripulacao);
+            } else if (proximoNo instanceof NoBatalhaCanonica) {
+                System.out.println("\n[!] ENTRANDO EM COMBATE CANÔNICO [!]");
+                ArrayList<Personagem> aliados = new ArrayList<>(tripulacao.getAliadosAtivos());
+                ArrayList<Personagem> inimigos = new ArrayList<>(((NoBatalhaCanonica) proximoNo).getInimigos());
+                
+                gerenciadorDeBatalha.iniciarCombate(aliados, inimigos, tripulacao);
+            } else if (proximoNo instanceof NoBatalhaFinal) {
+                System.out.println("\n[!] ENTRANDO NA BATALHA DO BOSS [!]");
+                ArrayList<Personagem> aliados = new ArrayList<>(tripulacao.getAliadosAtivos());
+                ArrayList<Personagem> inimigos = new ArrayList<>(((NoBatalhaFinal) proximoNo).getInimigos());
                 
                 gerenciadorDeBatalha.iniciarCombate(aliados, inimigos, tripulacao);
             } else {

@@ -366,5 +366,37 @@ public class PersonagemFactory {
         
         return magellan;
     }
+    public static java.util.ArrayList<Inimigo> sortearInimigosCanonicos(int capitulo, int nivel) {
+        java.util.ArrayList<Inimigo> inimigos = new java.util.ArrayList<>();
+        java.util.Random rand = new java.util.Random();
+        int sorteio = rand.nextInt(3);
+        
+        if (capitulo == 1) {
+            if (sorteio == 0) inimigos.add(criarBuggy(nivel));
+            else if (sorteio == 1) inimigos.add(criarDonKrieg(nivel));
+            else inimigos.add(criarArlong(nivel));
+        } else if (capitulo == 2) {
+            if (sorteio == 0) inimigos.add(criarWapol(nivel));
+            else if (sorteio == 1) inimigos.add(criarEneru(nivel));
+            else inimigos.add(criarMoria(nivel));
+        } else {
+            if (sorteio == 0) inimigos.add(criarMagellan(nivel));
+            else if (sorteio == 1) inimigos.add(criarDoflamingo(nivel));
+            else inimigos.add(criarBigMom(nivel));
+        }
+        return inimigos;
+    }
+
+    public static java.util.ArrayList<Inimigo> getBossCapitulo(int capitulo, int nivel) {
+        java.util.ArrayList<Inimigo> inimigos = new java.util.ArrayList<>();
+        if (capitulo == 1) {
+            inimigos.add(criarCrocodile(nivel));
+        } else if (capitulo == 2) {
+            inimigos.add(criarRobLucci(nivel));
+        } else {
+            inimigos.add(criarKaido(nivel));
+        }
+        return inimigos;
+    }
 
 }
