@@ -102,11 +102,11 @@ public class IlhaFactory {
 
     /** Cria um inimigo capanga escalado pelo índice da ilha. */
     private static Inimigo cap(String nome, int idx, String spriteKey) {
-        int hp = 60 + idx * 25;
+        int hp = 40 + idx * 20; // Reduzido de 60 pra 40 base
         float def = 1.0f - (idx * 0.02f); // 1.0 (100% dano) até um minimo
         if (def < 0.5f) def = 0.5f;
         int inic = 8 + idx;
-        int poder = 12 + idx * 5;
+        int poder = 8 + idx * 4; // Reduzido de 12 pra 8 base
         Inimigo e = new Inimigo(nome, hp, def, inic,
                 40 + idx * 20, 20 + idx * 10, spriteKey);
         e.adicionarHabilidade(new Habilidade("Ataque", TipoHabilidade.DANO, poder));
@@ -116,8 +116,8 @@ public class IlhaFactory {
     /** Cria um miniboss escalado pelo índice da ilha. */
     private static Inimigo mini(String nome, int idx, String spriteKey,
             String habNome, int habPoder) {
-        int hp = 130 + idx * 50;
-        float def = 0.8f - (idx * 0.03f); // 0.8 (recebe 80% do dano)
+        int hp = 80 + idx * 40; // Reduzido de 130 pra 80 base
+        float def = 0.9f - (idx * 0.03f); // 0.9 (recebe 90% do dano)
         if (def < 0.3f) def = 0.3f;
         int inic = 10 + idx;
         Inimigo e = new Inimigo(nome, hp, def, inic,
@@ -129,8 +129,8 @@ public class IlhaFactory {
     /** Cria um boss escalado pelo índice da ilha, com duas habilidades. */
     private static Inimigo boss(String nome, int idx, String spriteKey,
             String hab1, int pod1, String hab2, int pod2) {
-        int hp = 250 + idx * 120;
-        float def = 0.6f - (idx * 0.04f); // 0.6 (recebe 60% do dano)
+        int hp = 120 + idx * 80; // Reduzido de 250 pra 120 base
+        float def = 0.8f - (idx * 0.04f); // 0.8 (recebe 80% do dano)
         if (def < 0.2f) def = 0.2f;
         int inic = 12 + idx * 2;
         Inimigo b = new Inimigo(nome, hp, def, inic,
@@ -152,7 +152,7 @@ public class IlhaFactory {
         return new Ilha("Shells Town", "backgrounds/shells_town.png", Arrays.asList(
                 r("BOSS — Morgan Mão de Machado!", true,
                         boss("Morgan Mão de Machado", 0, "inimigos/bosses/morgan.png",
-                                "Corte de Machado", 35, "Golpe Devastador", 45).comAliado(PersonagemFactory.criarZoro()))));
+                                "Corte de Machado", 15, "Golpe Devastador", 22).comAliado(PersonagemFactory.criarZoro()))));
     }
 
     private static Ilha criarOrangeTown() {
@@ -161,11 +161,11 @@ public class IlhaFactory {
                         cap("Pirata de Buggy", 0, "inimigos/capangas/capanga_pirata.png"),
                         cap("Pirata de Buggy", 0, "inimigos/capangas/capanga_pirata.png")),
                 r("Rodada 2 — Lugartenentes", false,
-                        mini("Mohji & Richie", 0, "inimigos/minibosses/mohji.png", "Richie Ataca!", 22),
-                        mini("Cabaji", 0, "inimigos/minibosses/cabaji.png", "Acrobacia Letal", 20)),
+                        mini("Mohji & Richie", 0, "inimigos/minibosses/mohji.png", "Richie Ataca!", 14),
+                        mini("Cabaji", 0, "inimigos/minibosses/cabaji.png", "Acrobacia Letal", 16)),
                 r("BOSS — Buggy, o Palhaço!", true,
                         boss("Buggy, o Palhaço", 0, "inimigos/bosses/buggy.png",
-                                "Separação das Peças", 35, "Bala de Buggy", 42))));
+                                "Separação das Peças", 18, "Bala de Buggy", 25))));
     }
 
     private static Ilha criarVilaSyrup() {
