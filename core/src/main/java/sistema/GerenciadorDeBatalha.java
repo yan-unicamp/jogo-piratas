@@ -1,7 +1,7 @@
 package sistema;
 
 import java.util.ArrayList;
-import java.util.Comparator;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Random;
 
@@ -9,241 +9,235 @@ import entidades.Aliado;
 import entidades.Habilidade;
 import entidades.Inimigo;
 import entidades.Personagem;
-import entidades.TipoHabilidade;
+import progressao.Recompensa;
 
-/**
- * Gerenciador de batalha para o modo GUI (LibGDX).
- *
- * Funciona orientado a eventos — ao invés de um loop bloqueante,
- * expõe o estado atual da batalha para que a TelaBatalha possa
- * consultar e reagir:
- *
- *  1. {@link #iniciarCombate} — configura aliados, inimigos e ordem de turnos.
- *  2. {@link #getPersonagemAtivo} — retorna o aliado que está aguardando
- *     input do jogador (null se for turno de inimigo ou batalha encerrada).
- *  3. {@link #executarTurnoAliado} — chamado pela TelaBatalha ao clicar
- *     numa habilidade; executa a ação do aliado e depois processa
- *     automaticamente todos os turnos de inimigos até o próximo aliado.
- *  4. {@link #isBatalhaEncerrada} / {@link #isVitoria} — estado final.
- */
 public class GerenciadorDeBatalha {
+    public enum EstadoBatalha {
+        AGUARDANDO_INICIO,
+        PLANEJAMENTO_JOGADOR,
+        PLANEJAMENTO_INIMIGOS,
+        EXECUCAO_TURNOS,
+        VITORIA,
+        DERROTA
+    }
 
-    // ── Estado da batalha ─────────────────────────────────────────────────────
-    private List<Aliado>    aliados;
-    private List<Inimigo>   inimigos;
-    private List<Personagem> ordemTurnos;   // todos, ordenados por iniciativa
-    private int              indiceTurno;
-    private Personagem       personagemAtivo; // aliado esperando input do jogador
-    private boolean          batalhaEncerrada;
-    private boolean          vitoria;
-    private List<String>     logCombate;
+    private final FilaDeTurnos filaDeTurnos;
+    private ArrayList<Personagem> aliados;
+    private ArrayList<Personagem> inimigos;
+    private Tripulacao tripulacao;
+    private Random random;
+    private HashMap<Personagem, AcaoPlanejada> acoesPlanejadas;
 
-    private final Random random = new Random();
+    private EstadoBatalha estadoAtual;
+    private List<Personagem> aliadosAguardandoAcao;
 
-    // ──────────────────────────────────────────────────────────────────────────
-    // Inicialização
-    // ──────────────────────────────────────────────────────────────────────────
+    public static class AcaoPlanejada {
+        public Habilidade habilidade;
+        public Personagem alvo;
+
+        public AcaoPlanejada(Habilidade habilidade, Personagem alvo) {
+            this.habilidade = habilidade;
+            this.alvo = alvo;
+        }
+    }
 
     public GerenciadorDeBatalha() {
-        this.logCombate = new ArrayList<>();
+        this.filaDeTurnos = new FilaDeTurnos();
+        this.random = new Random();
+        this.acoesPlanejadas = new HashMap<>();
+        this.aliadosAguardandoAcao = new ArrayList<>();
+        this.estadoAtual = EstadoBatalha.AGUARDANDO_INICIO;
     }
 
-    /**
-     * Configura e inicia um novo combate.
-     *
-     * @param aliadosPersonagens Lista de aliados vivos da tripulação.
-     * @param inimigosLista      Lista de inimigos da rodada.
-     */
-    public void iniciarCombate(List<Aliado> aliadosPersonagens, List<Inimigo> inimigosLista) {
-        this.aliados          = new ArrayList<>(aliadosPersonagens);
-        this.inimigos         = new ArrayList<>(inimigosLista);
-        this.logCombate       = new ArrayList<>();
-        this.batalhaEncerrada = false;
-        this.vitoria          = false;
-        this.indiceTurno      = 0;
-        this.personagemAtivo  = null;
+    public void iniciarCombate(ArrayList<Personagem> aliados, ArrayList<Personagem> inimigos, Tripulacao tripulacao) {
+        this.aliados = aliados;
+        this.inimigos = inimigos;
+        this.tripulacao = tripulacao;
 
-        // Monta a ordem de turnos por iniciativa decrescente
-        this.ordemTurnos = new ArrayList<>();
-        ordemTurnos.addAll(aliados);
-        ordemTurnos.addAll(inimigos);
-        ordemTurnos.sort(Comparator.comparingInt(Personagem::getIniciativa).reversed());
+        for (Personagem aliado : aliados) {
+            filaDeTurnos.adicionar(aliado);
+        }
+        for (Personagem inimigo : inimigos) {
+            filaDeTurnos.adicionar(inimigo);
+        }
+        filaDeTurnos.ordenarPorIniciativa();
 
-        logCombate.add("⚔ Batalha iniciada! " + inimigos.size() + " inimigo(s).");
-
-        // Avança até o primeiro aliado que precisa de input
-        avancarAteProximoAliado();
+        iniciarNovoTurno();
     }
 
-    // ──────────────────────────────────────────────────────────────────────────
-    // Controle de turnos
-    // ──────────────────────────────────────────────────────────────────────────
+    private void iniciarNovoTurno() {
+        acoesPlanejadas.clear();
+        aliadosAguardandoAcao.clear();
 
-    /**
-     * Executa o turno do aliado ativo com a habilidade e alvo escolhidos.
-     * Depois processa automaticamente todos os turnos de inimigos até
-     * chegar no próximo aliado vivo (ou encerrar a batalha).
-     *
-     * Chamado pela TelaBatalha ao clicar num botão de habilidade.
-     */
-    public void executarTurnoAliado(Habilidade habilidade, Personagem alvo) {
-        if (batalhaEncerrada || personagemAtivo == null) return;
-
-        executarAcao(personagemAtivo, habilidade, alvo);
-        indiceTurno++;
-        personagemAtivo = null;
-
-        if (verificarFimBatalha()) return;
-
-        avancarAteProximoAliado();
-    }
-
-    /**
-     * Avança a fila de turnos processando inimigos automaticamente
-     * até encontrar um aliado vivo ou a batalha encerrar.
-     */
-    private void avancarAteProximoAliado() {
-        int total     = ordemTurnos.size();
-        int tentativas = 0;
-
-        while (tentativas < total * 3) {
-            if (verificarFimBatalha()) return;
-
-            Personagem atual = ordemTurnos.get(indiceTurno % total);
-
-            if (!atual.estaVivo()) {
-                // Personagem morto — pula o turno
-                indiceTurno++;
-                tentativas++;
-                continue;
-            }
-
-            if (atual instanceof Aliado) {
-                // Para aqui e aguarda input do jogador
-                personagemAtivo = atual;
-                return;
-            } else {
-                // Inimigo — age automaticamente
-                executarTurnoInimigo(atual);
-                indiceTurno++;
-                tentativas++;
-
-                if (verificarFimBatalha()) return;
+        for (Personagem aliado : aliados) {
+            if (aliado.getVidaAtual() > 0) {
+                aliadosAguardandoAcao.add(aliado);
             }
         }
 
-        // Segurança: todos os personagens desta rodada agiram — reinicia o índice
-        indiceTurno = 0;
-        avancarAteProximoAliado();
-    }
-
-    // ──────────────────────────────────────────────────────────────────────────
-    // Execução de ações
-    // ──────────────────────────────────────────────────────────────────────────
-
-    private void executarAcao(Personagem agente, Habilidade habilidade, Personagem alvo) {
-        if (agente == null || habilidade == null || alvo == null) return;
-        if (!agente.estaVivo()) return;
-
-        boolean alvoPodeSerAlvo = alvo.estaVivo()
-                || habilidade.getTipo() == TipoHabilidade.CURA;
-
-        if (alvoPodeSerAlvo) {
-            habilidade.executarAcao(alvo);
-            String msg = agente.getNome() + " usou [" + habilidade.getNome() + "]";
-            if (habilidade.getTipo() == TipoHabilidade.CURA) {
-                msg += " → curou " + alvo.getNome();
-            } else {
-                int danoAprox = (int) habilidade.getValorPoder();
-                msg += " em " + alvo.getNome() + " (" + danoAprox + " dmg)";
-                if (!alvo.estaVivo()) msg += " 💀";
-            }
-            logCombate.add(msg);
+        if (!aliadosAguardandoAcao.isEmpty()) {
+            estadoAtual = EstadoBatalha.PLANEJAMENTO_JOGADOR;
         } else {
-            logCombate.add(agente.getNome() + " mirou em " + alvo.getNome()
-                    + ", mas ele já foi derrotado!");
+            estadoAtual = EstadoBatalha.PLANEJAMENTO_INIMIGOS;
+            processarAcoesInimigos(); // Pula direto se não houver aliados vivos (embora já seria derrota)
         }
     }
 
-    private void executarTurnoInimigo(Personagem inimigo) {
-        List<Habilidade> habs = inimigo.getHabilidades();
-        if (habs.isEmpty()) {
-            logCombate.add(inimigo.getNome() + " passa o turno.");
+    public Personagem getAliadoAguardandoAcao() {
+        if (!aliadosAguardandoAcao.isEmpty()) {
+            return aliadosAguardandoAcao.get(0);
+        }
+        return null;
+    }
+
+    public void registrarAcaoJogador(Habilidade habilidade, Personagem alvo) {
+        if (estadoAtual != EstadoBatalha.PLANEJAMENTO_JOGADOR)
             return;
+
+        Personagem aliado = getAliadoAguardandoAcao();
+        if (aliado != null) {
+            acoesPlanejadas.put(aliado, new AcaoPlanejada(habilidade, alvo));
+            aliadosAguardandoAcao.remove(0);
+            System.out.println("Ação registrada para: " + aliado.getNome());
         }
 
-        Habilidade hab = habs.get(random.nextInt(habs.size()));
+        if (aliadosAguardandoAcao.isEmpty()) {
+            estadoAtual = EstadoBatalha.PLANEJAMENTO_INIMIGOS;
+            processarAcoesInimigos();
+        }
+    }
 
-        if (hab.getTipo() == TipoHabilidade.CURA || hab.getTipo() == TipoHabilidade.DEFESA) {
-            // Inimigo se cura ou cura outro inimigo
-            List<Inimigo> inimigosVivos = getInimigosVivos();
-            if (!inimigosVivos.isEmpty()) {
-                executarAcao(inimigo, hab, inimigosVivos.get(random.nextInt(inimigosVivos.size())));
+    public void processarAcoesInimigos() {
+        if (estadoAtual != EstadoBatalha.PLANEJAMENTO_INIMIGOS)
+            return;
+
+        for (Personagem inimigo : inimigos) {
+            if (inimigo.getVidaAtual() > 0) {
+                List<Habilidade> habs = inimigo.getHabilidades();
+                if (!habs.isEmpty()) {
+                    Habilidade habEscolhida = habs.get(random.nextInt(habs.size()));
+
+                    List<Personagem> alvos = new ArrayList<>();
+                    if (habEscolhida.getTipo() == entidades.TipoHabilidade.CURA
+                            || habEscolhida.getTipo() == entidades.TipoHabilidade.DEFESA) {
+                        for (Personagem p : inimigos)
+                            if (p.getVidaAtual() > 0)
+                                alvos.add(p);
+                    } else {
+                        for (Personagem p : aliados)
+                            if (p.getVidaAtual() > 0)
+                                alvos.add(p);
+                    }
+
+                    Personagem alvEscolhido = null;
+                    if (!alvos.isEmpty()) {
+                        alvEscolhido = alvos.get(random.nextInt(alvos.size()));
+                    }
+
+                    acoesPlanejadas.put(inimigo, new AcaoPlanejada(habEscolhida, alvEscolhido));
+                    System.out.println("Inimigo " + inimigo.getNome() + " planejou sua ação.");
+                }
             }
-        } else {
-            List<Aliado> aliadosVivos = getAliadosVivos();
-            if (!aliadosVivos.isEmpty()) {
-                executarAcao(inimigo, hab, aliadosVivos.get(random.nextInt(aliadosVivos.size())));
+        }
+        estadoAtual = EstadoBatalha.EXECUCAO_TURNOS;
+    }
+
+    public Personagem executarProximaAcao() {
+        if (estadoAtual != EstadoBatalha.EXECUCAO_TURNOS)
+            return null;
+
+        Personagem personagemDaVez = filaDeTurnos.obterProximoPersonagem();
+
+        if (personagemDaVez == null) {
+            verificarVitoriaOuDerrota();
+            if (estadoAtual != EstadoBatalha.VITORIA && estadoAtual != EstadoBatalha.DERROTA) {
+                iniciarNovoTurno();
+            }
+            return null;
+        }
+
+        if (personagemDaVez.getVidaAtual() > 0) {
+            AcaoPlanejada acao = acoesPlanejadas.get(personagemDaVez);
+            if (acao != null && acao.habilidade != null && acao.alvo != null) {
+                if (acao.alvo.getVidaAtual() > 0 || acao.habilidade.getTipo() == entidades.TipoHabilidade.CURA) {
+                    System.out.println("[" + personagemDaVez.getNome() + " usa " + acao.habilidade.getNome() + " em "
+                            + acao.alvo.getNome() + "]");
+                    acao.habilidade.executarAcao(acao.alvo);
+                } else {
+                    System.out
+                            .println("[" + personagemDaVez.getNome() + " tenta atacar, mas o alvo já foi derrotado!]");
+                }
             }
         }
+
+        verificarVitoriaOuDerrota();
+        return personagemDaVez;
     }
 
-    // ──────────────────────────────────────────────────────────────────────────
-    // Verificação de fim de batalha
-    // ──────────────────────────────────────────────────────────────────────────
+    public void verificarVitoriaOuDerrota() {
+        boolean aliadosVivos = false;
+        for (Personagem aliado : aliados) {
+            if (aliado.getVidaAtual() > 0) {
+                aliadosVivos = true;
+                break;
+            }
+        }
 
-    private boolean verificarFimBatalha() {
-        if (getAliadosVivos().isEmpty()) {
-            batalhaEncerrada = true;
-            vitoria          = false;
-            logCombate.add("💀 Derrota! Todos os aliados caíram em batalha.");
-            return true;
+        boolean inimigosVivos = false;
+        for (Personagem inimigo : inimigos) {
+            if (inimigo.getVidaAtual() > 0) {
+                inimigosVivos = true;
+                break;
+            }
         }
-        if (getInimigosVivos().isEmpty()) {
-            batalhaEncerrada = true;
-            vitoria          = true;
-            logCombate.add("🏆 Vitória! Todos os inimigos foram derrotados!");
-            return true;
+
+        if (!aliadosVivos) {
+            System.out.println("\nDerrota! Todos os aliados caíram.");
+            estadoAtual = EstadoBatalha.DERROTA;
+        } else if (!inimigosVivos) {
+            System.out.println("\nVitória! Inimigos derrotados.");
+            estadoAtual = EstadoBatalha.VITORIA;
+            recompensa();
         }
-        return false;
     }
 
-    // ──────────────────────────────────────────────────────────────────────────
-    // Getters para TelaBatalha
-    // ──────────────────────────────────────────────────────────────────────────
-
-    /** Aliado cuja vez é no momento (aguarda input). Null se for turno de inimigo ou batalha encerrada. */
-    public Personagem getPersonagemAtivo() { return personagemAtivo; }
-
-    public boolean isBatalhaEncerrada()    { return batalhaEncerrada; }
-    public boolean isVitoria()             { return vitoria; }
-
-    /** Log textual das últimas ações — exibido no painel lateral da TelaBatalha. */
-    public List<String> getLogCombate()    { return logCombate; }
-
-    /** Todos os aliados (vivos e mortos). */
-    public List<Aliado> getAliados()       { return aliados; }
-
-    /** Todos os inimigos (vivos e mortos). */
-    public List<Inimigo> getInimigos()     { return inimigos; }
-
-    /** Apenas aliados ainda vivos. */
-    public List<Aliado> getAliadosVivos() {
-        List<Aliado> vivos = new ArrayList<>();
-        if (aliados == null) return vivos;
-        for (Aliado a : aliados) {
-            if (a.estaVivo()) vivos.add(a);
+    public void recompensa() {
+        int dinheiroTotal = 0;
+        int xpTotal = 0;
+        ArrayList<Inimigo> oponentes;
+        for (Personagem inimigo : inimigos) {
+            if (inimigo instanceof Inimigo oponente) {
+                oponentes.add(oponente);
+            }
         }
-        return vivos;
+        for (Inimigo oponente : oponentes) {
+            dinheiroTotal += oponente.getRecompensa().getDinheiroGanhado();
+            xpTotal += oponente.getRecompensa().getExperienciaGanhada();
+        }
+
+        int xpDividido = xpTotal / aliados.size();
+
+        ArrayList<Aliado> amigos;
+        for (Personagem aliado : aliados) {
+            if (aliado instanceof Aliado amigo) {
+                amigos.add(amigo);
+            }
+        }
+        for (Aliado amigo : amigos) {
+            amigo.addXp(xpDividido);
+        }
+        tripulacao.receberDinheiro(dinheiroTotal);
     }
 
-    /** Apenas inimigos ainda vivos. */
-    public List<Inimigo> getInimigosVivos() {
-        List<Inimigo> vivos = new ArrayList<>();
-        if (inimigos == null) return vivos;
-        for (Inimigo i : inimigos) {
-            if (i.estaVivo()) vivos.add(i);
-        }
-        return vivos;
+    public EstadoBatalha getEstadoAtual() {
+        return estadoAtual;
+    }
+
+    public ArrayList<Personagem> getAliados() {
+        return aliados;
+    }
+
+    public ArrayList<Personagem> getInimigos() {
+        return inimigos;
     }
 }
