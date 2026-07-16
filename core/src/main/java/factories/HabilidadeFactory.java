@@ -103,7 +103,7 @@ public class HabilidadeFactory {
     }
 
     public static Habilidade criarEspecialMomonosuke(Aliado p) {
-        return new Habilidade("Rugido do Dragão", TipoHabilidade.DANO, p.getVidaMaxima() * 0.3f);
+        return new Habilidade("Rugido do Dragao", TipoHabilidade.DANO, p.getVidaMaxima() * 0.3f);
     }
 
     public static Habilidade criarEspecialBonClay(Aliado p) {
@@ -122,4 +122,19 @@ public class HabilidadeFactory {
         return new Habilidade("Sulong", TipoHabilidade.DANO, p.getVidaMaxima() * 0.3f);
     }
 
+    public static Habilidade criarGolpeConcentrado(Aliado p) {
+        return new Habilidade("Golpe Concentrado", TipoHabilidade.DANO, p.getVidaMaxima() * 0.4f);
+    }
+
+    public static Habilidade criarPosturaDefensiva(Aliado p) {
+        return new Habilidade("Postura Defensiva", TipoHabilidade.DEFESA, 0.4f, true);
+    }
+
+    public static Habilidade criarFolegoExtra(Aliado p) {
+        return new Habilidade("Folego Extra", TipoHabilidade.CURA, p.getVidaMaxima() * 0.4f, true);
+    }
+
+    public static Habilidade criarAtaqueSupremo(Aliado p) {
+        return new Habilidade("Ataque Supremo", TipoHabilidade.DANO, p.getVidaMaxima() * 1.2f);
+    }
 }

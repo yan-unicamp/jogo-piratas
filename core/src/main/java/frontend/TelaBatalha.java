@@ -300,7 +300,7 @@ public class TelaBatalha implements Screen {
         
         uiTable.add(logLabel).pad(10).row();
         
-        // Painel inferior (botões)
+        // Painel inferior (botoes)
         Table controlPanel = new Table();
         if (desenharBotoes) {
             Personagem aliadoVez = gerenciador.getAliadoAguardandoAcao();
@@ -400,7 +400,7 @@ public class TelaBatalha implements Screen {
                 break;
                 
             case PLANEJAMENTO_INIMIGOS:
-                // automático
+                // automatico
                 break;
 
             case EXECUCAO_TURNOS:
@@ -410,7 +410,7 @@ public class TelaBatalha implements Screen {
                     Personagem quemAgiu = gerenciador.prepararProximaAcao();
                     if (quemAgiu != null) {
                         animando = true;
-                        // Não mostramos nada no log na preparação, conforme pedido pelo usuário
+                        // Nao mostramos nada no log na preparacao, conforme pedido pelo usuario
                         // ou podemos deixar vazio
                         
                         AcaoPlanejada acao = gerenciador.getUltimaAcaoExecutada();
@@ -509,7 +509,7 @@ public class TelaBatalha implements Screen {
                 
             case DERROTA:
                 if (delayAcumulado == 0) {
-                    logLabel.setText("Sua tripulação foi derrotada... Game Over.");
+                    logLabel.setText("Sua tripulacao foi derrotada... Game Over.");
                     uiTable.clear();
                     
                     Table lossTable = new Table();

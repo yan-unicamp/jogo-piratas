@@ -8,16 +8,16 @@ import com.badlogic.gdx.graphics.Pixmap;
 import com.badlogic.gdx.graphics.Texture;
 
 /**
- * Carregador lazy de texturas com fallback automático.
+ * Carregador lazy de texturas com fallback automatico.
  *
  * Uso:
  *   Texture bg  = assets.getTextura("backgrounds/arlong_park.png");
  *   Texture img = assets.getTextura("inimigos/bosses/buggy.png");
  *
- * Se o arquivo não existir na pasta assets/, retorna uma textura
- * colorida de placeholder (cinza escuro) para o jogo não travar.
+ * Se o arquivo nao existir na pasta assets/, retorna uma textura
+ * colorida de placeholder (cinza escuro) para o jogo nao travar.
  *
- * Deve ser instanciado APÓS LibGDX.create() (contexto OpenGL ativo).
+ * Deve ser instanciado APOS LibGDX.create() (contexto OpenGL ativo).
  * Chamar dispose() ao encerrar o jogo para liberar as texturas.
  */
 public class Assets {
@@ -41,9 +41,9 @@ public class Assets {
     }
 
     /**
-     * Retorna a textura para o caminho dado (relativo à pasta assets/).
+     * Retorna a textura para o caminho dado (relativo A  pasta assets/).
      * Carrega na primeira chamada e armazena em cache.
-     * Se o arquivo não existir, retorna o placeholder.
+     * Se o arquivo nao existir, retorna o placeholder.
      */
     public Texture getTextura(String caminho) {
         if (caminho == null || caminho.isEmpty()) return placeholder;
@@ -56,7 +56,7 @@ public class Assets {
                 return t;
             }
         } catch (Exception e) {
-            Gdx.app.log("Assets", "Falha ao carregar: " + caminho + " — " + e.getMessage());
+            Gdx.app.log("Assets", "Falha ao carregar: " + caminho + " - " + e.getMessage());
         }
 
         // Salva o placeholder no cache para evitar tentativas repetidas
@@ -65,13 +65,13 @@ public class Assets {
     }
 
     /**
-     * Atalho para textura de Luffy — tenta o caminho novo e cai de volta
+     * Atalho para textura de Luffy - tenta o caminho novo e cai de volta
      * para o arquivo legado na raiz de assets/.
      */
     public Texture getLuffy() {
         Texture t = getTextura("personagens/chapeu_de_palha/luffy.png");
         if (t == placeholder) {
-            t = getTextura("luffy.png"); // arquivo já existente antes da refatoração
+            t = getTextura("luffy.png"); // arquivo ja existente antes da refatoracao
         }
         return t;
     }

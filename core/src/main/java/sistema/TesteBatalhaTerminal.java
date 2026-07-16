@@ -48,7 +48,7 @@ public class TesteBatalhaTerminal {
                         System.out.println((i + 1) + " - " + hab.getNome() + " (" + hab.getTipo() + " - Efeito: " + hab.getValorPoder() + ")");
                     }
                     
-                    System.out.print("Opção: ");
+                    System.out.print("Opcao: ");
                     int opcao = scanner.nextInt();
                     Habilidade habEscolhida = aliadoVez.getHabilidades().get(opcao - 1);
                     
@@ -63,7 +63,7 @@ public class TesteBatalhaTerminal {
                     break;
 
                 case PLANEJAMENTO_INIMIGOS:
-                    // Inimigos são automáticos, a máquina de estados andará pra frente
+                    // Inimigos sao automaticos, a maquina de estados andara pra frente
                     break;
 
                 case EXECUCAO_TURNOS:
@@ -77,9 +77,9 @@ public class TesteBatalhaTerminal {
                     break;
 
                 case VITORIA:
-                    System.out.println("\n--- VITÓRIA! ---");
+                    System.out.println("\n--- VITORIA! ---");
                     System.out.println("XP do " + heroi.getNome() + ": " + heroi.getExperiencia());
-                    System.out.println("Dinheiro da Tripulação: " + tripulacao.getDinheiro());
+                    System.out.println("Dinheiro da Tripulacao: " + tripulacao.getDinheiro());
                     jogoRodando = false;
                     break;
 
@@ -93,7 +93,7 @@ public class TesteBatalhaTerminal {
             }
         }
         
-        System.out.println("Simulação Encerrada.");
+        System.out.println("Simulacao Encerrada.");
         scanner.close();
     }
 }

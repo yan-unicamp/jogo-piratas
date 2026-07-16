@@ -6,7 +6,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Classe utilitária para inicializar a lista de ilhas do jogo,
+ * Classe utilitaria para inicializar a lista de ilhas do jogo,
  * agora utilizando a IlhaFactory e o IlhaEnum.
  */
 public class ProgressaoIlhas {

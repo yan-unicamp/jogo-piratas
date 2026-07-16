@@ -5,10 +5,10 @@ import java.util.List;
 /**
  * Representa uma Ilha do Grand Line.
  *
- * Cada ilha contém uma lista de {@link Rodada} em sequência:
+ * Cada ilha contem uma lista de {@link Rodada} em sequencia:
  * tipicamente 1-2 rodadas de capangas + 1 rodada de Boss.
- * Ao vencer todas as rodadas, a ilha fica marcada como concluída
- * e a próxima ilha é desbloqueada.
+ * Ao vencer todas as rodadas, a ilha fica marcada como concluida
+ * e a proxima ilha e desbloqueada.
  *
  * bgKey: caminho relativo do background, ex: "backgrounds/arlong_park.png"
  */
@@ -27,15 +27,15 @@ public class Ilha {
         this.rodadas = rodadas;
     }
 
-    /** @return A rodada atual, ou null se a ilha já foi concluída. */
+    /** @return A rodada atual, ou null se a ilha ja foi concluida. */
     public Rodada getRodadaAtual() {
         if (rodadaAtualIdx >= rodadas.size()) return null;
         return rodadas.get(rodadaAtualIdx);
     }
 
     /**
-     * Avança para a próxima rodada.
-     * @return true se a ilha foi completamente vencida (não há mais rodadas).
+     * Avanca para a proxima rodada.
+     * @return true se a ilha foi completamente vencida (nao ha mais rodadas).
      */
     public boolean avancarRodada() {
         rodadaAtualIdx++;
@@ -46,13 +46,13 @@ public class Ilha {
         return false;
     }
 
-    /** Reseta o progresso da ilha para começar do início (rodada 0). */
+    /** Reseta o progresso da ilha para comecar do inicio (rodada 0). */
     public void resetar() {
         rodadaAtualIdx = 0;
         completa       = false;
     }
 
-    // ── Getters ───────────────────────────────────────────────────────────────
+    // -- Getters ---------------------------------------------------------------
     public String      getNome()           { return nome; }
     public String      getBgKey()          { return bgKey; }
     public List<Rodada> getRodadas()       { return rodadas; }

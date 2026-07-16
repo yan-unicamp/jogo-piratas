@@ -9,10 +9,10 @@ public class ItemFactory {
     }
 
     public static Item criarCarneComOsso() {
-        return new Item("Carne com Osso", "A comida favorita do capitão. Restaura 100 de vida", 45, 100);
+        return new Item("Carne com Osso", "A comida favorita do capitao. Restaura 100 de vida", 45, 100);
     }
     
     public static Item criarKitMedico() {
-        return new Item("Kit Médico do Chopper", "Cura avançada, restaura 150 de vida", 80, 150);
+        return new Item("Kit Medico do Chopper", "Cura avancada, restaura 150 de vida", 80, 150);
     }
 }

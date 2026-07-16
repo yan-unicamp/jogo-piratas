@@ -24,8 +24,8 @@ public class Tripulacao {
 
     /**
      * Recebe a recompensa de uma batalha vencida.
-     * O ouro é somado ao total da tripulação.
-     * A XP é dividida igualmente entre os aliados VIVOS.
+     * O ouro e somado ao total da tripulacao.
+     * A XP e dividida igualmente entre os aliados VIVOS.
      */
     public void receberRecompensa(List<Inimigo> inimigosDerrotados) {
         int totalDinheiro = 0;
@@ -52,7 +52,7 @@ public class Tripulacao {
 
     /**
      * Tenta gastar uma quantia de dinheiro.
-     * @return true se o saldo era suficiente e o valor foi debitado; false caso contrário.
+     * @return true se o saldo era suficiente e o valor foi debitado; false caso contrario.
      */
     public boolean gastarDinheiro(int valor) {
         if (this.dinheiro >= valor) {
@@ -107,14 +107,14 @@ public class Tripulacao {
     public List<Aliado> getAliadosAtivos() { return aliadosAtivos; }
     public List<Item> getItens() { return itens; }
 
-    /** @return lista apenas com aliados que ainda têm vida (estaVivo() == true). */
+    /** @return lista apenas com aliados que ainda tem vida (estaVivo() == true). */
     public List<Aliado> getAliadosVivos() {
         return aliados.stream()
                 .filter(Aliado::estaVivo)
                 .collect(Collectors.toList());
     }
 
-    /** @return true se todos os aliados foram derrotados — condição de Game Over. */
+    /** @return true se todos os aliados foram derrotados - condicao de Game Over. */
     public boolean todosMortos() {
         return aliados.stream().noneMatch(Aliado::estaVivo);
     }

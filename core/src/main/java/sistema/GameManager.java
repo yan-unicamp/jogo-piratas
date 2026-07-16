@@ -19,7 +19,7 @@ import java.util.Random;
 
 /**
  * Gerenciador principal do jogo.
- * Contém a lógica de fluxo do jogo (estados, transições).
+ * Contem a logica de fluxo do jogo (estados, transicoes).
  */
 public class GameManager {
     private Mapa mapa;
@@ -107,12 +107,12 @@ public class GameManager {
             int etapaAtual = mapa.getEtapaAtual();
             int capituloAtual = mapa.getCapitulo();
             
-            System.out.println("\n--- MAPA: Capítulo " + capituloAtual + " - Etapa " + etapaAtual + " ---");
+            System.out.println("\n--- MAPA: Capitulo " + capituloAtual + " - Etapa " + etapaAtual + " ---");
             
             NoMapa proximoNo = null;
 
             if (etapaAtual == 0) {
-                System.out.println("Atenção! O Capitão Morgan Mão de Machado bloqueia o seu caminho!");
+                System.out.println("Atencao! O Capitao Morgan Mao de Machado bloqueia o seu caminho!");
                 Inimigo chefe = PersonagemFactory.criarMorgan(capituloAtual).comAliado(PersonagemFactory.criarZoro());
                 proximoNo = new NoBatalhaCanonica(chefe);
                 
@@ -120,7 +120,7 @@ public class GameManager {
                 try { System.in.read(); } catch (Exception e) {} 
             } 
             else if (etapaAtual == 3 || etapaAtual == 6) {
-                System.out.println("Atenção! Uma batalha formidável se aproxima...");
+                System.out.println("Atencao! Uma batalha formidavel se aproxima...");
                 Inimigo chefe = sortearBossCanonico(capituloAtual);
                 proximoNo = new NoBatalhaCanonica(chefe);
                 
@@ -136,7 +136,7 @@ public class GameManager {
                 try { System.in.read(); } catch (Exception e) {} 
             } 
             else {
-                List<String> opcoesDesc = Arrays.asList("Batalha Genérica", "Loja", "Descanso");
+                List<String> opcoesDesc = Arrays.asList("Batalha Generica", "Loja", "Descanso");
                 List<Inimigo> inimigosBasicos = new ArrayList<>();
                 inimigosBasicos.add(PersonagemFactory.criarMarinheiro(etapaAtual));
                 List<NoMapa> opcoesObj = Arrays.asList(new NoBatalha(inimigosBasicos), new NoBatalha(inimigosBasicos), new NoBatalha(inimigosBasicos));
@@ -144,7 +144,7 @@ public class GameManager {
                 List<Integer> indices = Arrays.asList(0, 1, 2);
                 Collections.shuffle(indices);
                 
-                System.out.println("Para qual Nó você quer ir?");
+                System.out.println("Para qual No voce quer ir?");
                 for (int i = 0; i < 3; i++) {
                     System.out.println((i + 1) + ". " + opcoesDesc.get(indices.get(i)));
                 }
@@ -166,7 +166,7 @@ public class GameManager {
                 if (escolha >= 1 && escolha <= 3) {
                     proximoNo = opcoesObj.get(indices.get(escolha - 1));
                 } else {
-                    System.out.println("Opção inválida!");
+                    System.out.println("Opcao invalida!");
                     continue;
                 }
             }
@@ -181,7 +181,7 @@ public class GameManager {
                 
                 gerenciadorDeBatalha.iniciarCombate(aliados, inimigos, tripulacao);
             } else if (proximoNo instanceof NoBatalhaCanonica) {
-                System.out.println("\n[!] ENTRANDO EM COMBATE CANÔNICO [!]");
+                System.out.println("\n[!] ENTRANDO EM COMBATE CANONICO [!]");
                 ArrayList<Personagem> aliados = new ArrayList<>(tripulacao.getAliadosAtivos());
                 ArrayList<Personagem> inimigos = new ArrayList<>(((NoBatalhaCanonica) proximoNo).getInimigos());
                 
@@ -207,8 +207,8 @@ public class GameManager {
 
     private void acharOnePiece() {
         System.out.println("\n=============================================");
-        System.out.println("PARABÉNS! VOCÊ ACHOU O ONE PIECE!");
-        System.out.println("Você concluiu sua jornada e se tornou o Rei dos Piratas!");
+        System.out.println("PARABENS! VOCE ACHOU O ONE PIECE!");
+        System.out.println("Voce concluiu sua jornada e se tornou o Rei dos Piratas!");
         System.out.println("=============================================\n");
         this.jogoRodando = false;
     }
@@ -224,13 +224,13 @@ public class GameManager {
     }
 
     public void mudarEstado(EstadoJogo novoEstado) {
-        System.out.println("Transição de estado: " + novoEstado);
+        System.out.println("Transicao de estado: " + novoEstado);
         // Em um sistema puramente terminal, apenas registramos o estado.
         // Quando a GUI voltar, aqui ficaria a troca de Telas.
     }
 
     public void setTelaAtual(com.badlogic.gdx.Screen screen) {
-        // Método de compatibilidade se necessário
+        // Metodo de compatibilidade se necessario
     }
 
     public boolean gastarOuro(int valor) {
@@ -248,7 +248,7 @@ public class GameManager {
             prepararBatalha(rodada.getInimigos());
             mudarEstado(EstadoJogo.BATALHA);
         } else {
-            System.out.println("A ilha " + ilha.getNome() + " já está concluída!");
+            System.out.println("A ilha " + ilha.getNome() + " ja esta concluida!");
         }
     }
 }

@@ -51,7 +51,7 @@ public class TelaInicio implements Screen {
         title.setColor(Color.GOLD);
         title.setAlignment(Align.center);
 
-        Label lblEnter = new Label("Pressione ENTER para iniciar", skin);
+        Label lblEnter = new Label("Pressione ENTER ou CLIQUE para iniciar", skin);
         lblEnter.setFontScale(1.2f);
         lblEnter.setAlignment(Align.center);
 
@@ -63,7 +63,7 @@ public class TelaInicio implements Screen {
     @Override
     public void render(float delta) {
         // Handle input
-        if (Gdx.input.isKeyJustPressed(Input.Keys.ENTER)) {
+        if (Gdx.input.isKeyJustPressed(Input.Keys.ENTER) || Gdx.input.justTouched()) {
             if (jogo.gameManager == null) {
                 jogo.gameManager = new GameManager(); // Initialize the game manager
             }

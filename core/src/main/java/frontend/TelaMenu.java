@@ -16,14 +16,14 @@ import sistema.GameManager;
 import sistema.JogoPiratas;
 
 /**
- * Tela de Menu Principal — funcional com botões Scene2D.
+ * Tela de Menu Principal - funcional com botoes Scene2D.
  *
- * Botões:
- * "Novo Jogo" → gameManager.iniciarJogo() → muda para MAPA
- * "Sair" → gameManager.encerrarJogo() → fecha o app
+ * Botoes:
+ * "Novo Jogo" -> gameManager.iniciarJogo() -> muda para MAPA
+ * "Sair" -> gameManager.encerrarJogo() -> fecha o app
  *
- * TODO Fase 5: Substituir SkinPadrao por skin temático (piratas),
- * adicionar logo animado, música de fundo, efeitos de hover.
+ * TODO Fase 5: Substituir SkinPadrao por skin tematico (piratas),
+ * adicionar logo animado, musica de fundo, efeitos de hover.
  */
 public class TelaMenu implements Screen {
 
@@ -49,7 +49,7 @@ public class TelaMenu implements Screen {
         tabela.setFillParent(true);
         tabela.center();
 
-        // Título
+        // Titulo
         Label titulo = new Label("JOGO PIRATAS", skin);
         titulo.setFontScale(2.5f, 2.5f);
         titulo.setColor(Color.GOLD);
@@ -57,7 +57,7 @@ public class TelaMenu implements Screen {
         Label subtitulo = new Label("Uma aventura no Grand Line", skin);
         subtitulo.setColor(Color.LIGHT_GRAY);
 
-        // Botões
+        // Botoes
         TextButton btnNovoJogo = new TextButton("  Novo Jogo  ", skin);
         TextButton btnSair = new TextButton("     Sair    ", skin);
 
@@ -86,7 +86,7 @@ public class TelaMenu implements Screen {
 
     @Override
     public void render(float delta) {
-        Gdx.gl.glClearColor(0f, 0f, 0.12f, 1f); // azul-noite marítimo
+        Gdx.gl.glClearColor(0f, 0f, 0.12f, 1f); // azul-noite maritimo
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
         stage.act(delta);
         stage.draw();

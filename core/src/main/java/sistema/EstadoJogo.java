@@ -1,14 +1,14 @@
 package sistema;
 
 /**
- * Enum que representa os estados possíveis do jogo.
+ * Enum que representa os estados possiveis do jogo.
  *
- * O GameManager usa este enum como máquina de estados para controlar
- * qual Screen do LibGDX está ativa em cada momento.
+ * O GameManager usa este enum como maquina de estados para controlar
+ * qual Screen do LibGDX esta ativa em cada momento.
  *
- * Fluxo típico:
- * MENU → MAPA → BATALHA → MAPA → LOJA → MAPA → ... → GAME_OVER
- * ↘ DESCANSO ↗
+ * Fluxo tipico:
+ * MENU -> MAPA -> BATALHA -> MAPA -> LOJA -> MAPA -> ... -> GAME_OVER
+ * a†˜ DESCANSO a†—
  */
 public enum EstadoJogo {
     MENU,

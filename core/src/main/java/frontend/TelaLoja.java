@@ -47,7 +47,7 @@ public class TelaLoja implements Screen {
         root.setBackground(new TextureRegionDrawable(SkinPadrao.textura1x1(0.05f, 0.1f, 0.1f, 1f)));
         stage.addActor(root);
 
-        // Título e Ouro
+        // Titulo e Ouro
         Label titulo = new Label("Mercador Ambulante", skin);
         titulo.setFontScale(1.8f);
         titulo.setColor(Color.GOLD);
@@ -57,7 +57,7 @@ public class TelaLoja implements Screen {
         ouroLbl.setColor(Color.YELLOW);
         root.add(ouroLbl).padBottom(20).row();
 
-        // Botões de compras simples
+        // Botoes de compras simples
         TextButton btnCura = new TextButton("Comprar Refeicao Especial (Cura 100% HP) - 50 Ouro", skin);
         btnCura.addListener(new ClickListener() {
             @Override
@@ -69,7 +69,7 @@ public class TelaLoja implements Screen {
                         }
                     }
                     atualizarOuro();
-                    System.out.println("Tripulação curada!");
+                    System.out.println("Tripulacao curada!");
                 }
             }
         });
@@ -84,11 +84,35 @@ public class TelaLoja implements Screen {
                         aliado.curar(aliado.getVidaMaxima());
                     }
                     atualizarOuro();
-                    System.out.println("Tripulação revivida e curada!");
+                    System.out.println("Tripulacao revivida e curada!");
                 }
             }
         });
-        root.add(btnReviver).width(600).height(50).padBottom(30).row();
+        root.add(btnReviver).width(600).height(50).padBottom(10).row();
+
+        TextButton btnXp = new TextButton("Comprar Experiencia (100 XP para todos) - 50 Ouro", skin);
+        btnXp.addListener(new ClickListener() {
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
+                if (gameManager.gastarOuro(50)) {
+                    java.util.List<sistema.HabilidadePendente> pendentes = new java.util.ArrayList<>();
+                    for (Aliado aliado : gameManager.getTripulacao().getAliados()) {
+                        java.util.List<entidades.Habilidade> destravadas = aliado.ganharExperiencia(100);
+                        for (entidades.Habilidade h : destravadas) {
+                            pendentes.add(new sistema.HabilidadePendente(aliado, h));
+                        }
+                    }
+                    atualizarOuro();
+                    System.out.println("Experiencia comprada!");
+                    if (!pendentes.isEmpty()) {
+                        jogo.setScreen(new frontend.TelaAprenderHabilidade(jogo, gameManager, pendentes, () -> {
+                            jogo.setScreen(new TelaLoja(jogo, gameManager, ilhaAtual));
+                        }));
+                    }
+                }
+            }
+        });
+        root.add(btnXp).width(600).height(50).padBottom(30).row();
 
         TextButton btnSair = new TextButton("Sair da Loja", skin);
         btnSair.getLabel().setColor(Color.LIGHT_GRAY);

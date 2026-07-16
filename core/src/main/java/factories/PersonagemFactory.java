@@ -6,6 +6,14 @@ import progressao.Recompensa;
 
 
 public class PersonagemFactory {
+    private static Aliado adicionarHabilidadesDeNivel(Aliado a) {
+        if (!a.temHabilidadeDesbloqueavelNoNivel(3)) a.adicionarHabilidadeDesbloqueavel(3, () -> HabilidadeFactory.criarGolpeConcentrado(a));
+        if (!a.temHabilidadeDesbloqueavelNoNivel(5)) a.adicionarHabilidadeDesbloqueavel(5, () -> HabilidadeFactory.criarPosturaDefensiva(a));
+        if (!a.temHabilidadeDesbloqueavelNoNivel(7)) a.adicionarHabilidadeDesbloqueavel(7, () -> HabilidadeFactory.criarFolegoExtra(a));
+        if (!a.temHabilidadeDesbloqueavelNoNivel(10)) a.adicionarHabilidadeDesbloqueavel(10, () -> HabilidadeFactory.criarAtaqueSupremo(a));
+        return a;
+    }
+
 
     public static Aliado criarLuffy() {
         Aliado luffy = new Aliado("Luffy", 100, 0.9f, 10, 1, 0, "luffy.png"); // nome, vida, defesa, iniciativa, nivel, xp
@@ -16,7 +24,7 @@ public class PersonagemFactory {
         luffy.adicionarHabilidadeDesbloqueavel(2, () -> HabilidadeFactory.criarEspecialGatling(luffy));
         luffy.adicionarHabilidadeDesbloqueavel(3, () -> HabilidadeFactory.criarEspecialGearSecond(luffy));
         
-        return luffy;
+        return adicionarHabilidadesDeNivel(luffy);
     }
 
     public static Aliado criarZoro() {
@@ -25,7 +33,7 @@ public class PersonagemFactory {
         zoro.adicionarHabilidade(HabilidadeFactory.criarDefesaHaki());
         zoro.adicionarHabilidade(HabilidadeFactory.criarEspecialZoro(zoro));
         
-        return zoro;
+        return adicionarHabilidadesDeNivel(zoro);
     }
 
     public static Aliado criarNami() {
@@ -34,7 +42,7 @@ public class PersonagemFactory {
         nami.adicionarHabilidade(HabilidadeFactory.criarEspecialNami(nami));
         nami.adicionarHabilidade(HabilidadeFactory.criarCurarAliadosBandagem());
         
-        return nami;
+        return adicionarHabilidadesDeNivel(nami);
     }
 
     public static Aliado criarSanji() {
@@ -43,7 +51,7 @@ public class PersonagemFactory {
         sanji.adicionarHabilidade(HabilidadeFactory.criarDefesaHaki());
         sanji.adicionarHabilidade(HabilidadeFactory.criarEspecialSanji(sanji));
         
-        return sanji;
+        return adicionarHabilidadesDeNivel(sanji);
     }
 
 
@@ -52,7 +60,7 @@ public class PersonagemFactory {
         robin.adicionarHabilidade(HabilidadeFactory.criarAtaqueBasico(robin));
         robin.adicionarHabilidade(HabilidadeFactory.criarEspecialRobin(robin));
         
-        return robin;
+        return adicionarHabilidadesDeNivel(robin);
     }
 
     public static Aliado criarUsopp() {
@@ -60,7 +68,7 @@ public class PersonagemFactory {
         usopp.adicionarHabilidade(HabilidadeFactory.criarAtaqueBasico(usopp));
         usopp.adicionarHabilidade(HabilidadeFactory.criarEspecialUsopp(usopp));
         
-        return usopp;
+        return adicionarHabilidadesDeNivel(usopp);
     }
 
     public static Aliado criarChopper() {
@@ -69,7 +77,7 @@ public class PersonagemFactory {
         chopper.adicionarHabilidade(HabilidadeFactory.criarCuraChopper(chopper));
         chopper.adicionarHabilidade(HabilidadeFactory.criarEspecialChopper(chopper));
         
-        return chopper;
+        return adicionarHabilidadesDeNivel(chopper);
     }
 
     public static Aliado criarBrook() {
@@ -77,7 +85,7 @@ public class PersonagemFactory {
         brook.adicionarHabilidade(HabilidadeFactory.criarAtaqueBasico(brook));
         brook.adicionarHabilidade(HabilidadeFactory.criarEspecialBrook(brook));
         
-        return brook;
+        return adicionarHabilidadesDeNivel(brook);
     }
 
     public static Aliado criarFranky() {
@@ -85,7 +93,7 @@ public class PersonagemFactory {
         franky.adicionarHabilidade(HabilidadeFactory.criarAtaqueBasico(franky));
         franky.adicionarHabilidade(HabilidadeFactory.criarEspecialFranky(franky));
         
-        return franky;
+        return adicionarHabilidadesDeNivel(franky);
     }
 
     public static Aliado criarJinbe() {
@@ -94,7 +102,7 @@ public class PersonagemFactory {
         jinbe.adicionarHabilidade(HabilidadeFactory.criarDefesaHaki());
         jinbe.adicionarHabilidade(HabilidadeFactory.criarEspecialJinbe(jinbe));
         
-        return jinbe;
+        return adicionarHabilidadesDeNivel(jinbe);
     }
 
     public static Aliado criarVivi(){
@@ -102,7 +110,7 @@ public class PersonagemFactory {
         vivi.adicionarHabilidade(HabilidadeFactory.criarAtaqueBasico(vivi));
         vivi.adicionarHabilidade(HabilidadeFactory.criarEspecialVivi(vivi));
         
-        return vivi;
+        return adicionarHabilidadesDeNivel(vivi);
     }
 
     public static Aliado criarCarrot(){
@@ -110,7 +118,7 @@ public class PersonagemFactory {
         carrot.adicionarHabilidade(HabilidadeFactory.criarAtaqueBasico(carrot));
         carrot.adicionarHabilidade(HabilidadeFactory.criarEspecialCarrot(carrot));
         
-        return carrot;
+        return adicionarHabilidadesDeNivel(carrot);
     }
 
     public static Aliado criarYamato() {
@@ -119,7 +127,7 @@ public class PersonagemFactory {
         yamato.adicionarHabilidade(HabilidadeFactory.criarDefesaHaki());
         yamato.adicionarHabilidade(HabilidadeFactory.criarEspecialYamato(yamato));
         
-        return yamato;
+        return adicionarHabilidadesDeNivel(yamato);
     }
 
     public static Aliado criarLaw(){
@@ -128,7 +136,7 @@ public class PersonagemFactory {
         law.adicionarHabilidade(HabilidadeFactory.criarDefesaHaki());
         law.adicionarHabilidade(HabilidadeFactory.criarEspecialLaw(law));
         
-        return law;
+        return adicionarHabilidadesDeNivel(law);
     }
 
     public static Aliado criarRebecca(){
@@ -136,7 +144,7 @@ public class PersonagemFactory {
         rebecca.adicionarHabilidade(HabilidadeFactory.criarAtaqueBasico(rebecca));
         rebecca.adicionarHabilidade(HabilidadeFactory.criarEspecialRebecca(rebecca));
         
-        return rebecca;
+        return adicionarHabilidadesDeNivel(rebecca);
     }
 
     public static Aliado criarVegapunk(){
@@ -144,7 +152,7 @@ public class PersonagemFactory {
         vegapunk.adicionarHabilidade(HabilidadeFactory.criarAtaqueBasico(vegapunk));
         vegapunk.adicionarHabilidade(HabilidadeFactory.criarEspecialVegapunk(vegapunk));
         
-        return vegapunk;
+        return adicionarHabilidadesDeNivel(vegapunk);
     }
 
     public static Aliado criarMomonosuke(){
@@ -152,7 +160,7 @@ public class PersonagemFactory {
         momonosuke.adicionarHabilidade(HabilidadeFactory.criarAtaqueBasico(momonosuke));
         momonosuke.adicionarHabilidade(HabilidadeFactory.criarEspecialMomonosuke(momonosuke));
         
-        return momonosuke;
+        return adicionarHabilidadesDeNivel(momonosuke);
     }
 
     public static Aliado criarBonClay(){
@@ -160,7 +168,7 @@ public class PersonagemFactory {
         bonClay.adicionarHabilidade(HabilidadeFactory.criarAtaqueBasico(bonClay));
         bonClay.adicionarHabilidade(HabilidadeFactory.criarEspecialBonClay(bonClay));
         
-        return bonClay;
+        return adicionarHabilidadesDeNivel(bonClay);
     }
 
     public static Aliado criarKoby(){
@@ -168,7 +176,7 @@ public class PersonagemFactory {
         koby.adicionarHabilidade(HabilidadeFactory.criarAtaqueBasico(koby));
         koby.adicionarHabilidade(HabilidadeFactory.criarEspecialKoby(koby));
         
-        return koby;
+        return adicionarHabilidadesDeNivel(koby);
     }
 
     public static Aliado criarCarue(){
@@ -176,7 +184,7 @@ public class PersonagemFactory {
         carue.adicionarHabilidade(HabilidadeFactory.criarAtaqueBasico(carue));
         carue.adicionarHabilidade(HabilidadeFactory.criarEspecialCarue(carue));
         
-        return carue;
+        return adicionarHabilidadesDeNivel(carue);
     }
 
     public static Aliado criarAce(){
@@ -184,7 +192,7 @@ public class PersonagemFactory {
         ace.adicionarHabilidade(HabilidadeFactory.criarAtaqueBasico(ace));
         ace.adicionarHabilidade(HabilidadeFactory.criarEspecialAce(ace));
         
-        return ace;
+        return adicionarHabilidadesDeNivel(ace);
     }
 
     public static Aliado criarLoki(){
@@ -193,7 +201,7 @@ public class PersonagemFactory {
         loki.adicionarHabilidade(HabilidadeFactory.criarEspecialLoki(loki));
         loki.adicionarHabilidade(HabilidadeFactory.criarDefesaHaki());
         
-        return loki;
+        return adicionarHabilidadesDeNivel(loki);
     }
     
     public static Inimigo criarMarinheiro(int nivel) { // (ta escalonando com o nivel atual, pode trocar dps)
@@ -219,7 +227,7 @@ public class PersonagemFactory {
     }
 
     public static Inimigo criarMorgan(int nivel){
-        Inimigo morgan = new Inimigo("Morgan Mão de Machado", 300, 0.6f, 20, 500, 200, "morgan.png");
+        Inimigo morgan = new Inimigo("Morgan Mao de Machado", 300, 0.6f, 20, 500, 200, "morgan.png");
         morgan.adicionarHabilidade(HabilidadeFactory.criarAtaqueBasicoInimigo(nivel));
         morgan.adicionarHabilidade(HabilidadeFactory.criarDefesaHaki());
         
@@ -420,3 +428,5 @@ public class PersonagemFactory {
     }
 
 }
+
+

@@ -30,14 +30,14 @@ import sistema.GameManager;
 import sistema.JogoPiratas;
 
 /**
- * Tela do Mapa do Grand Line — exibe todas as ilhas em ordem.
+ * Tela do Mapa do Grand Line - exibe todas as ilhas em ordem.
  *
  * Status por ilha:
- *   ✅ Concluída — card esmaecido, não clicável
- *   ⚔  Disponível — próxima ilha não concluída, clicável (destaque dourado)
- *   🔒 Bloqueada — ilhas além da atual, não clicáveis
+ *   [v] Concluida - card esmaecido, nao clicavel
+ *   [ ]  Disponivel - proxima ilha nao concluida, clicavel (destaque dourado)
+ *   [x] Bloqueada - ilhas alem da atual, nao clicaveis
  *
- * HUD superior: ouro, HP total da tripulação, nº de ilhas concluídas.
+ * HUD superior: ouro, HP total da tripulacao, nu de ilhas concluidas.
  */
 public class TelaMapa implements Screen {
 
@@ -54,9 +54,9 @@ public class TelaMapa implements Screen {
         this.gameManager = gameManager;
     }
 
-    // ──────────────────────────────────────────────────────────────────────────
+    // --------------------------------------------------------------------------
     // Lifecycle
-    // ──────────────────────────────────────────────────────────────────────────
+    // --------------------------------------------------------------------------
 
     @Override
     public void show() {
@@ -74,7 +74,7 @@ public class TelaMapa implements Screen {
         stack.setFillParent(true);
         stage.addActor(stack);
 
-        // Fundo: thumbnail da primeira opção disponível
+        // Fundo: thumbnail da primeira opcao disponivel
         if (!opcoes.isEmpty()) {
             Texture bgTex = assets.getTextura(opcoes.get(0).getBgKey());
             Image bgImg = new Image(new TextureRegionDrawable(new TextureRegion(bgTex)));
@@ -90,37 +90,37 @@ public class TelaMapa implements Screen {
         Table ui = montarUI(assets, concluidas, opcoes, etapa);
         stack.add(ui);
 
-        // Overlay de confirmação
+        // Overlay de confirmacao
         overlayConfirmacao = new Table();
         overlayConfirmacao.setFillParent(true);
         overlayConfirmacao.setVisible(false);
         stack.add(overlayConfirmacao);
 
-        // Se houver apenas 1 opção, pular para a confirmação
+        // Se houver apenas 1 opcao, pular para a confirmacao
         if (opcoes.size() == 1) {
             mostrarConfirmacao(opcoes.get(0), assets);
         }
     }
 
-    // ──────────────────────────────────────────────────────────────────────────
+    // --------------------------------------------------------------------------
     // Montagem da UI
-    // ──────────────────────────────────────────────────────────────────────────
+    // --------------------------------------------------------------------------
 
     private Table montarUI(Assets assets, List<Ilha> concluidas, List<Ilha> opcoes, int etapa) {
         Table ui = new Table();
         ui.setFillParent(true);
         ui.top().pad(16);
 
-        // ── HUD ───────────────────────────────────────────────────────────
-        ui.add(montarHud(etapa, 6)).fillX().expandX().padBottom(16).row(); // 5 genéricas + boss
+        // -- HUD -----------------------------------------------------------
+        ui.add(montarHud(etapa, 6)).fillX().expandX().padBottom(16).row(); // 5 genericas + boss
 
-        // ── Título ─────────────────────────────────────────────────────────
-        Label titulo = new Label("Grand Line — Escolha sua próxima ilha", skin);
+        // -- Titulo ---------------------------------------------------------
+        Label titulo = new Label("Grand Line - Escolha sua proxima ilha", skin);
         titulo.setFontScale(1.4f);
         titulo.setColor(Color.GOLD);
         ui.add(titulo).padBottom(12).row();
 
-        // ── Lista de ilhas em ScrollPane ───────────────────────────────────
+        // -- Lista de ilhas em ScrollPane -----------------------------------
         Table listaIlhas = montarListaIlhas(assets, concluidas, opcoes);
         ScrollPane scroll = new ScrollPane(listaIlhas, skin);
         scroll.setFadeScrollBars(false);
@@ -169,21 +169,21 @@ public class TelaMapa implements Screen {
         lista.top();
         lista.pad(0, 20, 20, 20);
 
-        // Histórico de ilhas concluídas
+        // Historico de ilhas concluidas
         for (int i = 0; i < concluidas.size(); i++) {
             Ilha ilha = concluidas.get(i);
             Table card = criarCardIlha(assets, ilha, i, true, false, false);
             lista.add(card).fillX().expandX().padBottom(10).row();
         }
 
-        // Título para as opções atuais (se houver mais de uma)
+        // Titulo para as opcoes atuais (se houver mais de uma)
         if (opcoes.size() > 1) {
             Label opcoesTitulo = new Label("--- Caminhos Disponiveis ---", skin);
             opcoesTitulo.setColor(Color.LIGHT_GRAY);
             lista.add(opcoesTitulo).padTop(10).padBottom(10).row();
         }
 
-        // Opções disponíveis
+        // Opcoes disponiveis
         for (int j = 0; j < opcoes.size(); j++) {
             Ilha ilha = opcoes.get(j);
             Table card = criarCardIlha(assets, ilha, concluidas.size() + j, false, true, false);
@@ -206,13 +206,13 @@ public class TelaMapa implements Screen {
                 SkinPadrao.textura1x1(bg[0], bg[1], bg[2], bg[3])));
         card.pad(10, 14, 10, 14);
 
-        // Thumbnail do background da ilha (pequeno, à esquerda)
+        // Thumbnail do background da ilha (pequeno, A  esquerda)
         Texture thumb = assets.getTextura(ilha.getBgKey());
         Image thumbImg = new Image(new TextureRegionDrawable(new TextureRegion(thumb)));
         thumbImg.setScaling(Scaling.fit);
         card.add(thumbImg).width(80).height(50).padRight(14);
 
-        // Informações
+        // Informacoes
         Table info = new Table();
         info.left();
 
@@ -242,9 +242,9 @@ public class TelaMapa implements Screen {
 
         card.add(info).expandX().fillX();
 
-        // Botão (só para ilha disponível)
+        // Botao (so para ilha disponivel)
         if (atual) {
-            TextButton btn = new TextButton("Entrar ▶", skin);
+            TextButton btn = new TextButton("Entrar >", skin);
             btn.getLabel().setColor(Color.GOLD);
             final Ilha ilhaFinal = ilha;
             btn.addListener(new ClickListener() {
@@ -255,7 +255,7 @@ public class TelaMapa implements Screen {
             });
             card.add(btn).width(140).height(46).padLeft(10);
         } else {
-            card.add().width(140); // espaço vazio para alinhar
+            card.add().width(140); // espaco vazio para alinhar
         }
 
         return card;
@@ -312,7 +312,7 @@ public class TelaMapa implements Screen {
         overlayConfirmacao.setVisible(true);
     }
 
-    // ──────────────────────────────────────────────────────────────────────────
+    // --------------------------------------------------------------------------
 
     @Override
     public void render(float delta) {

@@ -9,7 +9,8 @@ public enum IlhaEnum {
     ARLONG_PARK(RegiaoIlha.EAST_BLUE),
     LOGUETOWN(RegiaoIlha.EAST_BLUE),
 
-    // Paraíso
+    // Paraiso
+    WHISKY_PEAK(RegiaoIlha.PARAISO),
     LITTLE_GARDEN(RegiaoIlha.PARAISO),
     ILHA_DRUM(RegiaoIlha.PARAISO),
     ALABASTA(RegiaoIlha.PARAISO),
