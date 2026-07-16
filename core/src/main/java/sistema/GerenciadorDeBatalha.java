@@ -224,6 +224,12 @@ public class GerenciadorDeBatalha {
 
     }
 
+    private int xpGanhoBatalha = 0;
+    private int dinheiroGanhoBatalha = 0;
+    
+    public int getXpGanho() { return xpGanhoBatalha; }
+    public int getDinheiroGanho() { return dinheiroGanhoBatalha; }
+
     public void recompensa() {
         int dinheiroTotal = 0;
         int xpTotal = 0;
@@ -237,6 +243,9 @@ public class GerenciadorDeBatalha {
             dinheiroTotal += oponente.getRecompensa().getDinheiroGanhado();
             xpTotal += oponente.getRecompensa().getExperienciaGanhada();
         }
+
+        this.xpGanhoBatalha = xpTotal;
+        this.dinheiroGanhoBatalha = dinheiroTotal;
 
         int xpDividido = xpTotal / aliados.size();
 
