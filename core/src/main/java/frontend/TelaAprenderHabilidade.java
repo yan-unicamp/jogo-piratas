@@ -72,12 +72,12 @@ public class TelaAprenderHabilidade implements Screen {
         lblTitulo.setColor(Color.GOLD);
         lblTitulo.setFontScale(1.5f);
         
-        Label lblDesc = new Label("Porém, " + aliado.getNome() + " já conhece 4 habilidades.\nQual habilidade deseja esquecer?", skin);
+        Label lblDesc = new Label("Porem, " + aliado.getNome() + " ja conhece 4 habilidades.\nQual habilidade deseja esquecer?", skin);
 
         uiTable.add(lblTitulo).padBottom(10).row();
         uiTable.add(lblDesc).padBottom(30).row();
 
-        // Botões das habilidades atuais
+        // Botoes das habilidades atuais
         for (Habilidade habAtual : aliado.getHabilidades()) {
             TextButton btnHab = new TextButton("Esquecer: " + habAtual.getNome(), skin);
             btnHab.addListener(new ClickListener() {
@@ -91,7 +91,7 @@ public class TelaAprenderHabilidade implements Screen {
             uiTable.add(btnHab).size(350, 50).padBottom(10).row();
         }
 
-        // Botão para cancelar
+        // Botao para cancelar
         TextButton btnCancelar = new TextButton("Desistir de aprender " + novaHab.getNome(), skin);
         btnCancelar.getLabel().setColor(Color.SALMON);
         btnCancelar.addListener(new ClickListener() {

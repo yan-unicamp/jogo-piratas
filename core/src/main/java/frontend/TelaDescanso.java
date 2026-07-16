@@ -26,11 +26,11 @@ import sistema.GameManager;
 import sistema.JogoPiratas;
 
 /**
- * Interface gráfica do Nó de Descanso.
+ * Interface grafica do No de Descanso.
  *
- * Exibe cards com HP atual/máximo de cada aliado vivo.
- * Botão "Descansar" cura 30% do HP máximo de cada aliado e avança para o mapa.
- * Botão "Continuar" avança para o mapa sem curar.
+ * Exibe cards com HP atual/maximo de cada aliado vivo.
+ * Botao "Descansar" cura 30% do HP maximo de cada aliado e avanca para o mapa.
+ * Botao "Continuar" avanca para o mapa sem curar.
  */
 public class TelaDescanso implements Screen {
 
@@ -62,12 +62,12 @@ public class TelaDescanso implements Screen {
         raiz.setFillParent(true);
         raiz.center();
 
-        // --- Título ---
-        Label titulo = new Label("Nó de Descanso", skin);
+        // --- Titulo ---
+        Label titulo = new Label("No de Descanso", skin);
         titulo.setFontScale(2f);
         titulo.setColor(new Color(0.95f, 0.80f, 0.40f, 1f)); // dourado quente
 
-        Label subtitulo = new Label("Sua tripulação pode recuperar forças antes de continuar.", skin);
+        Label subtitulo = new Label("Sua tripulacao pode recuperar forcas antes de continuar.", skin);
         subtitulo.setColor(Color.LIGHT_GRAY);
 
         raiz.add(titulo).padBottom(8).row();
@@ -83,13 +83,13 @@ public class TelaDescanso implements Screen {
         }
         raiz.add(cardsTable).padBottom(50).row();
 
-        // --- Cálculo da cura para o label informativo ---
+        // --- Calculo da cura para o label informativo ---
         int curaPorAliado = calcularCura(aliados);
-        Label infoLabel = new Label("Descansar recupera ~" + curaPorAliado + " HP por aliado (30% do máximo).", skin);
+        Label infoLabel = new Label("Descansar recupera ~" + curaPorAliado + " HP por aliado (30% do maximo).", skin);
         infoLabel.setColor(new Color(0.6f, 0.9f, 0.6f, 1f));
         raiz.add(infoLabel).padBottom(30).row();
 
-        // --- Botões ---
+        // --- Botoes ---
         Table botoesTable = new Table();
 
         TextButton btnDescansar  = new TextButton("  Descansar  ", skin);
@@ -122,12 +122,12 @@ public class TelaDescanso implements Screen {
         stage.addActor(raiz);
     }
 
-    /** Monta um card visual para um aliado com nome, nível e barra de HP. */
+    /** Monta um card visual para um aliado com nome, nivel e barra de HP. */
     private Table criarCardAliado(Aliado aliado) {
         Table card = new Table();
         card.setBackground(new TextureRegionDrawable(texturaCor(0.10f, 0.07f, 0.02f, 0.85f)));
 
-        // Nome e nível
+        // Nome e nivel
         Label nomeLabel = new Label(aliado.getNome(), skin);
         nomeLabel.setColor(Color.WHITE);
 
@@ -156,7 +156,7 @@ public class TelaDescanso implements Screen {
         return card;
     }
 
-    /** Calcula um valor representativo de cura (usa o primeiro aliado como referência). */
+    /** Calcula um valor representativo de cura (usa o primeiro aliado como referencia). */
     private int calcularCura(List<Aliado> aliados) {
         if (aliados.isEmpty()) return 0;
         return (int)(aliados.get(0).getVidaMaxima() * CURA_PERCENTUAL);
@@ -171,12 +171,12 @@ public class TelaDescanso implements Screen {
 
         ProgressBar.ProgressBarStyle barStyle = new ProgressBar.ProgressBarStyle();
         barStyle.background  = new TextureRegionDrawable(fundoBarra);
-        barStyle.knob        = new TextureRegionDrawable(texturaCor(0f, 0f, 0f, 0f));  // invisível
+        barStyle.knob        = new TextureRegionDrawable(texturaCor(0f, 0f, 0f, 0f));  // invisivel
         barStyle.knobBefore  = new TextureRegionDrawable(preenchimento);
         s.add("hp", barStyle);
     }
 
-    /** Cria uma Texture 1×1 de cor sólida. */
+    /** Cria uma Texture 1A—1 de cor solida. */
     private static Texture texturaCor(float r, float g, float b, float a) {
         Pixmap px = new Pixmap(1, 1, Pixmap.Format.RGBA8888);
         px.setColor(r, g, b, a);
@@ -188,7 +188,7 @@ public class TelaDescanso implements Screen {
 
     @Override
     public void render(float delta) {
-        Gdx.gl.glClearColor(0.10f, 0.06f, 0.01f, 1f); // sépia quente de acampamento
+        Gdx.gl.glClearColor(0.10f, 0.06f, 0.01f, 1f); // sepia quente de acampamento
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
         stage.act(delta);
         stage.draw();

@@ -18,10 +18,10 @@ import java.util.ArrayList;
  */
 public class JogoPiratas extends Game {
 
-    /** SpriteBatch compartilhado entre todas as telas (evita criar vários) */
+    /** SpriteBatch compartilhado entre todas as telas (evita criar varios) */
     public SpriteBatch batch;
 
-    /** Fonte padrão compartilhada */
+    /** Fonte padrao compartilhada */
     public BitmapFont font;
     
     /** Gerenciador de Assets (texturas) */
@@ -33,14 +33,14 @@ public class JogoPiratas extends Game {
     @Override
     public void create() {
         batch = new SpriteBatch();
-        font = new BitmapFont(); // fonte padrão do libGDX
+        font = new BitmapFont(); // fonte padrao do libGDX
         font.setColor(Color.WHITE);
         
-        // Filtro linear para a fonte não ficar pixelada ao esticar
+        // Filtro linear para a fonte nao ficar pixelada ao esticar
         font.getRegion().getTexture().setFilter(com.badlogic.gdx.graphics.Texture.TextureFilter.Linear, com.badlogic.gdx.graphics.Texture.TextureFilter.Linear);
         font.getData().setScale(1.4f);
         
-        // Espaçar mais as letras (aumenta a distância horizontal entre elas)
+        // Espacar mais as letras (aumenta a distancia horizontal entre elas)
         for (com.badlogic.gdx.graphics.g2d.BitmapFont.Glyph[] page : font.getData().glyphs) {
             if (page != null) {
                 for (com.badlogic.gdx.graphics.g2d.BitmapFont.Glyph glyph : page) {

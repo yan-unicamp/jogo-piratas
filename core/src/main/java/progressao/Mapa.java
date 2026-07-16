@@ -46,8 +46,8 @@ public class Mapa {
 
         if (etapaAtual == 0) {
             if (capitulo == 1) opcoesAtuais.add(IlhaFactory.criar(IlhaEnum.SHELLS_TOWN));
-            else if (capitulo == 2) opcoesAtuais.add(IlhaFactory.criar(IlhaEnum.LOGUETOWN));
-            else if (capitulo == 3) opcoesAtuais.add(IlhaFactory.criar(IlhaEnum.THRILLER_BARK));
+            else if (capitulo == 2) opcoesAtuais.add(IlhaFactory.criar(IlhaEnum.WHISKY_PEAK));
+            else if (capitulo == 3) opcoesAtuais.add(IlhaFactory.criar(IlhaEnum.ILHA_HOMENS_PEIXE));
             else opcoesAtuais.add(IlhaFactory.criar(IlhaEnum.PUNK_HAZARD));
         } else if (etapaAtual == 3) {
             if (capitulo == 1) opcoesAtuais.add(IlhaFactory.criar(IlhaEnum.VILA_SYRUP));
@@ -65,7 +65,7 @@ public class Mapa {
             else if (capitulo == 3) opcoesAtuais.add(IlhaFactory.criar(IlhaEnum.WHOLE_CAKE));
             else opcoesAtuais.add(IlhaFactory.criar(IlhaEnum.ELBAPH));
         } else {
-            // Aleatório (1, 2, 4, 5, 7, 8)
+            // Aleatorio (1, 2, 4, 5, 7, 8)
             int nNodes = 3;
             for (int i = 0; i < nNodes; i++) {
                 int tipo = random.nextInt(10);
@@ -74,7 +74,7 @@ public class Mapa {
                 } else if (tipo < 4) {
                     opcoesAtuais.add(new IlhaDescanso());
                 } else {
-                    // Genérica
+                    // Generica
                     List<IlhasGenericasEnum> disponiveis = new ArrayList<>();
                     for (IlhasGenericasEnum ig : IlhasGenericasEnum.values()) {
                         if (ig.getCapitulo() == capitulo || ig.getCapitulo() == 0) {
@@ -98,18 +98,20 @@ public class Mapa {
         if (this.etapaAtual > MAX_ETAPAS_POR_CAPITULO) {
             this.etapaAtual = 0;
             this.capitulo++;
+            this.ilhasConcluidas.clear();
         }
 
         gerarProximosNos();
     }
 
-    // Compatibilidade com lógica legada de GameManager
+    // Compatibilidade com logica legada de GameManager
     public void avancarParaNo(NoMapa proximo) { 
         this.noAtual = proximo;
         this.etapaAtual++;
         if (this.etapaAtual > MAX_ETAPAS_POR_CAPITULO) {
             this.etapaAtual = 0;
             this.capitulo++;
+            this.ilhasConcluidas.clear();
         }
     }
 
@@ -117,7 +119,7 @@ public class Mapa {
     public int getCapitulo() { return capitulo; }
     public NoMapa getNoAtual() { return noAtual; }
 
-    // Retorna a fusão do histórico com as opções atuais para a TelaMapa legada (se necessário)
+    // Retorna a fusao do historico com as opcoes atuais para a TelaMapa legada (se necessario)
     public java.util.List<Ilha> getIlhas() { 
         List<Ilha> todas = new ArrayList<>(ilhasConcluidas);
         todas.addAll(opcoesAtuais);

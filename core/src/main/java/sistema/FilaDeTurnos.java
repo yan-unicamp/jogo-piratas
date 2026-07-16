@@ -6,11 +6,11 @@ import java.util.Comparator;
 import entidades.Personagem;
 
 /**
- * Mantém a ordem de turnos dos participantes do combate.
+ * Mantem a ordem de turnos dos participantes do combate.
  *
- * Os personagens são ordenados de forma decrescente por iniciativa:
+ * Os personagens sao ordenados de forma decrescente por iniciativa:
  * quem tem maior iniciativa age primeiro.
- * Ao término de cada "rodada" (todos agiram), a fila é reiniciada.
+ * Ao termino de cada "rodada" (todos agiram), a fila e reiniciada.
  */
 public class FilaDeTurnos {
     private final ArrayList<Personagem> fila;
@@ -21,12 +21,12 @@ public class FilaDeTurnos {
         this.espera = new ArrayList<>();
     }
 
-    /** Adiciona um personagem à fila de turnos. */
+    /** Adiciona um personagem A  fila de turnos. */
     public void adicionar(Personagem p) {
         fila.add(p);
     }
 
-    /** Ordena a fila por iniciativa (decrescente — maior age primeiro). */
+    /** Ordena a fila por iniciativa (decrescente - maior age primeiro). */
     public void ordenarPorIniciativa() {
         fila.sort(Comparator.comparing(Personagem::getIniciativa).reversed());
     }
@@ -42,7 +42,7 @@ public class FilaDeTurnos {
     }
 
     /**
-     * Retorna o próximo personagem da fila.
+     * Retorna o proximo personagem da fila.
      * Quando a fila se esgota, reseta-a e retorna null (sinal de nova rodada).
      */
     public Personagem obterProximoPersonagem() {
@@ -56,7 +56,7 @@ public class FilaDeTurnos {
         return prox;
     }
 
-    /** Remove um personagem de todas as listas (ex: após morte definitiva). */
+    /** Remove um personagem de todas as listas (ex: apos morte definitiva). */
     public void remover(Personagem p) {
         fila.remove(p);
         espera.remove(p);

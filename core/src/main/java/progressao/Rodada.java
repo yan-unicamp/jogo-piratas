@@ -7,8 +7,8 @@ import entidades.Inimigo;
  * Representa um encontro de batalha dentro de uma Ilha.
  *
  * Cada ilha tem N rodadas: geralmente 2 rodadas de capangas
- * seguidas de 1 rodada de boss. A última rodada (isBoss=true)
- * é o combate final que desbloqueia a próxima ilha.
+ * seguidas de 1 rodada de boss. A ultima rodada (isBoss=true)
+ * e o combate final que desbloqueia a proxima ilha.
  */
 public class Rodada {
 

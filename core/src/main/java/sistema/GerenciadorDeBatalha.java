@@ -80,14 +80,14 @@ public class GerenciadorDeBatalha {
             estadoAtual = EstadoBatalha.PLANEJAMENTO_JOGADOR;
         } else {
             estadoAtual = EstadoBatalha.PLANEJAMENTO_INIMIGOS;
-            processarAcoesInimigos(); // Pula direto se não houver aliados vivos (embora já seria derrota)
+            processarAcoesInimigos(); // Pula direto se nao houver aliados vivos (embora ja seria derrota)
         }
 
         if (!aliadosAguardandoAcao.isEmpty()) {
             estadoAtual = EstadoBatalha.PLANEJAMENTO_JOGADOR;
         } else {
             estadoAtual = EstadoBatalha.PLANEJAMENTO_INIMIGOS;
-            processarAcoesInimigos(); // Pula direto se não houver aliados vivos (embora já seria derrota)
+            processarAcoesInimigos(); // Pula direto se nao houver aliados vivos (embora ja seria derrota)
         }
     }
 
@@ -106,7 +106,7 @@ public class GerenciadorDeBatalha {
         if (aliado != null) {
             acoesPlanejadas.put(aliado, new AcaoPlanejada(habilidade, alvo));
             aliadosAguardandoAcao.remove(0);
-            System.out.println("Ação registrada para: " + aliado.getNome());
+            System.out.println("Acao registrada para: " + aliado.getNome());
         }
         if (aliadosAguardandoAcao.isEmpty()) {
             estadoAtual = EstadoBatalha.PLANEJAMENTO_INIMIGOS;
@@ -141,7 +141,7 @@ public class GerenciadorDeBatalha {
                         alvEscolhido = alvos.get(random.nextInt(alvos.size()));
                     }
                     acoesPlanejadas.put(inimigo, new AcaoPlanejada(habEscolhida, alvEscolhido));
-                    System.out.println("Inimigo " + inimigo.getNome() + " planejou sua ação.");
+                    System.out.println("Inimigo " + inimigo.getNome() + " planejou sua acao.");
                 }
             }
         }
@@ -217,11 +217,11 @@ public class GerenciadorDeBatalha {
         }
 
         if (!aliadosVivos) {
-            System.out.println("\nDerrota! Todos os aliados caíram.");
+            System.out.println("\nDerrota! Todos os aliados cairam.");
             estadoAtual = EstadoBatalha.DERROTA;
             for (Personagem aliado : aliados) aliado.resetarDefesa();
         } else if (!inimigosVivos) {
-            System.out.println("\nVitória! Inimigos derrotados.");
+            System.out.println("\nVitoria! Inimigos derrotados.");
             estadoAtual = EstadoBatalha.VITORIA;
             for (Personagem aliado : aliados) aliado.resetarDefesa();
             recompensa();

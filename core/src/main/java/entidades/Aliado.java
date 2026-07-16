@@ -14,6 +14,10 @@ public class Aliado extends Personagem {
     public void adicionarHabilidadeDesbloqueavel(int nivelDesbloqueio, java.util.function.Supplier<Habilidade> supplier) {
         habilidadesDesbloqueaveis.put(nivelDesbloqueio, supplier);
     }
+    
+    public boolean temHabilidadeDesbloqueavelNoNivel(int nivel) {
+        return habilidadesDesbloqueaveis.containsKey(nivel);
+    }
 
     public int getNivel() { return nivel; }
     public int getExperiencia() { return experiencia; }
@@ -35,7 +39,7 @@ public class Aliado extends Personagem {
         if (this.experiencia >= 100 * this.nivel) {
             this.experiencia -= 100 * this.nivel;
             this.nivel++;
-            System.out.println(this.getNome() + " subiu para o nível " + this.nivel + "!");
+            System.out.println(this.getNome() + " subiu para o nivel " + this.nivel + "!");
             subirStatus();
             return true;
         }

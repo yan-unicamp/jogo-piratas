@@ -12,7 +12,7 @@ public class NoBatalhaCanonica implements NoMapa {
     public NoBatalhaCanonica(Inimigo chefeSorteado) {
         this.inimigos = new ArrayList<>();
         this.inimigos.add(chefeSorteado);
-        // Opcional: adicionar lacaios genéricos caso queira que o boss venha acompanhado.
+        // Opcional: adicionar lacaios genericos caso queira que o boss venha acompanhado.
     }
 
     public ArrayList<Inimigo> getInimigos() {
@@ -21,7 +21,7 @@ public class NoBatalhaCanonica implements NoMapa {
 
     @Override
     public void entrarNo(GameManager controle) { 
-        // A lógica de combate será acionada pelo GameManager, que checará o tipo do nó
-        // e usará getInimigos().
+        // A logica de combate sera acionada pelo GameManager, que checara o tipo do no
+        // e usara getInimigos().
     }
 }

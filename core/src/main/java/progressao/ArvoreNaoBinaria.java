@@ -60,7 +60,7 @@ public class ArvoreNaoBinaria {
     }
 
     /**
-     * Define como os eventos serão distribuídos para os nós com base na profundidade.
+     * Define como os eventos serao distribuidos para os nos com base na profundidade.
      */
     public List<TipoNo> escolherEvento(int profundidadeAtual) {
         List<TipoNo> opcoes = new ArrayList<>();
@@ -72,7 +72,7 @@ public class ArvoreNaoBinaria {
         } else if (profundidadeAtual == 0) {
             opcoes.add(TipoNo.BATALHA);
         } else if (profundidadeAtual == profundidadeMax) {
-            // Se profundidadeMax for 9, já cai acima, mas mantendo para outros tamanhos
+            // Se profundidadeMax for 9, ja cai acima, mas mantendo para outros tamanhos
             opcoes.add(TipoNo.BATALHA_FINAL);
         } else if (profundidadeAtual == profundidadeMax - 1) {
             opcoes.add(TipoNo.DESCANSO);
@@ -106,7 +106,7 @@ public class ArvoreNaoBinaria {
     }
 
     /**
-     * Cria a árvore completa recursivamente, distribuindo os nós pelas regras.
+     * Cria a arvore completa recursivamente, distribuindo os nos pelas regras.
      */
     public NoDaArvore criarArvore(int profundidade, TipoNo tipoAtual) {
         NoMapa noMapa = instanciarNo(tipoAtual, profundidade);
@@ -117,12 +117,12 @@ public class ArvoreNaoBinaria {
             return node;
         }
 
-        // Gera a lista de eventos possíveis para os filhos do nó atual
+        // Gera a lista de eventos possiveis para os filhos do no atual
         List<TipoNo> tiposFilhos = escolherEvento(profundidade + 1);
 
         // Cria os filhos
         for (int i = 0; i < quantidadeFilhos; i++) {
-            // Escolhe um tipo aleatório entre as opções permitidas para aquele nível
+            // Escolhe um tipo aleatorio entre as opcoes permitidas para aquele nivel
             TipoNo tipoSorteado = tiposFilhos.get(random.nextInt(tiposFilhos.size()));
             NoDaArvore novoFilho = criarArvore(profundidade + 1, tipoSorteado);
             node.adicionarFilho(novoFilho);
@@ -132,7 +132,7 @@ public class ArvoreNaoBinaria {
     }
 
     /**
-     * Ponto de entrada para gerar a árvore.
+     * Ponto de entrada para gerar a arvore.
      */
     public NoDaArvore gerarArvore() {
         return criarArvore(0, escolherEvento(0).get(0));

@@ -67,7 +67,7 @@ public class TelaTripulacao implements Screen {
         root.add(scrollLista).width(250).expandY().fillY().pad(20);
         root.add(painelDetalhes).expand().fill().pad(20).row();
 
-        // Botão voltar
+        // Botao voltar
         TextButton btnVoltar = new TextButton("Voltar", skin);
         btnVoltar.addListener(new ClickListener() {
             @Override
@@ -77,7 +77,7 @@ public class TelaTripulacao implements Screen {
         });
         root.add(btnVoltar).width(200).height(50).padBottom(20).colspan(2).row();
 
-        // Mostrar o primeiro por padrão, se existir
+        // Mostrar o primeiro por padrao, se existir
         if (!gameManager.getTripulacao().getAliados().isEmpty()) {
             mostrarDetalhes(gameManager.getTripulacao().getAliados().get(0));
         }
@@ -144,7 +144,7 @@ public class TelaTripulacao implements Screen {
         }
         painelDetalhes.add(habTable).colspan(2).padTop(10).left().row();
 
-        // Botão Convocar / Desconvocar
+        // Botao Convocar / Desconvocar
         final boolean isAtivo = gameManager.getTripulacao().getAliadosAtivos().contains(aliado);
         String txtBotao = isAtivo ? "Desconvocar" : "Convocar";
         TextButton btnConvocar = new TextButton(txtBotao, skin);
