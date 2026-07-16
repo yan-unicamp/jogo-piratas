@@ -90,4 +90,33 @@ public abstract class Personagem {
     public void adicionarHabilidade(Habilidade habilidade) { 
         this.habilidades.add(habilidade);
     }
+    
+    protected com.badlogic.gdx.graphics.Texture texturaCarregada;
+    
+    public com.badlogic.gdx.graphics.Texture getTextura() {
+        if (texturaCarregada != null) return texturaCarregada;
+        if (caminhoImagem == null || caminhoImagem.isEmpty()) return null;
+        
+        String[] possiblePaths = {
+            "personagens/chapeu_de_palha/" + caminhoImagem,
+            "personagens/" + caminhoImagem,
+            "inimigos/" + caminhoImagem,
+            "inimigos/capangas/" + caminhoImagem,
+            caminhoImagem
+        };
+        
+        for (String path : possiblePaths) {
+            if (com.badlogic.gdx.Gdx.files.internal(path).exists()) {
+                texturaCarregada = new com.badlogic.gdx.graphics.Texture(com.badlogic.gdx.Gdx.files.internal(path));
+                return texturaCarregada;
+            }
+        }
+        
+        String placeholderPath = "personagens/aliados_especiais/placeholder.png";
+        if (com.badlogic.gdx.Gdx.files.internal(placeholderPath).exists()) {
+            texturaCarregada = new com.badlogic.gdx.graphics.Texture(com.badlogic.gdx.Gdx.files.internal(placeholderPath));
+            return texturaCarregada;
+        }
+        return null;
+    }
 }

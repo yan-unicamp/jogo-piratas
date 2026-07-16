@@ -80,8 +80,7 @@ public class TelaBatalha implements Screen {
         
         String bgPath = ilhaAtual.getBgKey();
         if (!Gdx.files.internal(bgPath).exists()) {
-            bgPath = "backgrounds/mar.png"; // Fallback para mar genérico
-            if (!Gdx.files.internal(bgPath).exists()) bgPath = "backgrounds/wano.png";
+            bgPath = "backgrounds/dressrosa.png"; 
         }
         bgTexture = new Texture(Gdx.files.internal(bgPath));
         Image bgImage = new Image(bgTexture);
@@ -160,41 +159,6 @@ public class TelaBatalha implements Screen {
         atualizarUI(true);
     }
     
-    private Texture getTexturePersonagem(Personagem p) {
-        String filename = p.getCaminhoImagem();
-        if (textureCache.containsKey(filename)) {
-            return textureCache.get(filename);
-        }
-        
-        String[] possiblePaths = {
-            "personagens/chapeu_de_palha/" + filename,
-            "personagens/" + filename,
-            "inimigos/" + filename,
-            "inimigos/capangas/" + filename,
-            filename
-        };
-        
-        for (String path : possiblePaths) {
-            if (Gdx.files.internal(path).exists()) {
-                Texture tex = new Texture(Gdx.files.internal(path));
-                textureCache.put(filename, tex);
-                return tex;
-            }
-        }
-        
-        String placeholderPath = "personagens/aliados_especiais/placeholder.png";
-        if (Gdx.files.internal(placeholderPath).exists()) {
-            if (!textureCache.containsKey("placeholder")) {
-                textureCache.put("placeholder", new Texture(Gdx.files.internal(placeholderPath)));
-            }
-            Texture tex = textureCache.get("placeholder");
-            textureCache.put(filename, tex);
-            return tex;
-        }
-        
-        textureCache.put(filename, null);
-        return null;
-    }
 
     private void atualizarUI(boolean desenharBotoes) {
         uiTable.clear();
@@ -225,8 +189,10 @@ public class TelaBatalha implements Screen {
                 portraitBox.setBackground(bg);
             }
             
-            Image placeholder = new Image(skin.newDrawable(isActing ? "dark" : "gray"));
-            portraitBox.add(placeholder).size(30, 30).pad(2).row();
+            Texture texP = p.getTextura();
+            Image portrait = texP != null ? new Image(texP) : new Image(skin.newDrawable(isActing ? "dark" : "gray"));
+            portrait.setScaling(com.badlogic.gdx.utils.Scaling.fit);
+            portraitBox.add(portrait).size(40, 40).pad(2).row();
             
             String shortName = p.getNome().split(" ")[0];
             Label nameLbl = new Label(shortName, skin);
@@ -237,12 +203,12 @@ public class TelaBatalha implements Screen {
             timelineTable.add(portraitBox).padRight(5);
         }
         
-        uiTable.add(timelineTable).padTop(10).padBottom(5).row();
+        uiTable.add(timelineTable).padTop(5).padBottom(5).row();
 
         Label titleLabel = new Label(ilhaAtual.getNome() + " - " + rodadaAtual.getDescricao(), skin);
         titleLabel.setColor(Color.ORANGE);
-        titleLabel.setFontScale(2.0f);
-        uiTable.add(titleLabel).padTop(5).padBottom(15).row();
+        titleLabel.setFontScale(1.5f);
+        uiTable.add(titleLabel).padTop(2).padBottom(5).row();
         
         Table battleArea = new Table();
         Table leftColumn = new Table();
@@ -263,33 +229,28 @@ public class TelaBatalha implements Screen {
                 com.badlogic.gdx.scenes.scene2d.ui.ProgressBar hpBar = new com.badlogic.gdx.scenes.scene2d.ui.ProgressBar(0f, (float)aliado.getVidaMaxima(), 1f, false, skin);
                 hpBar.setValue((float)aliado.getVidaAtual());
                 hpBar.setAnimateDuration(0.2f);
-                hpTable.add(hpBar).width(80).height(15).padRight(5);
+                hpTable.add(hpBar).width(80).height(10).padRight(5);
                 hpTable.add(new Label((int)aliado.getVidaAtual() + "/" + (int)aliado.getVidaMaxima(), skin));
                 charTable.add(hpTable).padBottom(5).row();
                 
                 Group group = groupCache.get(aliado);
                 if (group == null) {
-                    Texture tex = getTexturePersonagem(aliado);
-                    Image img;
-                    if (tex != null) {
-                        img = new Image(tex);
-                    } else {
-                        img = new Image(skin.newDrawable("dark"));
-                    }
+                    Texture tex = aliado.getTextura();
+                    Image img = tex != null ? new Image(tex) : new Image(skin.newDrawable("dark"));
                     img.setScaling(com.badlogic.gdx.utils.Scaling.fit);
-                    img.setSize(180, 180);
+                    img.setSize(110, 110);
                     img.setOrigin(Align.center);
                     group = new Group();
-                    group.setSize(180, 180);
+                    group.setSize(110, 110);
                     group.addActor(img);
                     groupCache.put(aliado, group);
                 }
-                charTable.add(group).size(180, 180).row();
+                charTable.add(group).size(110, 110).row();
                 
                 int index = aliados.indexOf(aliado);
-                float padL = (index % 2 == 1) ? 0 : 80;
-                float padR = (index % 2 == 1) ? 80 : 0;
-                leftColumn.add(charTable).pad(5).padLeft(padL).padRight(padR).row();
+                float padL = (index % 2 == 1) ? 0 : 40;
+                float padR = (index % 2 == 1) ? 40 : 0;
+                leftColumn.add(charTable).pad(2).padLeft(padL).padRight(padR).row();
             }
         }
         
@@ -307,33 +268,28 @@ public class TelaBatalha implements Screen {
                 com.badlogic.gdx.scenes.scene2d.ui.ProgressBar hpBar = new com.badlogic.gdx.scenes.scene2d.ui.ProgressBar(0f, (float)ini.getVidaMaxima(), 1f, false, skin);
                 hpBar.setValue((float)ini.getVidaAtual());
                 hpBar.setAnimateDuration(0.2f);
-                hpTable.add(hpBar).width(80).height(15).padRight(5);
+                hpTable.add(hpBar).width(80).height(10).padRight(5);
                 hpTable.add(new Label((int)ini.getVidaAtual() + "/" + (int)ini.getVidaMaxima(), skin));
                 charTable.add(hpTable).padBottom(5).row();
                 
                 Group group = groupCache.get(ini);
                 if (group == null) {
-                    Texture tex = getTexturePersonagem(ini);
-                    Image img;
-                    if (tex != null) {
-                        img = new Image(tex);
-                    } else {
-                        img = new Image(skin.newDrawable("dark"));
-                    }
+                    Texture tex = ini.getTextura();
+                    Image img = tex != null ? new Image(tex) : new Image(skin.newDrawable("dark"));
                     img.setScaling(com.badlogic.gdx.utils.Scaling.fit);
-                    img.setSize(180, 180);
+                    img.setSize(110, 110);
                     img.setOrigin(Align.center);
                     group = new Group();
-                    group.setSize(180, 180);
+                    group.setSize(110, 110);
                     group.addActor(img);
                     groupCache.put(ini, group);
                 }
-                charTable.add(group).size(180, 180).row();
+                charTable.add(group).size(110, 110).row();
                 
                 int index = inimigos.indexOf(ini);
-                float padL = (index % 2 == 1) ? 80 : 0;
-                float padR = (index % 2 == 1) ? 0 : 80;
-                rightColumn.add(charTable).pad(5).padLeft(padL).padRight(padR).row();
+                float padL = (index % 2 == 1) ? 40 : 0;
+                float padR = (index % 2 == 1) ? 0 : 40;
+                rightColumn.add(charTable).pad(2).padLeft(padL).padRight(padR).row();
             }
         }
         
@@ -371,10 +327,26 @@ public class TelaBatalha implements Screen {
                                 }
                             }
                         });
-                        controlPanel.add(btn).size(300, 50).pad(10);
+                        controlPanel.add(btn).size(200, 40).pad(5);
                         buttonCount++;
                         if (buttonCount % 2 == 0) controlPanel.row();
                     }
+                    
+                    TextButton btnDebug = new TextButton("Vencer (Debug)", skin);
+                    btnDebug.getLabel().setColor(Color.RED);
+                    btnDebug.addListener(new ClickListener() {
+                        @Override
+                        public void clicked(InputEvent event, float x, float y) {
+                            for (Personagem ini : inimigos) {
+                                if (ini.estaVivo()) ini.receberDano(ini.getVidaAtual());
+                            }
+                            gerenciador.verificarVitoriaOuDerrota();
+                            atualizarUI(false);
+                        }
+                    });
+                    controlPanel.add(btnDebug).size(200, 40).pad(5);
+                    buttonCount++;
+                    if (buttonCount % 2 == 0) controlPanel.row();
                 } else {
                     boolean isCuraOuDefesa = (habilidadeSelecionada.getTipo() == TipoHabilidade.CURA || habilidadeSelecionada.getTipo() == TipoHabilidade.DEFESA);
                     ArrayList<Personagem> possiveisAlvos = isCuraOuDefesa ? aliados : inimigos;
@@ -394,7 +366,7 @@ public class TelaBatalha implements Screen {
                                     atualizarUI(false);
                                 }
                             });
-                            controlPanel.add(btnAlvo).size(300, 50).pad(10);
+                            controlPanel.add(btnAlvo).size(200, 40).pad(5);
                             buttonCount++;
                             if (buttonCount % 2 == 0) controlPanel.row();
                         }
@@ -408,7 +380,7 @@ public class TelaBatalha implements Screen {
                             atualizarUI(true);
                         }
                     });
-                    controlPanel.add(btnVoltar).size(300, 50).pad(10);
+                    controlPanel.add(btnVoltar).size(200, 40).pad(5);
                 }
             }
         }
@@ -508,10 +480,18 @@ public class TelaBatalha implements Screen {
                         @Override
                         public void clicked(InputEvent event, float x, float y) {
                             java.util.List<sistema.HabilidadePendente> pendentes = gerenciador.getHabilidadesPendentes();
+                            Runnable onComplete = () -> {
+                                if (completa) {
+                                    jogo.setScreen(new frontend.TelaMapa(jogo, gameManager));
+                                } else {
+                                    jogo.setScreen(new frontend.TelaBatalha(jogo, gameManager, ilhaAtual, ilhaAtual.getRodadaAtual()));
+                                }
+                            };
+                            
                             if (!pendentes.isEmpty()) {
-                                jogo.setScreen(new frontend.TelaAprenderHabilidade(jogo, gameManager, pendentes));
+                                jogo.setScreen(new frontend.TelaAprenderHabilidade(jogo, gameManager, pendentes, onComplete));
                             } else {
-                                jogo.setScreen(new frontend.TelaMapa(jogo, gameManager));
+                                onComplete.run();
                             }
                         }
                     });

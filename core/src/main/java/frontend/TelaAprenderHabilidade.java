@@ -30,10 +30,13 @@ public class TelaAprenderHabilidade implements Screen {
     private Skin skin;
     private Table uiTable;
 
-    public TelaAprenderHabilidade(JogoPiratas jogo, GameManager gameManager, List<HabilidadePendente> pendentes) {
+    private Runnable onComplete;
+
+    public TelaAprenderHabilidade(JogoPiratas jogo, GameManager gameManager, List<HabilidadePendente> pendentes, Runnable onComplete) {
         this.jogo = jogo;
         this.gameManager = gameManager;
         this.pendentes = pendentes;
+        this.onComplete = onComplete;
     }
 
     @Override
@@ -53,7 +56,11 @@ public class TelaAprenderHabilidade implements Screen {
         uiTable.clear();
 
         if (pendentes.isEmpty()) {
-            jogo.setScreen(new TelaMapa(jogo, gameManager));
+            if (onComplete != null) {
+                onComplete.run();
+            } else {
+                jogo.setScreen(new TelaMapa(jogo, gameManager));
+            }
             return;
         }
 

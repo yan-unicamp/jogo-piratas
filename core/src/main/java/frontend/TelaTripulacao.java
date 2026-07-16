@@ -120,10 +120,11 @@ public class TelaTripulacao implements Screen {
 
         painelDetalhes.add(lblNome).padBottom(20).colspan(2).row();
         
-        try {
-            Image img = new Image(new Texture(aliado.getCaminhoImagem()));
+        Texture tex = aliado.getTextura();
+        if (tex != null) {
+            Image img = new Image(tex);
             painelDetalhes.add(img).size(120, 120).padRight(20);
-        } catch (Exception e) {
+        } else {
             Image img = new Image(new TextureRegionDrawable(SkinPadrao.textura1x1(0.3f, 0.3f, 0.3f, 1f)));
             painelDetalhes.add(img).size(120, 120).padRight(20);
         }

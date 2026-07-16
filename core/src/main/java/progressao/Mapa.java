@@ -32,6 +32,15 @@ public class Mapa {
     public List<Ilha> getIlhasConcluidas() { return ilhasConcluidas; }
     public List<Ilha> getOpcoesAtuais() { return opcoesAtuais; }
 
+    private List<IlhaEnum> canonicasCap2 = new ArrayList<>();
+    private IlhaEnum sortearCanonicaCap2() {
+        if (canonicasCap2.isEmpty()) {
+            canonicasCap2.addAll(java.util.Arrays.asList(IlhaEnum.THRILLER_BARK, IlhaEnum.ALABASTA, IlhaEnum.ENIES_LOBBY, IlhaEnum.ILHA_DRUM));
+        }
+        int idx = random.nextInt(canonicasCap2.size());
+        return canonicasCap2.remove(idx);
+    }
+
     public void gerarProximosNos() {
         opcoesAtuais.clear();
 
@@ -42,17 +51,17 @@ public class Mapa {
             else opcoesAtuais.add(IlhaFactory.criar(IlhaEnum.PUNK_HAZARD));
         } else if (etapaAtual == 3) {
             if (capitulo == 1) opcoesAtuais.add(IlhaFactory.criar(IlhaEnum.VILA_SYRUP));
-            else if (capitulo == 2) opcoesAtuais.add(IlhaFactory.criar(IlhaEnum.ILHA_DRUM));
+            else if (capitulo == 2) opcoesAtuais.add(IlhaFactory.criar(sortearCanonicaCap2()));
             else if (capitulo == 3) opcoesAtuais.add(IlhaFactory.criar(IlhaEnum.SABAODY));
             else opcoesAtuais.add(IlhaFactory.criar(IlhaEnum.WANO));
         } else if (etapaAtual == 6) {
             if (capitulo == 1) opcoesAtuais.add(IlhaFactory.criar(IlhaEnum.BARATIE));
-            else if (capitulo == 2) opcoesAtuais.add(IlhaFactory.criar(IlhaEnum.ALABASTA));
+            else if (capitulo == 2) opcoesAtuais.add(IlhaFactory.criar(sortearCanonicaCap2()));
             else if (capitulo == 3) opcoesAtuais.add(IlhaFactory.criar(IlhaEnum.DRESSROSA));
             else opcoesAtuais.add(IlhaFactory.criar(IlhaEnum.EGGHEAD));
         } else if (etapaAtual == 9) {
             if (capitulo == 1) opcoesAtuais.add(IlhaFactory.criar(IlhaEnum.ARLONG_PARK));
-            else if (capitulo == 2) opcoesAtuais.add(IlhaFactory.criar(IlhaEnum.ENIES_LOBBY));
+            else if (capitulo == 2) opcoesAtuais.add(IlhaFactory.criar(IlhaEnum.MARINEFORD));
             else if (capitulo == 3) opcoesAtuais.add(IlhaFactory.criar(IlhaEnum.WHOLE_CAKE));
             else opcoesAtuais.add(IlhaFactory.criar(IlhaEnum.ELBAPH));
         } else {
