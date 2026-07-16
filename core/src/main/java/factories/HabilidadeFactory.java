@@ -15,7 +15,7 @@ public class HabilidadeFactory {
     }
 
     public static Habilidade criarDefesaHaki() {
-        return new Habilidade("Haki", TipoHabilidade.DEFESA, 0.1f);
+        return new Habilidade("Haki", TipoHabilidade.DEFESA, 0.1f, true);
     }
 
     public static Habilidade criarCurarAliadosBandagem() {

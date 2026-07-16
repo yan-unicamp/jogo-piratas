@@ -47,6 +47,7 @@ public class TelaBatalha implements Screen {
     private Tripulacao tripulacao;
 
     private boolean aguardandoAcaoJogador = false;
+    private boolean animando = false;
     private Habilidade habilidadeSelecionada;
     private boolean escolhendoAlvo = false;
     private java.util.HashMap<String, Texture> textureCache = new java.util.HashMap<>();
@@ -77,7 +78,12 @@ public class TelaBatalha implements Screen {
         rootStack.setFillParent(true);
         stage.addActor(rootStack);
         
-        bgTexture = new Texture(Gdx.files.internal(ilhaAtual.getBgKey()));
+        String bgPath = ilhaAtual.getBgKey();
+        if (!Gdx.files.internal(bgPath).exists()) {
+            bgPath = "backgrounds/mar.png"; // Fallback para mar genérico
+            if (!Gdx.files.internal(bgPath).exists()) bgPath = "backgrounds/wano.png";
+        }
+        bgTexture = new Texture(Gdx.files.internal(bgPath));
         Image bgImage = new Image(bgTexture);
         bgImage.setScaling(com.badlogic.gdx.utils.Scaling.fill);
         rootStack.add(bgImage);
@@ -353,9 +359,16 @@ public class TelaBatalha implements Screen {
                         btn.addListener(new ClickListener() {
                             @Override
                             public void clicked(InputEvent event, float x, float y) {
-                                habilidadeSelecionada = hab;
-                                escolhendoAlvo = true;
-                                atualizarUI(true);
+                                if (hab.isSelfcast()) {
+                                    aguardandoAcaoJogador = false;
+                                    gerenciador.registrarAcaoJogador(hab, aliadoVez);
+                                    logLabel.setText(aliadoVez.getNome() + " preparou " + hab.getNome());
+                                    atualizarUI(false);
+                                } else {
+                                    habilidadeSelecionada = hab;
+                                    escolhendoAlvo = true;
+                                    atualizarUI(true);
+                                }
                             }
                         });
                         controlPanel.add(btn).size(300, 50).pad(10);
@@ -417,15 +430,16 @@ public class TelaBatalha implements Screen {
             case PLANEJAMENTO_INIMIGOS:
                 // automático
                 break;
-                
+
             case EXECUCAO_TURNOS:
                 delayAcumulado += delta;
-                if (delayAcumulado > 1.5f) { // 1.5 segundo por animação/ação
+                if (!animando && delayAcumulado > 1.0f) {
                     delayAcumulado = 0;
-                    Personagem quemAgiu = gerenciador.executarProximaAcao();
+                    Personagem quemAgiu = gerenciador.prepararProximaAcao();
                     if (quemAgiu != null) {
-                        logLabel.setText(gerenciador.getUltimoLog());
-                        atualizarUI(false);
+                        animando = true;
+                        // Não mostramos nada no log na preparação, conforme pedido pelo usuário
+                        // ou podemos deixar vazio
                         
                         AcaoPlanejada acao = gerenciador.getUltimaAcaoExecutada();
                         if (acao != null) {
@@ -446,7 +460,7 @@ public class TelaBatalha implements Screen {
                                     )
                                 ));
                             }
-                            if (acao.alvo != null && acao.habilidade.getTipo() == TipoHabilidade.DANO) {
+                            if (acao.alvo != null && acao.habilidade.getTipo() == entidades.TipoHabilidade.DANO) {
                                 Group gAlvo = groupCache.get(acao.alvo);
                                 if (gAlvo != null && gAlvo.getChildren().size > 0) {
                                     Image imgAlvo = (Image) gAlvo.getChildren().get(0);
@@ -461,6 +475,12 @@ public class TelaBatalha implements Screen {
                             }
                         }
                     }
+                } else if (animando && delayAcumulado > 0.5f) {
+                    delayAcumulado = 0;
+                    animando = false;
+                    gerenciador.aplicarAcaoPreparada();
+                    logLabel.setText(gerenciador.getUltimoLog());
+                    atualizarUI(false);
                 }
                 break;
                 

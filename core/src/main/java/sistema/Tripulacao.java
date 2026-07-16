@@ -69,7 +69,6 @@ public class Tripulacao {
     public void adicionarAliado(Aliado aliado) {
         if (!this.aliados.contains(aliado)) {
             this.aliados.add(aliado);
-            this.aliadosAtivos.add(aliado);
         }
     }
 

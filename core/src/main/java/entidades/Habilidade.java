@@ -4,12 +4,20 @@ public class Habilidade {
     private String nome;
     private TipoHabilidade tipo;
     private float valorPoder;
+    private boolean selfcast;
 
     public Habilidade(String nome, TipoHabilidade tipo, float valorPoder) {
+        this(nome, tipo, valorPoder, false);
+    }
+
+    public Habilidade(String nome, TipoHabilidade tipo, float valorPoder, boolean selfcast) {
         this.nome = nome;
         this.tipo = tipo;
         this.valorPoder = valorPoder;
+        this.selfcast = selfcast;
     }
+
+    public boolean isSelfcast() { return selfcast; }
 
     public void executarAcao(Personagem alvo) {
         switch (tipo) {

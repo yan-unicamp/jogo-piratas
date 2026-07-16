@@ -67,7 +67,10 @@ public class TesteBatalhaTerminal {
                     break;
 
                 case EXECUCAO_TURNOS:
-                    Personagem quemAgiu = gerenciador.executarProximaAcao();
+                    Personagem quemAgiu = gerenciador.prepararProximaAcao();
+                    if (quemAgiu != null) {
+                        gerenciador.aplicarAcaoPreparada();
+                    }
                     if (quemAgiu != null) {
                         try { Thread.sleep(1000); } catch (InterruptedException e) {}
                     }

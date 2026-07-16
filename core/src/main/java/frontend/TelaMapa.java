@@ -139,7 +139,7 @@ public class TelaMapa implements Screen {
         int hpTotal = gameManager.getTripulacao().getAliadosVivos()
                 .stream().mapToInt(a -> a.getVidaAtual()).sum();
 
-        Label lblIlhas = new Label("Ilhas: " + etapa + "/" + total, skin);
+        Label lblIlhas = new Label("Ilha: " + etapa, skin);
         lblIlhas.setColor(Color.WHITE);
         lblIlhas.setFontScale(1.2f);
 

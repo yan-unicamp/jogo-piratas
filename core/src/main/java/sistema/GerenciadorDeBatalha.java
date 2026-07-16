@@ -154,14 +154,14 @@ public class GerenciadorDeBatalha {
         return ultimaAcaoExecutada;
     }
 
-    public Personagem executarProximaAcao() {
-        if (estadoAtual != EstadoBatalha.EXECUCAO_TURNOS)
-            return null;
+    private Personagem personagemDaVez;
 
-        Personagem personagemDaVez = null;
+    public Personagem prepararProximaAcao() {
+        if (estadoAtual != EstadoBatalha.EXECUCAO_TURNOS) return null;
+
+        personagemDaVez = null;
         ultimaAcaoExecutada = null;
         
-        // Pula os turnos de quem já morreu
         while (true) {
             personagemDaVez = filaDeTurnos.obterProximoPersonagem();
             if (personagemDaVez == null) {
@@ -172,27 +172,31 @@ public class GerenciadorDeBatalha {
                 return null;
             }
             if (personagemDaVez.getVidaAtual() > 0) {
-                break; // Achou o próximo vivo!
+                break;
             }
         }
-
-        if (personagemDaVez.getVidaAtual() > 0) {
-            AcaoPlanejada acao = acoesPlanejadas.get(personagemDaVez);
-            if (acao != null && acao.habilidade != null && acao.alvo != null) {
-                if (acao.alvo.getVidaAtual() > 0 || acao.habilidade.getTipo() == entidades.TipoHabilidade.CURA) {
-                    ultimoLog = personagemDaVez.getNome() + " usou " + acao.habilidade.getNome() + " em " + acao.alvo.getNome() + "!";
-                    System.out.println("[" + ultimoLog + "]");
-                    acao.habilidade.executarAcao(acao.alvo);
-                    ultimaAcaoExecutada = acao;
-                } else {
-                    ultimoLog = personagemDaVez.getNome() + " tentou atacar, mas o alvo ja foi derrotado!";
-                    System.out.println("[" + ultimoLog + "]");
-                }
+        
+        if (personagemDaVez != null) {
+            ultimaAcaoExecutada = acoesPlanejadas.get(personagemDaVez);
+            if (ultimaAcaoExecutada != null) {
+                ultimoLog = personagemDaVez.getNome() + " vai usar " + ultimaAcaoExecutada.habilidade.getNome() + "!";
             }
         }
-
-        verificarVitoriaOuDerrota();
         return personagemDaVez;
+    }
+
+    public void aplicarAcaoPreparada() {
+        if (personagemDaVez != null && personagemDaVez.getVidaAtual() > 0 && ultimaAcaoExecutada != null) {
+            if (ultimaAcaoExecutada.alvo.getVidaAtual() > 0 || ultimaAcaoExecutada.habilidade.getTipo() == entidades.TipoHabilidade.CURA) {
+                ultimoLog = personagemDaVez.getNome() + " usou " + ultimaAcaoExecutada.habilidade.getNome() + " em " + ultimaAcaoExecutada.alvo.getNome() + "!";
+                System.out.println("[" + ultimoLog + "]");
+                ultimaAcaoExecutada.habilidade.executarAcao(ultimaAcaoExecutada.alvo);
+            } else {
+                ultimoLog = personagemDaVez.getNome() + " tentou atacar, mas o alvo ja foi derrotado!";
+                System.out.println("[" + ultimoLog + "]");
+            }
+        }
+        verificarVitoriaOuDerrota();
     }
 
     public void verificarVitoriaOuDerrota() {
