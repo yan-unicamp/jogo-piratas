@@ -71,7 +71,7 @@ public class GerenciadorDeBatalha {
         aliadosAguardandoAcao.clear();
 
         for (Personagem aliado : aliados) {
-            if (aliado.getVidaAtual() > 0) {
+            if (aliado.getVidaAtual() > 0 && aliado.getTurnosDePausa() == 0) {
                 aliadosAguardandoAcao.add(aliado);
             }
         }
@@ -119,7 +119,7 @@ public class GerenciadorDeBatalha {
             return;
 
         for (Personagem inimigo : inimigos) {
-            if (inimigo.getVidaAtual() > 0) {
+            if (inimigo.getVidaAtual() > 0 && inimigo.getTurnosDePausa() == 0) {
                 List<Habilidade> habs = inimigo.getHabilidades();
                 if (!habs.isEmpty()) {
                     Habilidade habEscolhida = habs.get(random.nextInt(habs.size()));
@@ -172,6 +172,12 @@ public class GerenciadorDeBatalha {
                 return null;
             }
             if (personagemDaVez.getVidaAtual() > 0) {
+                if (personagemDaVez.getTurnosDePausa() > 0) {
+                    personagemDaVez.decrementarTurnoDePausa();
+                    ultimoLog = personagemDaVez.getNome() + " esta exausto e perdeu o turno!";
+                    System.out.println("[" + ultimoLog + "]");
+                    return personagemDaVez;
+                }
                 break;
             }
         }
@@ -180,6 +186,9 @@ public class GerenciadorDeBatalha {
             ultimaAcaoExecutada = acoesPlanejadas.get(personagemDaVez);
             if (ultimaAcaoExecutada != null) {
                 ultimoLog = personagemDaVez.getNome() + " vai usar " + ultimaAcaoExecutada.habilidade.getNome() + "!";
+                if (ultimaAcaoExecutada.habilidade.isEspecial()) {
+                    personagemDaVez.setTurnosDePausa(1);
+                }
             }
         }
         return personagemDaVez;
