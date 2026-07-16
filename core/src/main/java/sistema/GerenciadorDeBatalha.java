@@ -147,11 +147,18 @@ public class GerenciadorDeBatalha {
         estadoAtual = EstadoBatalha.EXECUCAO_TURNOS;
     }
 
+    private AcaoPlanejada ultimaAcaoExecutada;
+
+    public AcaoPlanejada getUltimaAcaoExecutada() {
+        return ultimaAcaoExecutada;
+    }
+
     public Personagem executarProximaAcao() {
         if (estadoAtual != EstadoBatalha.EXECUCAO_TURNOS)
             return null;
 
         Personagem personagemDaVez = null;
+        ultimaAcaoExecutada = null;
         
         // Pula os turnos de quem já morreu
         while (true) {
@@ -175,6 +182,7 @@ public class GerenciadorDeBatalha {
                     System.out.println("[" + personagemDaVez.getNome() + " usa " + acao.habilidade.getNome() + " em "
                             + acao.alvo.getNome() + "]");
                     acao.habilidade.executarAcao(acao.alvo);
+                    ultimaAcaoExecutada = acao;
                 } else {
                     System.out
                             .println("[" + personagemDaVez.getNome() + " tenta atacar, mas o alvo já foi derrotado!]");

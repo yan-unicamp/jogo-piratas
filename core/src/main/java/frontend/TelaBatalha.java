@@ -12,7 +12,9 @@ import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
+import com.badlogic.gdx.scenes.scene2d.Group;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
+import com.badlogic.gdx.scenes.scene2d.actions.Actions;
 import com.badlogic.gdx.utils.Align;
 import com.badlogic.gdx.utils.ScreenUtils;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
@@ -24,6 +26,7 @@ import entidades.Personagem;
 import entidades.TipoHabilidade;
 import factories.PersonagemFactory;
 import sistema.GerenciadorDeBatalha;
+import sistema.GerenciadorDeBatalha.AcaoPlanejada;
 import sistema.JogoPiratas;
 import sistema.Tripulacao;
 
@@ -47,10 +50,15 @@ public class TelaBatalha implements Screen {
     private boolean aguardandoAcaoJogador = false;
     private Habilidade habilidadeSelecionada;
     private boolean escolhendoAlvo = false;
+    private java.util.HashMap<String, Texture> textureCache = new java.util.HashMap<>();
+    private java.util.HashMap<Personagem, Group> groupCache = new java.util.HashMap<>();
 
     public TelaBatalha(JogoPiratas jogo) {
         this.jogo = jogo;
     }
+
+    private Texture bgTexture;
+    private Texture overlayTexture;
 
     @Override
     public void show() {
@@ -59,9 +67,27 @@ public class TelaBatalha implements Screen {
         
         criarSkin();
         
+        com.badlogic.gdx.scenes.scene2d.ui.Stack rootStack = new com.badlogic.gdx.scenes.scene2d.ui.Stack();
+        rootStack.setFillParent(true);
+        stage.addActor(rootStack);
+        
+        bgTexture = new Texture(Gdx.files.internal("backgrounds/alabasta.png"));
+        Image bgImage = new Image(bgTexture);
+        bgImage.setScaling(com.badlogic.gdx.utils.Scaling.fill);
+        rootStack.add(bgImage);
+        
+        Pixmap pix = new Pixmap(1, 1, Pixmap.Format.RGBA8888);
+        pix.setColor(0f, 0f, 0f, 0.8f);
+        pix.fill();
+        overlayTexture = new Texture(pix);
+        pix.dispose();
+        
+        Image overlayImage = new Image(overlayTexture);
+        overlayImage.setScaling(com.badlogic.gdx.utils.Scaling.stretch);
+        rootStack.add(overlayImage);
+        
         uiTable = new Table();
-        uiTable.setFillParent(true);
-        stage.addActor(uiTable);
+        rootStack.add(uiTable);
         
         logLabel = new Label("Batalha Iniciada!", skin);
         
@@ -115,6 +141,42 @@ public class TelaBatalha implements Screen {
         aguardandoAcaoJogador = true;
         atualizarUI(true);
     }
+    
+    private Texture getTexturePersonagem(Personagem p) {
+        String filename = p.getCaminhoImagem();
+        if (textureCache.containsKey(filename)) {
+            return textureCache.get(filename);
+        }
+        
+        String[] possiblePaths = {
+            "personagens/chapeu_de_palha/" + filename,
+            "personagens/" + filename,
+            "inimigos/" + filename,
+            "inimigos/capangas/" + filename,
+            filename
+        };
+        
+        for (String path : possiblePaths) {
+            if (Gdx.files.internal(path).exists()) {
+                Texture tex = new Texture(Gdx.files.internal(path));
+                textureCache.put(filename, tex);
+                return tex;
+            }
+        }
+        
+        String placeholderPath = "personagens/aliados_especiais/placeholder.png";
+        if (Gdx.files.internal(placeholderPath).exists()) {
+            if (!textureCache.containsKey("placeholder")) {
+                textureCache.put("placeholder", new Texture(Gdx.files.internal(placeholderPath)));
+            }
+            Texture tex = textureCache.get("placeholder");
+            textureCache.put(filename, tex);
+            return tex;
+        }
+        
+        textureCache.put(filename, null);
+        return null;
+    }
 
     private void atualizarUI(boolean desenharBotoes) {
         uiTable.clear();
@@ -132,10 +194,31 @@ public class TelaBatalha implements Screen {
                 lbl.setAlignment(Align.center);
                 charTable.add(lbl).padBottom(5).row();
                 
-                Image img = new Image(skin.newDrawable("dark"));
-                charTable.add(img).size(80, 80).row();
+                Group group = groupCache.get(aliado);
+                if (group == null) {
+                    Texture tex = getTexturePersonagem(aliado);
+                    Image img;
+                    if (tex != null) {
+                        com.badlogic.gdx.graphics.g2d.TextureRegion region = new com.badlogic.gdx.graphics.g2d.TextureRegion(tex);
+                        region.flip(true, false); // Espelha o aliado para olhar para a direita
+                        img = new Image(new com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable(region));
+                    } else {
+                        img = new Image(skin.newDrawable("dark"));
+                    }
+                    img.setScaling(com.badlogic.gdx.utils.Scaling.fit);
+                    img.setSize(130, 130);
+                    img.setOrigin(Align.center);
+                    group = new Group();
+                    group.setSize(130, 130);
+                    group.addActor(img);
+                    groupCache.put(aliado, group);
+                }
+                charTable.add(group).size(130, 130).row();
                 
-                leftColumn.add(charTable).pad(20).row();
+                int index = aliados.indexOf(aliado);
+                float padL = (index % 2 == 1) ? 0 : 80;
+                float padR = (index % 2 == 1) ? 80 : 0;
+                leftColumn.add(charTable).pad(20).padLeft(padL).padRight(padR).row();
             }
         }
         
@@ -148,10 +231,29 @@ public class TelaBatalha implements Screen {
                 lbl.setAlignment(Align.center);
                 charTable.add(lbl).padBottom(5).row();
                 
-                Image img = new Image(skin.newDrawable("dark"));
-                charTable.add(img).size(80, 80).row();
+                Group group = groupCache.get(ini);
+                if (group == null) {
+                    Texture tex = getTexturePersonagem(ini);
+                    Image img;
+                    if (tex != null) {
+                        img = new Image(tex);
+                    } else {
+                        img = new Image(skin.newDrawable("dark"));
+                    }
+                    img.setScaling(com.badlogic.gdx.utils.Scaling.fit);
+                    img.setSize(130, 130);
+                    img.setOrigin(Align.center);
+                    group = new Group();
+                    group.setSize(130, 130);
+                    group.addActor(img);
+                    groupCache.put(ini, group);
+                }
+                charTable.add(group).size(130, 130).row();
                 
-                rightColumn.add(charTable).pad(20).row();
+                int index = inimigos.indexOf(ini);
+                float padL = (index % 2 == 1) ? 80 : 0;
+                float padR = (index % 2 == 1) ? 0 : 80;
+                rightColumn.add(charTable).pad(20).padLeft(padL).padRight(padR).row();
             }
         }
         
@@ -250,6 +352,40 @@ public class TelaBatalha implements Screen {
                     if (quemAgiu != null) {
                         logLabel.setText(quemAgiu.getNome() + " agiu!");
                         atualizarUI(false);
+                        
+                        AcaoPlanejada acao = gerenciador.getUltimaAcaoExecutada();
+                        if (acao != null) {
+                            Group gAtacante = groupCache.get(quemAgiu);
+                            if (gAtacante != null && gAtacante.getChildren().size > 0) {
+                                Image imgAtacante = (Image) gAtacante.getChildren().get(0);
+                                boolean isAliado = aliados.contains(quemAgiu);
+                                float moveX = isAliado ? 60f : -60f;
+                                
+                                imgAtacante.addAction(Actions.sequence(
+                                    Actions.parallel(
+                                        Actions.moveBy(moveX, 0, 0.1f),
+                                        Actions.scaleTo(1.3f, 1.3f, 0.1f)
+                                    ),
+                                    Actions.parallel(
+                                        Actions.moveBy(-moveX, 0, 0.1f),
+                                        Actions.scaleTo(1.0f, 1.0f, 0.1f)
+                                    )
+                                ));
+                            }
+                            if (acao.alvo != null && acao.habilidade.getTipo() == TipoHabilidade.DANO) {
+                                Group gAlvo = groupCache.get(acao.alvo);
+                                if (gAlvo != null && gAlvo.getChildren().size > 0) {
+                                    Image imgAlvo = (Image) gAlvo.getChildren().get(0);
+                                    imgAlvo.addAction(Actions.sequence(
+                                        Actions.delay(0.2f),
+                                        Actions.color(Color.RED, 0.1f),
+                                        Actions.color(Color.WHITE, 0.1f),
+                                        Actions.color(Color.RED, 0.1f),
+                                        Actions.color(Color.WHITE, 0.1f)
+                                    ));
+                                }
+                            }
+                        }
                     }
                 }
                 break;
@@ -288,5 +424,10 @@ public class TelaBatalha implements Screen {
     public void dispose() {
         stage.dispose();
         if (skin != null) skin.dispose();
+        if (bgTexture != null) bgTexture.dispose();
+        if (overlayTexture != null) overlayTexture.dispose();
+        for (Texture tex : textureCache.values()) {
+            if (tex != null) tex.dispose();
+        }
     }
 }
