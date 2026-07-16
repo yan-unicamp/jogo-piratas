@@ -15,6 +15,9 @@ application {
 // Garantir que os assets sejam encontrados ao rodar
 run {
     workingDir = rootProject.file('assets')
+    if (org.gradle.internal.os.OperatingSystem.current().isMacOsX()) {
+        jvmArgs += '-XstartOnFirstThread'
+    }
 }
 
 // Criar a pasta assets se não existir ao rodar
