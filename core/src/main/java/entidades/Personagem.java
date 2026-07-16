@@ -69,8 +69,7 @@ public abstract class Personagem {
     }
 
     public float getDefesa() {
-
-        return defesa;
+        return defesaAtual;
     }
 
     public int getIniciativa() {

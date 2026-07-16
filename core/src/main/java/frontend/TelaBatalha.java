@@ -11,7 +11,9 @@ import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
+import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
+import com.badlogic.gdx.utils.Align;
 import com.badlogic.gdx.utils.ScreenUtils;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
 
@@ -117,49 +119,72 @@ public class TelaBatalha implements Screen {
     private void atualizarUI(boolean desenharBotoes) {
         uiTable.clear();
         
-        Table charactersTable = new Table();
-        Table leftTable = new Table();
-        Table rightTable = new Table();
+        Table battleArea = new Table();
+        Table leftColumn = new Table();
+        Table rightColumn = new Table();
         
         // Status dos Aliados (esquerda)
         for (Personagem aliado : aliados) {
             if (aliado.estaVivo()) {
-                Label lbl = new Label(aliado.getNome() + " HP: " + aliado.getVidaAtual() + "/" + aliado.getVidaMaxima() + " DEF: " + aliado.getDefesa(), skin);
-                leftTable.add(lbl).pad(5).left().row();
+                Table charTable = new Table();
+                String info = String.format("%s\nHP: %d/%d Lvl: 1\nDEF: %.1f", aliado.getNome(), (int)aliado.getVidaAtual(), (int)aliado.getVidaMaxima(), aliado.getDefesa());
+                Label lbl = new Label(info, skin);
+                lbl.setAlignment(Align.center);
+                charTable.add(lbl).padBottom(5).row();
+                
+                Image img = new Image(skin.newDrawable("dark"));
+                charTable.add(img).size(80, 80).row();
+                
+                leftColumn.add(charTable).pad(20).row();
             }
         }
         
         // Status dos Inimigos (direita)
         for (Personagem ini : inimigos) {
             if (ini.estaVivo()) {
-                Label lbl = new Label(ini.getNome() + " HP: " + ini.getVidaAtual() + "/" + ini.getVidaMaxima() + " DEF: " + ini.getDefesa(), skin);
-                rightTable.add(lbl).pad(5).right().row();
+                Table charTable = new Table();
+                String info = String.format("%s\nHP: %d/%d Lvl: 1\nDEF: %.1f", ini.getNome(), (int)ini.getVidaAtual(), (int)ini.getVidaMaxima(), ini.getDefesa());
+                Label lbl = new Label(info, skin);
+                lbl.setAlignment(Align.center);
+                charTable.add(lbl).padBottom(5).row();
+                
+                Image img = new Image(skin.newDrawable("dark"));
+                charTable.add(img).size(80, 80).row();
+                
+                rightColumn.add(charTable).pad(20).row();
             }
         }
         
-        charactersTable.add(leftTable).expandX().left().pad(20);
-        charactersTable.add(rightTable).expandX().right().pad(20);
+        battleArea.add(leftColumn).expand().left().pad(20);
+        battleArea.add(rightColumn).expand().right().pad(20);
         
-        uiTable.add(charactersTable).expandX().fillX().row();
+        uiTable.add(battleArea).expand().fill().row();
         
-        uiTable.add(logLabel).pad(20).row();
+        uiTable.add(logLabel).pad(10).row();
         
+        // Painel inferior (botões)
+        Table controlPanel = new Table();
         if (desenharBotoes) {
             Personagem aliadoVez = gerenciador.getAliadoAguardandoAcao();
             if (aliadoVez != null) {
-                Table botoesTable = new Table();
+                int buttonCount = 0;
                 if (!escolhendoAlvo) {
                     for (final Habilidade hab : aliadoVez.getHabilidades()) {
-                        TextButton btn = new TextButton(hab.getNome() + " (" + hab.getValorPoder() + ")", skin);
+                        String poderFormatado = (hab.getTipo() == TipoHabilidade.DEFESA) 
+                            ? String.format("%.1f", hab.getValorPoder()) 
+                            : String.valueOf((int) hab.getValorPoder());
+                        TextButton btn = new TextButton(hab.getNome() + " (" + poderFormatado + ")", skin);
                         btn.addListener(new ClickListener() {
                             @Override
                             public void clicked(InputEvent event, float x, float y) {
                                 habilidadeSelecionada = hab;
                                 escolhendoAlvo = true;
-                                atualizarUI(true); // Redesenha com botões de alvo
+                                atualizarUI(true);
                             }
                         });
-                        botoesTable.add(btn).pad(5).fillX();
+                        controlPanel.add(btn).size(250, 60).pad(10);
+                        buttonCount++;
+                        if (buttonCount % 2 == 0) controlPanel.row();
                     }
                 } else {
                     boolean isCuraOuDefesa = (habilidadeSelecionada.getTipo() == TipoHabilidade.CURA || habilidadeSelecionada.getTipo() == TipoHabilidade.DEFESA);
@@ -180,7 +205,9 @@ public class TelaBatalha implements Screen {
                                     atualizarUI(false);
                                 }
                             });
-                            botoesTable.add(btnAlvo).pad(5).fillX();
+                            controlPanel.add(btnAlvo).size(250, 60).pad(10);
+                            buttonCount++;
+                            if (buttonCount % 2 == 0) controlPanel.row();
                         }
                     }
                     
@@ -192,11 +219,11 @@ public class TelaBatalha implements Screen {
                             atualizarUI(true);
                         }
                     });
-                    botoesTable.add(btnVoltar).pad(5).fillX();
+                    controlPanel.add(btnVoltar).size(250, 60).pad(10);
                 }
-                uiTable.add(botoesTable).colspan(2).pad(10).row();
             }
         }
+        uiTable.add(controlPanel).fillX().padBottom(20).row();
     }
 
     @Override

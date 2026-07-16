@@ -206,9 +206,11 @@ public class GerenciadorDeBatalha {
         if (!aliadosVivos) {
             System.out.println("\nDerrota! Todos os aliados caíram.");
             estadoAtual = EstadoBatalha.DERROTA;
+            for (Personagem aliado : aliados) aliado.resetarDefesa();
         } else if (!inimigosVivos) {
             System.out.println("\nVitória! Inimigos derrotados.");
             estadoAtual = EstadoBatalha.VITORIA;
+            for (Personagem aliado : aliados) aliado.resetarDefesa();
             recompensa();
         }
 

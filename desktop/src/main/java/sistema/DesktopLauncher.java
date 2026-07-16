@@ -11,7 +11,8 @@ public class DesktopLauncher {
     public static void main(String[] args) {
         Lwjgl3ApplicationConfiguration config = new Lwjgl3ApplicationConfiguration();
         config.setTitle("Jogo Piratas");
-        config.setWindowedMode(1280, 720);
+        config.setWindowedMode(1280, 900);
+        config.setResizable(false);
         config.setForegroundFPS(0);
         config.useVsync(false); // Desliga a trava do monitor
 
