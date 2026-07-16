@@ -53,13 +53,11 @@ public abstract class Personagem {
 
         return nome; 
     }
-    public float getVidaAtual() { 
-
-        return vidaAtual; 
+    public int getVidaAtual() {
+        return (int) vidaAtual;
     }
-    public float getVidaMaxima() { 
-        
-        return vidaMaxima; 
+    public int getVidaMaxima() {
+        return vidaMaxima;
     }
     public float getDefesa() { 
         

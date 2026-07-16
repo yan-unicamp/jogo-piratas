@@ -330,10 +330,15 @@ public class TelaBatalha implements Screen {
         for (Inimigo ini : gb.getInimigos()) {
             gameManager.getTripulacao().receberRecompensa(ini.getRecompensa());
         }
-        // Verifica se há mais rodadas
+        // Verifica se há mais rodadas na ilha
         boolean ilhaCompleta = gameManager.avancarRodada();
         if (ilhaCompleta) {
-            gameManager.mudarEstado(EstadoJogo.MAPA);
+            // Verifica se é a última ilha (vitória total)
+            if (gameManager.verificarVitoria()) {
+                gameManager.mudarEstado(EstadoJogo.VITORIA);
+            } else {
+                gameManager.mudarEstado(EstadoJogo.MAPA);
+            }
         } else {
             gameManager.mudarEstado(EstadoJogo.BATALHA); // nova TelaBatalha com próxima rodada
         }
@@ -345,9 +350,12 @@ public class TelaBatalha implements Screen {
 
     private Personagem escolherAlvo(Habilidade hab, GerenciadorDeBatalha gb) {
         if (hab.getTipo() == TipoHabilidade.DANO) {
-            return gb.getInimigosVivos().stream().findFirst().orElse(null);
+            List<Inimigo> vivos = gb.getInimigosVivos();
+            return vivos.isEmpty() ? null : vivos.get(0);
         }
-        return gb.getAliadosVivos().stream()
+        // CURA ou DEFESA — alvo com menor HP
+        List<Aliado> vivos = gb.getAliadosVivos();
+        return vivos.stream()
                 .min((a, b) -> a.getVidaAtual() - b.getVidaAtual())
                 .orElse(null);
     }

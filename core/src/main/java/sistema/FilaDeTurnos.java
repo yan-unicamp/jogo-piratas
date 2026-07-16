@@ -17,20 +17,23 @@ public class FilaDeTurnos {
     private final ArrayList<Personagem> espera;
 
     public FilaDeTurnos() {
-        this.fila = new ArrayList<>();
+        this.fila   = new ArrayList<>();
         this.espera = new ArrayList<>();
     }
 
+    /** Adiciona um personagem à fila de turnos. */
     public void adicionar(Personagem p) {
         fila.add(p);
     }
 
+    /** Ordena a fila por iniciativa (decrescente — maior age primeiro). */
     public void ordenarPorIniciativa() {
         fila.sort(Comparator.comparing(Personagem::getIniciativa).reversed());
     }
 
     /**
-     * Adiciona novamente membros da espera para lista e ordena a lista por iniciativa.
+     * Recoloca os personagens de espera de volta na fila e reordena.
+     * Chamado quando a fila esgota (fim de uma rodada completa).
      */
     private void resetarFila() {
         fila.addAll(espera);
@@ -38,37 +41,26 @@ public class FilaDeTurnos {
         ordenarPorIniciativa();
     }
 
-
     /**
-     * Retorna o proximo personagem da fila.
-     * Caso a fila acabe, reseta ela e retorna nulo.
+     * Retorna o próximo personagem da fila.
+     * Quando a fila se esgota, reseta-a e retorna null (sinal de nova rodada).
      */
     public Personagem obterProximoPersonagem() {
-        if (fila.isEmpty()) {  // Se a fila acabou, coloca os personagens de volta na fila e ordena, retornando null.
+        if (fila.isEmpty()) {
             resetarFila();
             return null;
         }
-
-        Personagem prox = fila.getFirst();
-        fila.removeFirst();
+        Personagem prox = fila.get(0);
+        fila.remove(0);
         espera.add(prox);
-
         return prox;
     }
 
-    /** Adiciona um personagem à fila (sem reordenar). */
-    public void adicionar(Personagem p) {
-        fila.add(p);
-    }
-
-    /** Remove um personagem da fila (ex: após morte definitiva). */
+    /** Remove um personagem de todas as listas (ex: após morte definitiva). */
     public void remover(Personagem p) {
         fila.remove(p);
-        if (indiceTurnoAtual >= fila.size()) {
-            indiceTurnoAtual = 0;
-        }
+        espera.remove(p);
     }
 
-    public List<Personagem> getFila() { return fila; }
-    public int getIndiceTurnoAtual() { return indiceTurnoAtual; }
+    public ArrayList<Personagem> getFila() { return fila; }
 }
