@@ -81,6 +81,13 @@ public class GerenciadorDeBatalha {
             estadoAtual = EstadoBatalha.PLANEJAMENTO_INIMIGOS;
             processarAcoesInimigos(); // Pula direto se não houver aliados vivos (embora já seria derrota)
         }
+
+        if (!aliadosAguardandoAcao.isEmpty()) {
+            estadoAtual = EstadoBatalha.PLANEJAMENTO_JOGADOR;
+        } else {
+            estadoAtual = EstadoBatalha.PLANEJAMENTO_INIMIGOS;
+            processarAcoesInimigos(); // Pula direto se não houver aliados vivos (embora já seria derrota)
+        }
     }
 
     public Personagem getAliadoAguardandoAcao() {
@@ -100,7 +107,6 @@ public class GerenciadorDeBatalha {
             aliadosAguardandoAcao.remove(0);
             System.out.println("Ação registrada para: " + aliado.getNome());
         }
-
         if (aliadosAguardandoAcao.isEmpty()) {
             estadoAtual = EstadoBatalha.PLANEJAMENTO_INIMIGOS;
             processarAcoesInimigos();
@@ -133,7 +139,6 @@ public class GerenciadorDeBatalha {
                     if (!alvos.isEmpty()) {
                         alvEscolhido = alvos.get(random.nextInt(alvos.size()));
                     }
-
                     acoesPlanejadas.put(inimigo, new AcaoPlanejada(habEscolhida, alvEscolhido));
                     System.out.println("Inimigo " + inimigo.getNome() + " planejou sua ação.");
                 }
@@ -146,14 +151,21 @@ public class GerenciadorDeBatalha {
         if (estadoAtual != EstadoBatalha.EXECUCAO_TURNOS)
             return null;
 
-        Personagem personagemDaVez = filaDeTurnos.obterProximoPersonagem();
-
-        if (personagemDaVez == null) {
-            verificarVitoriaOuDerrota();
-            if (estadoAtual != EstadoBatalha.VITORIA && estadoAtual != EstadoBatalha.DERROTA) {
-                iniciarNovoTurno();
+        Personagem personagemDaVez = null;
+        
+        // Pula os turnos de quem já morreu
+        while (true) {
+            personagemDaVez = filaDeTurnos.obterProximoPersonagem();
+            if (personagemDaVez == null) {
+                verificarVitoriaOuDerrota();
+                if (estadoAtual != EstadoBatalha.VITORIA && estadoAtual != EstadoBatalha.DERROTA) {
+                    iniciarNovoTurno();
+                }
+                return null;
             }
-            return null;
+            if (personagemDaVez.getVidaAtual() > 0) {
+                break; // Achou o próximo vivo!
+            }
         }
 
         if (personagemDaVez.getVidaAtual() > 0) {
@@ -194,11 +206,14 @@ public class GerenciadorDeBatalha {
         if (!aliadosVivos) {
             System.out.println("\nDerrota! Todos os aliados caíram.");
             estadoAtual = EstadoBatalha.DERROTA;
+            for (Personagem aliado : aliados) aliado.resetarDefesa();
         } else if (!inimigosVivos) {
             System.out.println("\nVitória! Inimigos derrotados.");
             estadoAtual = EstadoBatalha.VITORIA;
+            for (Personagem aliado : aliados) aliado.resetarDefesa();
             recompensa();
         }
+
     }
 
     public void recompensa() {

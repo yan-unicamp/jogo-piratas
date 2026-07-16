@@ -25,9 +25,10 @@ public abstract class Personagem {
     }
 
     public void receberDano(float valor) {
-        float dano = valor * defesaAtual; 
+        float dano = valor * defesaAtual;
         this.vidaAtual -= dano;
-        if (this.vidaAtual < 1) this.vidaAtual = 0; 
+        if (this.vidaAtual < 1)
+            this.vidaAtual = 0;
     }
 
     public void curar(float valor) {
@@ -37,9 +38,10 @@ public abstract class Personagem {
         }
     }
 
-    public void aumentarDefesaTemporaria(float valor) { 
+    public void aumentarDefesaTemporaria(float valor) {
         float novadefesa = defesa - valor;
-        if (novadefesa < 0) novadefesa = 0; // Impede que a defesa fique negativa (o que faria o dano curar o personagem)
+        if (novadefesa < 0)
+            novadefesa = 0; // Impede que a defesa fique negativa (o que faria o dano curar o personagem)
         this.defesaAtual = novadefesa;
     }
 
@@ -51,30 +53,33 @@ public abstract class Personagem {
         return this.vidaAtual > 0;
     }
 
-    public String getNome() { 
+    public String getNome() {
 
-        return nome; 
-    }
-    public float getVidaAtual() { 
-
-        return vidaAtual; 
-    }
-    public float getVidaMaxima() { 
-        
-        return vidaMaxima; 
-    }
-    public float getDefesa() { 
-        
-        return defesa; 
-    }
-    public int getIniciativa() { 
-        
-        return iniciativa; 
+        return nome;
     }
 
-    public List<Habilidade> getHabilidades() { 
-        
-        return habilidades; 
+    public float getVidaAtual() {
+
+        return vidaAtual;
+    }
+
+    public float getVidaMaxima() {
+
+        return vidaMaxima;
+    }
+
+    public float getDefesa() {
+        return defesaAtual;
+    }
+
+    public int getIniciativa() {
+
+        return iniciativa;
+    }
+
+    public List<Habilidade> getHabilidades() {
+
+        return habilidades;
     }
 
     public String getCaminhoImagem() { 
