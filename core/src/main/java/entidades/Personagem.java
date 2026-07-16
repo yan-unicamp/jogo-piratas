@@ -4,15 +4,16 @@ import java.util.ArrayList;
 import java.util.List;
 
 public abstract class Personagem {
-    private String nome;
-    private float vidaAtual;
-    private int vidaMaxima;
-    private float defesa;
-    private float defesaAtual; 
-    private int iniciativa;
-    private List<Habilidade> habilidades;
+    protected String nome;
+    protected float vidaAtual;
+    protected int vidaMaxima;
+    protected float defesa;
+    protected float defesaAtual; 
+    protected int iniciativa;
+    protected List<Habilidade> habilidades;
+    protected String caminhoImagem;
 
-    public Personagem(String nome, int vidaMaxima, float defesa, int iniciativa) {
+    public Personagem(String nome, int vidaMaxima, float defesa, int iniciativa, String caminhoImagem) {
         this.nome = nome;
         this.vidaMaxima = vidaMaxima;
         this.vidaAtual = vidaMaxima;
@@ -20,6 +21,7 @@ public abstract class Personagem {
         this.defesaAtual = defesa;
         this.iniciativa = iniciativa;
         this.habilidades = new ArrayList<>();
+        this.caminhoImagem = caminhoImagem;
     }
 
     public void receberDano(float valor) {
@@ -73,6 +75,10 @@ public abstract class Personagem {
     public List<Habilidade> getHabilidades() { 
         
         return habilidades; 
+    }
+
+    public String getCaminhoImagem() { 
+        return caminhoImagem; 
     }
 
     public void adicionarHabilidade(Habilidade habilidade) { 
