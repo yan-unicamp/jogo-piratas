@@ -95,7 +95,10 @@ public class IlhaFactory {
                         rodadas.add(new Rodada(inimigos2, true, "Chefe Local"));
                 }
 
-                return new Ilha(nome, "backgrounds/dressrosa.png", rodadas);
+                String bgKey = (genEnum == progressao.IlhasGenericasEnum.BARCO_PIRATA_INIMIGO) 
+                        ? "backgrounds/navio_generico.png" 
+                        : "backgrounds/" + genEnum.name().toLowerCase() + ".png";
+                return new Ilha(nome, bgKey, rodadas);
         }
 
         // --------------------------------------------------------------------------
@@ -228,7 +231,7 @@ public class IlhaFactory {
         }
 
         private static Ilha criarWhiskyPeak() {
-                return new Ilha("Whisky Peak", "backgrounds/dressrosa.png", Arrays.asList(
+                return new Ilha("Whisky Peak", "backgrounds/whisky_peak.png", Arrays.asList(
                                 r("Rodada 1 - Cacadores de Recompensa", false,
                                                 cap("Agente Baroque", 4, "inimigos/capangas/capanga_pirata.png"),
                                                 cap("Agente Baroque", 4, "inimigos/capangas/capanga_pirata.png"),

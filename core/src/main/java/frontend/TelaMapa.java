@@ -74,13 +74,11 @@ public class TelaMapa implements Screen {
         stack.setFillParent(true);
         stage.addActor(stack);
 
-        // Fundo: thumbnail da primeira opcao disponivel
-        if (!opcoes.isEmpty()) {
-            Texture bgTex = assets.getTextura(opcoes.get(0).getBgKey());
-            Image bgImg = new Image(new TextureRegionDrawable(new TextureRegion(bgTex)));
-            bgImg.setScaling(Scaling.fill);
-            stack.add(bgImg);
-        }
+        // Fundo: sunny
+        Texture bgTex = assets.getTextura("backgrounds/sunny.png");
+        Image bgImg = new Image(new TextureRegionDrawable(new TextureRegion(bgTex)));
+        bgImg.setScaling(Scaling.fill);
+        stack.add(bgImg);
         // Overlay escuro
         Table overlay = new Table();
         overlay.setBackground(new TextureRegionDrawable(SkinPadrao.textura1x1(0f, 0f, 0f, 0.65f)));
@@ -265,7 +263,18 @@ public class TelaMapa implements Screen {
         this.ilhaSelecionada = ilha;
         
         overlayConfirmacao.clearChildren();
-        overlayConfirmacao.setBackground(new TextureRegionDrawable(SkinPadrao.textura1x1(0, 0, 0, 0.85f)));
+        
+        Stack stack = new Stack();
+        stack.setFillParent(true);
+        
+        Texture bgTex = assets.getTextura(ilha.getBgKey());
+        Image bgImg = new Image(new TextureRegionDrawable(new TextureRegion(bgTex)));
+        bgImg.setScaling(Scaling.fill);
+        stack.add(bgImg);
+        
+        Table tint = new Table();
+        tint.setBackground(new TextureRegionDrawable(SkinPadrao.textura1x1(0, 0, 0, 0.85f)));
+        stack.add(tint);
         
         Table janela = new Table();
         janela.setBackground(new TextureRegionDrawable(SkinPadrao.textura1x1(0.15f, 0.1f, 0.1f, 1f)));
@@ -308,7 +317,8 @@ public class TelaMapa implements Screen {
         janela.add(btnConfirmar).width(300).height(50).padBottom(15).row();
         janela.add(btnVoltar).width(300).height(50).row();
         
-        overlayConfirmacao.add(janela);
+        tint.add(janela);
+        overlayConfirmacao.add(stack).expand().fill();
         overlayConfirmacao.setVisible(true);
     }
 

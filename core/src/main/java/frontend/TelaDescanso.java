@@ -58,12 +58,27 @@ public class TelaDescanso implements Screen {
         // Skin extra: barra de HP (verde sobre fundo escuro)
         adicionarEstilosBarraHp(skin);
 
+        // Adiciona fundo do Sunny
+        Texture bgTex = jogo.assets.getTextura("backgrounds/sunny.png");
+        com.badlogic.gdx.scenes.scene2d.ui.Image bgImg = new com.badlogic.gdx.scenes.scene2d.ui.Image(
+                new com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable(
+                        new com.badlogic.gdx.graphics.g2d.TextureRegion(bgTex)));
+        bgImg.setFillParent(true);
+        bgImg.setScaling(com.badlogic.gdx.utils.Scaling.fill);
+        stage.addActor(bgImg);
+
+        // Overlay escuro
+        Table overlayEscuro = new Table();
+        overlayEscuro.setFillParent(true);
+        overlayEscuro.setBackground(new TextureRegionDrawable(texturaCor(0, 0, 0, 0.65f)));
+        stage.addActor(overlayEscuro);
+
         Table raiz = new Table();
         raiz.setFillParent(true);
         raiz.center();
 
         // --- Titulo ---
-        Label titulo = new Label("No de Descanso", skin);
+        Label titulo = new Label("Descansar no Sunny", skin);
         titulo.setFontScale(2f);
         titulo.setColor(new Color(0.95f, 0.80f, 0.40f, 1f)); // dourado quente
 

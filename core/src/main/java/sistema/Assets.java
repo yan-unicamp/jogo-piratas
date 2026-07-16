@@ -59,6 +59,20 @@ public class Assets {
             Gdx.app.log("Assets", "Falha ao carregar: " + caminho + " - " + e.getMessage());
         }
 
+        // Fallbacks
+        String fallback = null;
+        if (!caminho.equals("backgrounds/ilha_generica.png") && caminho.startsWith("backgrounds/")) {
+            fallback = "backgrounds/ilha_generica.png";
+        } else if (!caminho.equals("inimigos/capangas/capanga_pirata.png") && (caminho.startsWith("inimigos/") || caminho.startsWith("personagens/"))) {
+            fallback = "inimigos/capangas/capanga_pirata.png";
+        }
+        
+        if (fallback != null) {
+            Texture t = getTextura(fallback);
+            cache.put(caminho, t);
+            return t;
+        }
+
         // Salva o placeholder no cache para evitar tentativas repetidas
         cache.put(caminho, placeholder);
         return placeholder;
