@@ -1,14 +1,28 @@
 package progressao;
 
-public class Recompensa {
-    private int dinheiroGanhado;
-    private int experienciaGanhada;
+import sistema.Tripulacao;
+import entidades.Aliado;
+import entidades.Item;
 
-    public Recompensa(int dinheiroGanhado, int experienciaGanhada) {
-        this.dinheiroGanhado = dinheiroGanhado;
-        this.experienciaGanhada = experienciaGanhada;
+public class Recompensa {
+
+    private Recompensa() {
+        // Classe apenas com métodos estáticos
     }
 
-    public int getDinheiroGanhado() { return dinheiroGanhado; }
-    public int getExperienciaGanhada() { return experienciaGanhada; }
+    public static void darDinheiro(Tripulacao tripulacao, int valor) {
+        tripulacao.receberDinheiro(valor);
+    }
+    
+    public static void darItem(Tripulacao tripulacao, Item item) {
+        if (item != null) {
+            tripulacao.receberItem(item);
+        }
+    }
+
+    public static void darXp(Tripulacao tripulacao, int valor) {
+        for (Aliado aliado : tripulacao.getAliadosAtivos()) {
+            aliado.addXp(valor);
+        }
+    }
 }

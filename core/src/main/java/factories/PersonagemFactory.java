@@ -2,7 +2,7 @@ package factories;
 
 import entidades.Aliado;
 import entidades.Inimigo;
-import progressao.Recompensa;
+
 
 public class PersonagemFactory {
 
@@ -95,24 +95,21 @@ public class PersonagemFactory {
 
     
     public static Inimigo criarMarinheiro(int nivel) { // (ta escalonando com o nivel atual, pode trocar dps)
-        Recompensa loot = new Recompensa(10 * nivel, 5 * nivel); // dinheiro, xp 
-        Inimigo marinheiro = new Inimigo("Marinheiro Who", 30 * nivel, 0, 5, loot);// nome, vida, defesa, iniciativa, recompensa
+        Inimigo marinheiro = new Inimigo("Marinheiro Who", 30 * nivel, 0, 5, 10 * nivel, 5 * nivel);// nome, vida, defesa, iniciativa, dinheiro, xp
         marinheiro.adicionarHabilidade(HabilidadeFactory.criarAtaqueBasicoInimigo(nivel));
         
         return marinheiro;
     }
 
     public static Inimigo criarPirataInimigo(int nivel) { // (ta escalonando com o nivel atual, pode trocar dps)
-        Recompensa loot = new Recompensa(10 * nivel, 5 * nivel); // dinheiro, xp 
-        Inimigo pirata = new Inimigo("Pirata Who", 30 * nivel, 0, 5, loot);// nome, vida, defesa, iniciativa, recompensa
+        Inimigo pirata = new Inimigo("Pirata Who", 30 * nivel, 0, 5, 10 * nivel, 5 * nivel);// nome, vida, defesa, iniciativa, dinheiro, xp
         pirata.adicionarHabilidade(HabilidadeFactory.criarAtaqueBasicoInimigo(nivel));
         
         return pirata;
     }
     
     public static Inimigo criarChefe(int nivel) {
-        Recompensa lootGordo = new Recompensa(500, 200);
-        Inimigo boss = new Inimigo("Boss who", 300, 0.6f, 20, lootGordo);
+        Inimigo boss = new Inimigo("Boss who", 300, 0.6f, 20, 500, 200);
         boss.adicionarHabilidade(HabilidadeFactory.criarAtaqueBasicoInimigo(nivel));
         boss.adicionarHabilidade(HabilidadeFactory.criarDefesaHaki());
         
