@@ -108,7 +108,8 @@ public class IlhaFactory {
         /** Cria um inimigo capanga escalado pelo indice da ilha. */
         private static Inimigo cap(String nome, int idx, String spriteKey) {
         int hp = 60 + idx * 35;
-        int def = 2 + (int)(idx * 1.5f);
+        float def = 1.0f - (idx * 0.02f);
+        if (def < 0.5f) def = 0.5f;
         int inic = 8 + idx;
         int poder = 12 + idx * 8;
         Inimigo e = new Inimigo(nome, hp, def, inic,
@@ -121,7 +122,8 @@ public class IlhaFactory {
         private static Inimigo mini(String nome, int idx, String spriteKey,
             String habNome, int habPoder) {
         int hp = 130 + idx * 60;
-        int def = 5 + idx * 2;
+        float def = 0.9f - (idx * 0.03f);
+        if (def < 0.3f) def = 0.3f;
         int inic = 10 + idx;
         Inimigo e = new Inimigo(nome, hp, def, inic,
                 100 + idx * 40, 50 + idx * 20, spriteKey);
@@ -133,7 +135,8 @@ public class IlhaFactory {
         private static Inimigo boss(String nome, int idx, String spriteKey,
             String hab1, int pod1, String hab2, int pod2) {
         int hp = 250 + idx * 150;
-        int def = 8 + idx * 3;
+        float def = 0.8f - (idx * 0.04f);
+        if (def < 0.2f) def = 0.2f;
         int inic = 12 + idx * 2;
         Inimigo b = new Inimigo(nome, hp, def, inic,
                 200 + idx * 100, 100 + idx * 50, spriteKey);
