@@ -63,8 +63,55 @@ public class HabilidadeFactory {
     }
 
     public static Habilidade criarEspecialFranky(Aliado p) {
-        return new Habilidade("Coupe de Vent", TipoHabilidade.DANO, p.getVidaMaxima() * 0.3f);
-        
+        return new Habilidade("Coupe de Vent", TipoHabilidade.DANO, p.getVidaMaxima() * 0.3f); 
+    }
+
+    public static Habilidade criarEspecialVivi(Aliado p) {
+        return new Habilidade("Danse Macabre", TipoHabilidade.DANO, p.getVidaMaxima() * 0.3f);
+    }
+
+    public static Habilidade criarEspecialCarue(Aliado p) {
+        return new Habilidade("Patada do Carue", TipoHabilidade.DANO, p.getVidaMaxima() * 0.3f);
+    }
+
+    public static Habilidade criarEspecialKoby(Aliado p) {
+        return new Habilidade("Shigan", TipoHabilidade.DANO, p.getVidaMaxima() * 0.3f);
+    }
+
+    public static Habilidade criarEspecialYamato(Aliado p) {
+        return new Habilidade("Thunder Bagua", TipoHabilidade.DANO, p.getVidaMaxima() * 0.3f);
+    }
+
+    public static Habilidade criarEspecialLaw(Aliado p) {
+        return new Habilidade("Room", TipoHabilidade.DANO, p.getVidaMaxima() * 0.3f);
+    }
+
+    public static Habilidade criarEspecialRebecca(Aliado p) {
+        return new Habilidade("Coliseu", TipoHabilidade.DANO, p.getVidaMaxima() * 0.3f);
+    }
+
+    public static Habilidade criarEspecialVegapunk(Aliado p) {
+        return new Habilidade("Fabrica", TipoHabilidade.DANO, p.getVidaMaxima() * 0.3f);
+    }
+
+    public static Habilidade criarEspecialMomonosuke(Aliado p) {
+        return new Habilidade("Rugido do Dragão", TipoHabilidade.DANO, p.getVidaMaxima() * 0.3f);
+    }
+
+    public static Habilidade criarEspecialBonClay(Aliado p) {
+        return new Habilidade("Manji ", TipoHabilidade.DANO, p.getVidaMaxima() * 0.3f);
+    }
+
+    public static Habilidade criarEspecialAce(Aliado p) {
+        return new Habilidade("Hiken", TipoHabilidade.DANO, p.getVidaMaxima() * 0.3f);
+    }
+    
+    public static Habilidade criarEspecialLoki(Aliado p) {
+        return new Habilidade("Porrada", TipoHabilidade.DANO, p.getVidaMaxima() * 0.3f);
+    }
+
+    public static Habilidade criarEspecialCarrot(Aliado p) {
+        return new Habilidade("Sulong", TipoHabilidade.DANO, p.getVidaMaxima() * 0.3f);
     }
 
 }

@@ -96,6 +96,7 @@ public class PersonagemFactory {
     public static Aliado criarVivi(){
         Aliado vivi = new Aliado("Vivi", 70, 1, 6, 1, 0, "vivi.png");
         vivi.adicionarHabilidade(HabilidadeFactory.criarAtaqueBasico(vivi));
+        vivi.adicionarHabilidade(HabilidadeFactory.criarEspecialVivi(vivi));
         
         return vivi;
     }
@@ -103,6 +104,7 @@ public class PersonagemFactory {
     public static Aliado criarCarrot(){
         Aliado carrot = new Aliado("Carrot", 70, 1, 6, 1, 0, "carrot.png");
         carrot.adicionarHabilidade(HabilidadeFactory.criarAtaqueBasico(carrot));
+        carrot.adicionarHabilidade(HabilidadeFactory.criarEspecialCarrot(carrot));
         
         return carrot;
     }
@@ -128,6 +130,7 @@ public class PersonagemFactory {
     public static Aliado criarRebecca(){
         Aliado rebecca = new Aliado("Rebecca", 70, 1, 6, 1, 0, "rebecca.png");
         rebecca.adicionarHabilidade(HabilidadeFactory.criarAtaqueBasico(rebecca));
+        rebecca.adicionarHabilidade(HabilidadeFactory.criarEspecialRebecca(rebecca));
         
         return rebecca;
     }
@@ -143,6 +146,7 @@ public class PersonagemFactory {
     public static Aliado criarMomonosuke(){
         Aliado momonosuke = new Aliado("Momonosuke", 70, 1, 6, 1, 0, "momonosuke.png");
         momonosuke.adicionarHabilidade(HabilidadeFactory.criarAtaqueBasico(momonosuke));
+        momonosuke.adicionarHabilidade(HabilidadeFactory.criarEspecialMomonosuke(momonosuke));
         
         return momonosuke;
     }
@@ -150,6 +154,7 @@ public class PersonagemFactory {
     public static Aliado criarBonClay(){
         Aliado bonClay = new Aliado("Bon Clay", 70, 1, 6, 1, 0, "bonclay.png");
         bonClay.adicionarHabilidade(HabilidadeFactory.criarAtaqueBasico(bonClay));
+        bonClay.adicionarHabilidade(HabilidadeFactory.criarEspecialBonClay(bonClay));
         
         return bonClay;
     }
@@ -157,20 +162,23 @@ public class PersonagemFactory {
     public static Aliado criarKoby(){
         Aliado koby = new Aliado("Koby", 70, 1, 6, 1, 0, "koby.png");
         koby.adicionarHabilidade(HabilidadeFactory.criarAtaqueBasico(koby));
+        koby.adicionarHabilidade(HabilidadeFactory.criarEspecialKoby(koby));
         
         return koby;
     }
 
-    public static Aliado criarKaru(){
-        Aliado karu = new Aliado("Karu", 70, 1, 6, 1, 0, "karu.png");
-        karu.adicionarHabilidade(HabilidadeFactory.criarAtaqueBasico(karu));
+    public static Aliado criarCarue(){
+        Aliado carue = new Aliado("Carue", 70, 1, 6, 1, 0, "carue.png");
+        carue.adicionarHabilidade(HabilidadeFactory.criarAtaqueBasico(carue));
+        carue.adicionarHabilidade(HabilidadeFactory.criarEspecialCarue(carue));
         
-        return karu;
+        return carue;
     }
 
     public static Aliado criarAce(){
         Aliado ace = new Aliado("Ace", 70, 1, 6, 1, 0, "ace.png");
         ace.adicionarHabilidade(HabilidadeFactory.criarAtaqueBasico(ace));
+        ace.adicionarHabilidade(HabilidadeFactory.criarEspecialAce(ace));
         
         return ace;
     }
@@ -178,13 +186,15 @@ public class PersonagemFactory {
     public static Aliado criarLoki(){
         Aliado loki = new Aliado("Loki", 120, 0.90f, 10, 1, 0, "loki.png");
         loki.adicionarHabilidade(HabilidadeFactory.criarAtaqueBasico(loki));
+        loki.adicionarHabilidade(HabilidadeFactory.criarEspecialLoki(loki));
+        loki.adicionarHabilidade(HabilidadeFactory.criarDefesaHaki());
         
         return loki;
     }
     
     public static Inimigo criarMarinheiro(int nivel) { // (ta escalonando com o nivel atual, pode trocar dps)
         Recompensa loot = new Recompensa(10 * nivel, 5 * nivel); // dinheiro, xp 
-        Inimigo marinheiro = new Inimigo("Marinheiro Who", 30 * nivel, 0, 5, loot, "marinheiro.png");// nome, vida, defesa, iniciativa, recompensa
+        Inimigo marinheiro = new Inimigo("Marinheiro Who", 30 * nivel, 1, 5, loot, "marinheiro.png");// nome, vida, defesa, iniciativa, recompensa
         marinheiro.adicionarHabilidade(HabilidadeFactory.criarAtaqueBasicoInimigo(nivel));
         
         return marinheiro;
@@ -192,7 +202,7 @@ public class PersonagemFactory {
 
     public static Inimigo criarPirataInimigo(int nivel) { // (ta escalonando com o nivel atual, pode trocar dps)
         Recompensa loot = new Recompensa(10 * nivel, 5 * nivel); // dinheiro, xp 
-        Inimigo pirata = new Inimigo("Pirata Who", 30 * nivel, 0, 5, loot, "pirata.png");// nome, vida, defesa, iniciativa, recompensa
+        Inimigo pirata = new Inimigo("Pirata Who", 30 * nivel, 1, 5, loot, "pirata.png");// nome, vida, defesa, iniciativa, recompensa
         pirata.adicionarHabilidade(HabilidadeFactory.criarAtaqueBasicoInimigo(nivel));
         
         return pirata;
