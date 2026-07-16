@@ -9,7 +9,7 @@ import entidades.Aliado;
 import entidades.Habilidade;
 import entidades.Inimigo;
 import entidades.Personagem;
-import progressao.Recompensa;
+
 
 public class GerenciadorDeBatalha {
     public enum EstadoBatalha {
@@ -204,20 +204,20 @@ public class GerenciadorDeBatalha {
     public void recompensa() {
         int dinheiroTotal = 0;
         int xpTotal = 0;
-        ArrayList<Inimigo> oponentes;
+        ArrayList<Inimigo> oponentes = new ArrayList<>();
         for (Personagem inimigo : inimigos) {
             if (inimigo instanceof Inimigo oponente) {
                 oponentes.add(oponente);
             }
         }
         for (Inimigo oponente : oponentes) {
-            dinheiroTotal += oponente.getRecompensa().getDinheiroGanhado();
-            xpTotal += oponente.getRecompensa().getExperienciaGanhada();
+            dinheiroTotal += oponente.getRecompensaDinheiro();
+            xpTotal += oponente.getRecompensaExperiencia();
         }
 
         int xpDividido = xpTotal / aliados.size();
 
-        ArrayList<Aliado> amigos;
+        ArrayList<Aliado> amigos = new ArrayList<>();
         for (Personagem aliado : aliados) {
             if (aliado instanceof Aliado amigo) {
                 amigos.add(amigo);

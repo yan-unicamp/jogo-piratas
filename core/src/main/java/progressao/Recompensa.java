@@ -7,7 +7,6 @@ import entidades.Item;
 public class Recompensa {
 
     private Recompensa() {
-        // Classe apenas com métodos estáticos
     }
 
     public static void darDinheiro(Tripulacao tripulacao, int valor) {
