@@ -427,6 +427,40 @@ public class PersonagemFactory {
         return inimigos;
     }
 
+    public static Inimigo criarCapanga(String nome, int idx, String spriteKey) {
+        int hp = 60 + idx * 35;
+        float def = 1.0f - (idx * 0.02f);
+        if (def < 0.5f) def = 0.5f;
+        int inic = 8 + idx;
+        int poder = 12 + idx * 8;
+        Inimigo e = new Inimigo(nome, hp, def, inic,
+                40 + idx * 20, 20 + idx * 10, spriteKey);
+        e.adicionarHabilidade(new entidades.Habilidade("Ataque", entidades.TipoHabilidade.DANO, poder));
+        return e;
+    }
+
+    public static Inimigo criarMiniBoss(String nome, int idx, String spriteKey, String habNome, int habPoder) {
+        int hp = 130 + idx * 60;
+        float def = 0.9f - (idx * 0.03f);
+        if (def < 0.3f) def = 0.3f;
+        int inic = 10 + idx;
+        Inimigo e = new Inimigo(nome, hp, def, inic,
+                100 + idx * 40, 50 + idx * 20, spriteKey);
+        e.adicionarHabilidade(new entidades.Habilidade(habNome, entidades.TipoHabilidade.DANO, habPoder + (idx * 5)));
+        return e;
+    }
+
+    public static Inimigo criarBoss(String nome, int idx, String spriteKey, String hab1, int pod1, String hab2, int pod2) {
+        int hp = 250 + idx * 150;
+        float def = 0.8f - (idx * 0.04f);
+        if (def < 0.2f) def = 0.2f;
+        int inic = 12 + idx * 2;
+        Inimigo b = new Inimigo(nome, hp, def, inic,
+                200 + idx * 100, 100 + idx * 50, spriteKey);
+        b.adicionarHabilidade(new entidades.Habilidade(hab1, entidades.TipoHabilidade.DANO, pod1 + (idx * 6)));
+        b.adicionarHabilidade(new entidades.Habilidade(hab2, entidades.TipoHabilidade.DANO, pod2 + (idx * 8)));
+        return b;
+    }
 }
 
 
