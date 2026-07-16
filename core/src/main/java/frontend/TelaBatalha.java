@@ -163,7 +163,6 @@ public class TelaBatalha implements Screen {
     private void atualizarUI(boolean desenharBotoes) {
         uiTable.clear();
         
-        // --- TIMELINE DE INICIATIVA ---
         Table timelineTable = new Table();
         timelineTable.add(new Label("Iniciativa:", skin)).padRight(10);
         
@@ -214,7 +213,6 @@ public class TelaBatalha implements Screen {
         Table leftColumn = new Table();
         Table rightColumn = new Table();
         
-        // Status dos Aliados (esquerda)
         for (Personagem aliado : aliados) {
             if (aliado.estaVivo()) {
                 Table charTable = new Table();
@@ -254,7 +252,6 @@ public class TelaBatalha implements Screen {
             }
         }
         
-        // Status dos Inimigos (direita)
         for (Personagem ini : inimigos) {
             if (ini.estaVivo()) {
                 Table charTable = new Table();
@@ -300,13 +297,13 @@ public class TelaBatalha implements Screen {
         
         uiTable.add(logLabel).pad(10).row();
         
-        // Painel inferior (botoes)
         Table controlPanel = new Table();
         if (desenharBotoes) {
             Personagem aliadoVez = gerenciador.getAliadoAguardandoAcao();
             if (aliadoVez != null) {
                 int buttonCount = 0;
                 if (!escolhendoAlvo) {
+                    Table optionsTable = new Table();
                     for (final Habilidade hab : aliadoVez.getHabilidades()) {
                         String poderFormatado = (hab.getTipo() == TipoHabilidade.DEFESA) 
                             ? String.format("%.1f", hab.getValorPoder()) 
@@ -327,10 +324,12 @@ public class TelaBatalha implements Screen {
                                 }
                             }
                         });
-                        controlPanel.add(btn).size(200, 40).pad(5);
+                        optionsTable.add(btn).size(400, 60).pad(10);
                         buttonCount++;
-                        if (buttonCount % 2 == 0) controlPanel.row();
+                        if (buttonCount % 2 == 0) optionsTable.row();
                     }
+                    controlPanel.add().width(440);
+                    controlPanel.add(optionsTable).expandX().center();
                     
                     TextButton btnDebug = new TextButton("Vencer (Debug)", skin);
                     btnDebug.getLabel().setColor(Color.RED);
@@ -344,15 +343,14 @@ public class TelaBatalha implements Screen {
                             atualizarUI(false);
                         }
                     });
-                    controlPanel.add(btnDebug).size(200, 40).pad(5);
-                    buttonCount++;
-                    if (buttonCount % 2 == 0) controlPanel.row();
+                    controlPanel.add(btnDebug).size(400, 60).pad(10).padLeft(30);
                 } else {
                     boolean isCuraOuDefesa = (habilidadeSelecionada.getTipo() == TipoHabilidade.CURA || habilidadeSelecionada.getTipo() == TipoHabilidade.DEFESA);
                     ArrayList<Personagem> possiveisAlvos = isCuraOuDefesa ? aliados : inimigos;
                     
                     logLabel.setText("Selecione alvo para " + habilidadeSelecionada.getNome());
                     
+                    Table optionsTable = new Table();
                     for (final Personagem alvo : possiveisAlvos) {
                         if (alvo.estaVivo()) {
                             TextButton btnAlvo = new TextButton("Alvo: " + alvo.getNome(), skin);
@@ -366,11 +364,13 @@ public class TelaBatalha implements Screen {
                                     atualizarUI(false);
                                 }
                             });
-                            controlPanel.add(btnAlvo).size(200, 40).pad(5);
+                            optionsTable.add(btnAlvo).size(400, 60).pad(10);
                             buttonCount++;
-                            if (buttonCount % 2 == 0) controlPanel.row();
+                            if (buttonCount % 2 == 0) optionsTable.row();
                         }
                     }
+                    controlPanel.add().width(440);
+                    controlPanel.add(optionsTable).expandX().center();
                     
                     TextButton btnVoltar = new TextButton("Voltar", skin);
                     btnVoltar.addListener(new ClickListener() {
@@ -380,11 +380,11 @@ public class TelaBatalha implements Screen {
                             atualizarUI(true);
                         }
                     });
-                    controlPanel.add(btnVoltar).size(200, 40).pad(5);
+                    controlPanel.add(btnVoltar).size(400, 60).pad(10).padLeft(30);
                 }
             }
         }
-        uiTable.add(controlPanel).fillX().padBottom(20).row();
+        uiTable.add(controlPanel).fillX().minHeight(200).padBottom(20).row();
     }
 
     @Override
@@ -400,7 +400,6 @@ public class TelaBatalha implements Screen {
                 break;
                 
             case PLANEJAMENTO_INIMIGOS:
-                // automatico
                 break;
 
             case EXECUCAO_TURNOS:
@@ -410,9 +409,6 @@ public class TelaBatalha implements Screen {
                     Personagem quemAgiu = gerenciador.prepararProximaAcao();
                     if (quemAgiu != null) {
                         animando = true;
-                        // Nao mostramos nada no log na preparacao, conforme pedido pelo usuario
-                        // ou podemos deixar vazio
-                        
                         AcaoPlanejada acao = gerenciador.getUltimaAcaoExecutada();
                         if (acao != null) {
                             Group gAtacante = groupCache.get(quemAgiu);
