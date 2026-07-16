@@ -312,15 +312,23 @@ public class TelaBatalha implements Screen {
                         btn.addListener(new ClickListener() {
                             @Override
                             public void clicked(InputEvent event, float x, float y) {
-                                if (hab.isSelfcast()) {
-                                    aguardandoAcaoJogador = false;
-                                    gerenciador.registrarAcaoJogador(hab, aliadoVez);
-                                    logLabel.setText(aliadoVez.getNome() + " preparou " + hab.getNome());
-                                    atualizarUI(false);
+                                Runnable acaoConfirmada = () -> {
+                                    if (hab.isSelfcast()) {
+                                        aguardandoAcaoJogador = false;
+                                        gerenciador.registrarAcaoJogador(hab, aliadoVez);
+                                        logLabel.setText(aliadoVez.getNome() + " preparou " + hab.getNome());
+                                        atualizarUI(false);
+                                    } else {
+                                        habilidadeSelecionada = hab;
+                                        escolhendoAlvo = true;
+                                        atualizarUI(true);
+                                    }
+                                };
+                                
+                                if (hab.isEspecial()) {
+                                    exibirConfirmacaoEspecial(hab, acaoConfirmada);
                                 } else {
-                                    habilidadeSelecionada = hab;
-                                    escolhendoAlvo = true;
-                                    atualizarUI(true);
+                                    acaoConfirmada.run();
                                 }
                             }
                         });
@@ -337,7 +345,7 @@ public class TelaBatalha implements Screen {
                         @Override
                         public void clicked(InputEvent event, float x, float y) {
                             for (Personagem ini : inimigos) {
-                                if (ini.estaVivo()) ini.receberDano(ini.getVidaAtual());
+                                if (ini.estaVivo()) ini.receberDano(999999);
                             }
                             gerenciador.verificarVitoriaOuDerrota();
                             atualizarUI(false);
@@ -536,6 +544,44 @@ public class TelaBatalha implements Screen {
 
         stage.act(delta);
         stage.draw();
+    }
+    
+    private void exibirConfirmacaoEspecial(Habilidade hab, Runnable acaoConfirmada) {
+        uiTable.clear();
+        
+        Table confTable = new Table();
+        Label titulo = new Label("Atencao!", skin);
+        titulo.setColor(Color.YELLOW);
+        titulo.setFontScale(2.0f);
+        
+        Label aviso = new Label("O ataque especial '" + hab.getNome() + "' deixara o personagem exausto.\nEle perdera o proximo turno. Deseja continuar?", skin);
+        aviso.setAlignment(Align.center);
+        
+        Table botoes = new Table();
+        TextButton btnSim = new TextButton("Sim", skin);
+        btnSim.addListener(new ClickListener() {
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
+                acaoConfirmada.run();
+            }
+        });
+        
+        TextButton btnNao = new TextButton("Nao", skin);
+        btnNao.addListener(new ClickListener() {
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
+                atualizarUI(true);
+            }
+        });
+        
+        botoes.add(btnSim).size(200, 60).pad(10);
+        botoes.add(btnNao).size(200, 60).pad(10);
+        
+        confTable.add(titulo).padBottom(20).row();
+        confTable.add(aviso).padBottom(40).row();
+        confTable.add(botoes);
+        
+        uiTable.add(confTable).expand().center();
     }
 
     @Override
