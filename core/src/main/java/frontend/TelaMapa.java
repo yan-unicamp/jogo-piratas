@@ -265,6 +265,7 @@ public class TelaMapa implements Screen {
             @Override
             public void clicked(InputEvent event, float x, float y) {
                 gameManager.entrarIlha(ilha);
+                jogo.setScreen(new TelaBatalha(jogo, gameManager));
             }
         });
         

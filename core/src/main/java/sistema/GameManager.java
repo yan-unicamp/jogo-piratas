@@ -43,17 +43,17 @@ public class GameManager {
         this.bossesCap1 = new ArrayList<>(Arrays.asList("kuro", "donKrieg", "arlong"));
         this.bossesCap2 = new ArrayList<>(Arrays.asList("wapol", "crocodile", "robLucci", "moria"));
         this.bossesCap3 = new ArrayList<>(Arrays.asList("doflamingo", "bigMom", "kaido"));
+        
+        // Inicializa a tripulação com o Luffy (sempre presente)
+        tripulacao.adicionarAliado(PersonagemFactory.criarLuffy());
+        tripulacao.adicionarAliadoAtivo(tripulacao.getAliados().get(0));
+        
         System.out.println("GameManager inicializado.");
     }
 
     public void iniciarJogo() { 
         System.out.println("Iniciando o jogo...");
         this.jogoRodando = true;
-        
-        // Exemplo: adicionando um aliado base
-        tripulacao.adicionarAliado(PersonagemFactory.criarLuffy());
-        tripulacao.adicionarAliadoAtivo(tripulacao.getAliados().get(0));
-
         loopPrincipal();
     }
 
@@ -211,6 +211,7 @@ public class GameManager {
 
     public Tripulacao getTripulacao() { return tripulacao; }
     public Mapa getMapa() { return mapa; }
+    public GerenciadorDeBatalha getGerenciadorDeBatalha() { return gerenciadorDeBatalha; }
 
     public void prepararBatalha(List<Inimigo> inimigos) {
         System.out.println("\n[!] PREPARANDO BATALHA [!]");

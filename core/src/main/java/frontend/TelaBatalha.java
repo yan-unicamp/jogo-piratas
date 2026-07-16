@@ -22,7 +22,7 @@ import entidades.Habilidade;
 import entidades.Inimigo;
 import entidades.Personagem;
 import entidades.TipoHabilidade;
-import factories.PersonagemFactory;
+import sistema.GameManager;
 import sistema.GerenciadorDeBatalha;
 import sistema.JogoPiratas;
 import sistema.Tripulacao;
@@ -32,6 +32,7 @@ import java.util.ArrayList;
 public class TelaBatalha implements Screen {
 
     private final JogoPiratas jogo;
+    private final GameManager gameManager;
     private Stage stage;
     private Skin skin;
     private Table uiTable;
@@ -42,14 +43,14 @@ public class TelaBatalha implements Screen {
     
     private ArrayList<Personagem> aliados;
     private ArrayList<Personagem> inimigos;
-    private Tripulacao tripulacao;
 
     private boolean aguardandoAcaoJogador = false;
     private Habilidade habilidadeSelecionada;
     private boolean escolhendoAlvo = false;
 
-    public TelaBatalha(JogoPiratas jogo) {
+    public TelaBatalha(JogoPiratas jogo, GameManager gameManager) {
         this.jogo = jogo;
+        this.gameManager = gameManager;
     }
 
     @Override
@@ -95,22 +96,10 @@ public class TelaBatalha implements Screen {
     }
 
     private void inicializarBatalha() {
-        aliados = new ArrayList<>();
-        aliados.add(PersonagemFactory.criarLuffy());
-        aliados.add(PersonagemFactory.criarZoro());
-        aliados.add(PersonagemFactory.criarChopper());
-        
-        inimigos = new ArrayList<>();
-        inimigos.add(PersonagemFactory.criarMarinheiro(1));
-        inimigos.add(PersonagemFactory.criarPirataInimigo(1));
-        
-        tripulacao = new Tripulacao();
-        for (Personagem aliado : aliados) {
-            tripulacao.getAliados().add((Aliado) aliado);
-        }
-
-        gerenciador = new GerenciadorDeBatalha();
-        gerenciador.iniciarCombate(aliados, inimigos, tripulacao);
+        // Usa o gerenciador já preparado pelo GameManager
+        gerenciador = gameManager.getGerenciadorDeBatalha();
+        aliados = gerenciador.getAliados();
+        inimigos = gerenciador.getInimigos();
         
         aguardandoAcaoJogador = true;
         atualizarUI(true);
