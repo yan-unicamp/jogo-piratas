@@ -216,4 +216,176 @@ public class PersonagemFactory {
         
         return boss;
     }
+
+    public static Inimigo criarMoria(int nivel){
+        Recompensa loot = new Recompensa(500, 200);
+        Inimigo moria = new Inimigo("Moria", 300, 0.6f, 20, loot, "moria.png");
+        moria.adicionarHabilidade(HabilidadeFactory.criarAtaqueBasicoInimigo(nivel));
+        moria.adicionarHabilidade(HabilidadeFactory.criarDefesaHaki());
+        
+        return moria;
+    }
+
+    public static Inimigo criarKuro(int nivel){
+        Recompensa loot = new Recompensa(500, 200);
+        Inimigo kuro = new Inimigo("Kuro", 300, 0.6f, 20, loot, "kuro.png");
+        kuro.adicionarHabilidade(HabilidadeFactory.criarAtaqueBasicoInimigo(nivel));
+        kuro.adicionarHabilidade(HabilidadeFactory.criarDefesaHaki());
+        
+        return kuro;
+    }
+
+    public static Inimigo criarRodyJones(int nivel){
+        Recompensa loot = new Recompensa(500, 200);
+        Inimigo rodyJones = new Inimigo("Rody Jones", 300, 0.6f, 20, loot, "rodyjones.png");
+        rodyJones.adicionarHabilidade(HabilidadeFactory.criarAtaqueBasicoInimigo(nivel));
+        rodyJones.adicionarHabilidade(HabilidadeFactory.criarDefesaHaki());
+        
+        return rodyJones;
+    }
+
+    public static Inimigo criarWapol(int nivel){
+        Recompensa loot = new Recompensa(500, 200);
+        Inimigo wapol = new Inimigo("Wapol", 300, 0.6f, 20, loot, "wapol.png");
+        wapol.adicionarHabilidade(HabilidadeFactory.criarAtaqueBasicoInimigo(nivel));
+        wapol.adicionarHabilidade(HabilidadeFactory.criarDefesaHaki());
+        
+        return wapol;
+    }
+
+    public static Inimigo criarDoflamingo(int nivel){
+        Recompensa loot = new Recompensa(500, 200);
+        Inimigo doflamingo = new Inimigo("Doflamingo", 300, 0.6f, 20, loot, "doflamingo.png");
+        doflamingo.adicionarHabilidade(HabilidadeFactory.criarAtaqueBasicoInimigo(nivel));
+        doflamingo.adicionarHabilidade(HabilidadeFactory.criarDefesaHaki());
+        
+        return doflamingo;
+    }
+
+    public static Inimigo criarEneru(int nivel){
+        Recompensa loot = new Recompensa(500, 200);
+        Inimigo eneru = new Inimigo("Eneru", 300, 0.6f, 20, loot, "eneru.png");
+        eneru.adicionarHabilidade(HabilidadeFactory.criarAtaqueBasicoInimigo(nivel));
+        eneru.adicionarHabilidade(HabilidadeFactory.criarDefesaHaki());
+        
+        return eneru;
+    }
+
+    public static Inimigo criarCrocodile(int nivel){
+        Recompensa loot = new Recompensa(500, 200);
+        Inimigo crocodile = new Inimigo("Crocodile", 300, 0.6f, 20, loot, "crocodile.png");
+        crocodile.adicionarHabilidade(HabilidadeFactory.criarAtaqueBasicoInimigo(nivel));
+        crocodile.adicionarHabilidade(HabilidadeFactory.criarDefesaHaki());
+        
+        return crocodile;
+    }
+
+    public static Inimigo criarDonKrieg(int nivel){
+        Recompensa loot = new Recompensa(500, 200);
+        Inimigo donKrieg = new Inimigo("Don Krieg", 300, 0.6f, 20, loot, "donkrieg.png");
+        donKrieg.adicionarHabilidade(HabilidadeFactory.criarAtaqueBasicoInimigo(nivel));
+        donKrieg.adicionarHabilidade(HabilidadeFactory.criarDefesaHaki());
+        
+        return donKrieg;
+    }
+
+    public static Inimigo criarBuggy(int nivel){
+        Recompensa loot = new Recompensa(500, 200);
+        Inimigo buggy = new Inimigo("Buggy", 300, 0.6f, 20, loot, "buggy.png");
+        buggy.adicionarHabilidade(HabilidadeFactory.criarAtaqueBasicoInimigo(nivel));
+        buggy.adicionarHabilidade(HabilidadeFactory.criarDefesaHaki());
+        
+        return buggy;
+    }
+
+    public static Inimigo criarArlong(int nivel){
+        Recompensa loot = new Recompensa(500, 200);
+        Inimigo arlong = new Inimigo("Arlong", 300, 0.6f, 20, loot, "arlong.png");
+        arlong.adicionarHabilidade(HabilidadeFactory.criarAtaqueBasicoInimigo(nivel));
+        arlong.adicionarHabilidade(HabilidadeFactory.criarDefesaHaki());
+        
+        return arlong;
+    }
+
+    public static Inimigo criarRobLucci(int nivel){
+        Recompensa loot = new Recompensa(500, 200);
+        Inimigo robLucci = new Inimigo("Rob Lucci", 300, 0.6f, 20, loot, "roblucci.png");
+        robLucci.adicionarHabilidade(HabilidadeFactory.criarAtaqueBasicoInimigo(nivel));
+        robLucci.adicionarHabilidade(HabilidadeFactory.criarDefesaHaki());
+        
+        return robLucci;
+    }
+
+    public static Inimigo criarBigMom(int nivel){
+        Recompensa loot = new Recompensa(500, 200);
+        Inimigo bigMom = new Inimigo("Big Mom", 300, 0.6f, 20, loot, "bigmom.png");
+        bigMom.adicionarHabilidade(HabilidadeFactory.criarAtaqueBasicoInimigo(nivel));
+        bigMom.adicionarHabilidade(HabilidadeFactory.criarDefesaHaki());
+        
+        return bigMom;
+    }
+
+    public static Inimigo criarAkainu(int nivel){
+        Recompensa loot = new Recompensa(500, 200);
+        Inimigo akainu = new Inimigo("Akainu", 300, 0.6f, 20, loot, "akainu.png");
+        akainu.adicionarHabilidade(HabilidadeFactory.criarAtaqueBasicoInimigo(nivel));
+        akainu.adicionarHabilidade(HabilidadeFactory.criarDefesaHaki());
+        
+        return akainu;
+    }
+
+    public static Inimigo criarKizaru(int nivel){
+        Recompensa loot = new Recompensa(500, 200);
+        Inimigo kizaru = new Inimigo("Kizaru", 300, 0.6f, 20, loot, "kizaru.png");
+        kizaru.adicionarHabilidade(HabilidadeFactory.criarAtaqueBasicoInimigo(nivel));
+        kizaru.adicionarHabilidade(HabilidadeFactory.criarDefesaHaki());
+        
+        return kizaru;
+    }
+
+    public static Inimigo criarKaido(int nivel){
+        Recompensa loot = new Recompensa(500, 200);
+        Inimigo kaido = new Inimigo("Kaido", 300, 0.6f, 20, loot, "kaido.png");
+        kaido.adicionarHabilidade(HabilidadeFactory.criarAtaqueBasicoInimigo(nivel));
+        kaido.adicionarHabilidade(HabilidadeFactory.criarDefesaHaki());
+        
+        return kaido;
+    }
+
+    public static Inimigo criarMihawk(int nivel){
+        Recompensa loot = new Recompensa(500, 200);
+        Inimigo mihawk = new Inimigo("Mihawk", 300, 0.6f, 20, loot, "mihawk.png");
+        mihawk.adicionarHabilidade(HabilidadeFactory.criarAtaqueBasicoInimigo(nivel));
+        mihawk.adicionarHabilidade(HabilidadeFactory.criarDefesaHaki());
+        
+        return mihawk;
+    }
+
+    public static Inimigo criarSmoker(int nivel){
+        Recompensa loot = new Recompensa(500, 200);
+        Inimigo smoker = new Inimigo("Smoker", 300, 0.6f, 20, loot, "smoker.png");
+        smoker.adicionarHabilidade(HabilidadeFactory.criarAtaqueBasicoInimigo(nivel));
+        smoker.adicionarHabilidade(HabilidadeFactory.criarDefesaHaki());
+        
+        return smoker;
+    }
+
+    public static Inimigo criarCesar(int nivel){
+        Recompensa loot = new Recompensa(500, 200);
+        Inimigo cesar = new Inimigo("Cesar", 300, 0.6f, 20, loot, "cesar.png");
+        cesar.adicionarHabilidade(HabilidadeFactory.criarAtaqueBasicoInimigo(nivel));
+        cesar.adicionarHabilidade(HabilidadeFactory.criarDefesaHaki());
+        
+        return cesar;
+    }
+
+    public static Inimigo criarMagellan(int nivel){
+        Recompensa loot = new Recompensa(500, 200);
+        Inimigo magellan = new Inimigo("Magellan", 300, 0.6f, 20, loot, "magellan.png");
+        magellan.adicionarHabilidade(HabilidadeFactory.criarAtaqueBasicoInimigo(nivel));
+        magellan.adicionarHabilidade(HabilidadeFactory.criarDefesaHaki());
+        
+        return magellan;
+    }
+
 }
