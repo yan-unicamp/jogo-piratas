@@ -97,7 +97,12 @@ public class TelaLoja implements Screen {
                     for (Aliado aliado : gameManager.getTripulacao().getAliadosAtivos()) {
                         java.util.List<entidades.Habilidade> destravadas = aliado.ganharExperiencia(100);
                         for (entidades.Habilidade h : destravadas) {
-                            pendentes.add(new sistema.HabilidadePendente(aliado, h));
+                            if (aliado.getHabilidades().size() < 4) {
+                                aliado.adicionarHabilidade(h);
+                                System.out.println(aliado.getNome() + " aprendeu " + h.getNome() + "!");
+                            } else {
+                                pendentes.add(new sistema.HabilidadePendente(aliado, h));
+                            }
                         }
                     }
                     atualizarOuro();
