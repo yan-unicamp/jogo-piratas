@@ -414,8 +414,6 @@ public class TelaBatalha implements Screen {
                     Personagem quemAgiu = gerenciador.prepararProximaAcao();
                     if (quemAgiu != null) {
                         animando = true;
-                        // Não mostramos nada no log na preparação, conforme pedido pelo usuário
-                        // ou podemos deixar vazio
                         
                         AcaoPlanejada acao = gerenciador.getUltimaAcaoExecutada();
                         if (acao != null) {
