@@ -107,17 +107,24 @@ public class GameManager {
             
             NoMapa proximoNo = null;
 
-            if (etapaAtual == 3 || etapaAtual == 6) {
+            if (etapaAtual == 0) {
+                System.out.println("Atenção! O Capitão Morgan Mão de Machado bloqueia o seu caminho!");
+                Inimigo chefe = PersonagemFactory.criarMorgan(capituloAtual).comAliado(PersonagemFactory.criarZoro());
+                proximoNo = new NoBatalhaCanonica(chefe);
+                
+                System.out.println("Pressione ENTER para prosseguir.");
+                try { System.in.read(); } catch (Exception e) {} 
+            } 
+            else if (etapaAtual == 3 || etapaAtual == 6) {
                 System.out.println("Atenção! Uma batalha formidável se aproxima...");
                 Inimigo chefe = sortearBossCanonico(capituloAtual);
                 proximoNo = new NoBatalhaCanonica(chefe);
                 
                 System.out.println("Pressione ENTER para prosseguir.");
-                // scanner.nextLine() pode precisar ser evitado se buffer estiver sujo, vamos garantir
                 try { System.in.read(); } catch (Exception e) {} 
             } 
             else if (etapaAtual == 10) {
-                System.out.println("O CHEFE DO CAPÍTULO ESTÁ AQUI!");
+                System.out.println("O CHEFE DO CAPITULO ESTA AQUI!");
                 Inimigo chefeFinal = obterBossFinal(capituloAtual);
                 proximoNo = new NoBatalhaFinal(chefeFinal);
                 

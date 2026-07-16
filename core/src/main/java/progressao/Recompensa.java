@@ -24,4 +24,10 @@ public class Recompensa {
             aliado.ganharExperiencia(valor);
         }
     }
+
+    public static void darAliado(Tripulacao tripulacao, Aliado aliado) {
+        if (aliado != null) {
+            tripulacao.adicionarAliado(aliado);
+        }
+    }
 }

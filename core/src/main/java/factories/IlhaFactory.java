@@ -15,6 +15,8 @@ public class IlhaFactory {
 
     public static Ilha criar(IlhaEnum ilhaEnum) {
         switch (ilhaEnum) {
+            case SHELLS_TOWN:
+                return criarShellsTown();
             case ORANGE_TOWN:
                 return criarOrangeTown();
             case VILA_SYRUP:
@@ -62,6 +64,36 @@ public class IlhaFactory {
             default:
                 throw new IllegalArgumentException("Ilha desconhecida: " + ilhaEnum);
         }
+    }
+
+    public static Ilha criarGenerica(progressao.IlhasGenericasEnum genEnum) {
+        String nome = genEnum.name().replace("_", " ");
+        String[] words = nome.toLowerCase().split(" ");
+        StringBuilder sb = new StringBuilder();
+        for (String w : words) {
+            if(w.length() > 0) sb.append(Character.toUpperCase(w.charAt(0))).append(w.substring(1)).append(" ");
+        }
+        nome = sb.toString().trim();
+        
+        int cap = genEnum.getCapitulo();
+        if (cap == 0) cap = 1;
+
+        List<Rodada> rodadas = new java.util.ArrayList<>();
+
+        List<Inimigo> inimigos = Arrays.asList(
+            cap("Pirata", cap * 2, "inimigo_generico"),
+            cap("Capanga", cap * 2, "inimigo_generico")
+        );
+        rodadas.add(new Rodada(inimigos, false, "Combate Local"));
+
+        if (genEnum != progressao.IlhasGenericasEnum.BARCO_PIRATA_INIMIGO) {
+            List<Inimigo> inimigos2 = Arrays.asList(
+                mini("Capitão " + nome, cap * 2, "boss_generico", "Ataque Poderoso", 25 * cap)
+            );
+            rodadas.add(new Rodada(inimigos2, true, "Chefe Local"));
+        }
+
+        return new Ilha(nome, "backgrounds/mar.png", rodadas);
     }
 
     // ──────────────────────────────────────────────────────────────────────────
@@ -113,6 +145,13 @@ public class IlhaFactory {
     // Ilhas
     // ──────────────────────────────────────────────────────────────────────────
 
+    private static Ilha criarShellsTown() {
+        return new Ilha("Shells Town", "backgrounds/shells_town.png", Arrays.asList(
+                r("BOSS — Morgan Mão de Machado!", true,
+                        boss("Morgan Mão de Machado", 0, "inimigos/bosses/morgan.png",
+                                "Corte de Machado", 35, "Golpe Devastador", 45).comAliado(PersonagemFactory.criarZoro()))));
+    }
+
     private static Ilha criarOrangeTown() {
         return new Ilha("Orange Town", "backgrounds/orange_town.png", Arrays.asList(
                 r("Rodada 1 — Piratas de Buggy", false,
@@ -136,7 +175,7 @@ public class IlhaFactory {
                         mini("Jango", 1, "inimigos/minibosses/jango.png", "Hipnose!", 28)),
                 r("BOSS — Capitão Kuro!", true,
                         boss("Capitão Kuro", 1, "inimigos/bosses/kuro.png",
-                                "Unhas de Gato", 45, "Tempo de Massacre", 55))));
+                                "Unhas de Gato", 45, "Tempo de Massacre", 55).comAliado(PersonagemFactory.criarUsopp()))));
     }
 
     private static Ilha criarBaratie() {
@@ -147,12 +186,12 @@ public class IlhaFactory {
                 r("Rodada 2 — Pearl & Gin", false,
                         mini("Pearl", 2, "inimigos/minibosses/pearl.png", "Escudo de Fogo", 32),
                         mini("Gin", 2, "inimigos/minibosses/gin.png", "Tonfa de Ferro", 35)),
-                r("Interlúdio — Dracule Mihawk", false,
-                        boss("Dracule Mihawk", 2, "inimigos/bosses/mihawk.png",
-                                "Corte de Cruz", 70, "Yoru — Pleno Negro", 85)),
+                // r("Interlúdio — Dracule Mihawk", false,
+                //         boss("Dracule Mihawk", 2, "inimigos/bosses/mihawk.png",
+                //                 "Corte de Cruz", 70, "Yoru — Pleno Negro", 85)),
                 r("BOSS — Don Krieg!", true,
                         boss("Don Krieg", 2, "inimigos/bosses/krieg.png",
-                                "Bazuca MH5", 50, "Granada Explosiva", 60))));
+                                "Bazuca MH5", 50, "Granada Explosiva", 60).comAliado(PersonagemFactory.criarSanji()))));
     }
 
     private static Ilha criarArlongPark() {
@@ -162,11 +201,11 @@ public class IlhaFactory {
                         cap("Homem-Peixe", 3, "inimigos/capangas/capanga_arlong.png")),
                 r("Rodada 2 — Tripulação de Arlong", false,
                         mini("Hatchan", 3, "inimigos/minibosses/hachi.png", "Seis Espadas", 38),
-                        mini("Kuroobi", 3, "inimigos/minibosses/kuroobi.png", "Artes Marciais Peixe", 35),
-                        mini("Chuu", 3, "inimigos/minibosses/chuu.png", "Pistola d'Água", 30)),
+                        mini("Kuroobi", 2, "inimigos/minibosses/kuroobi.png", "Golpe de Karatê", 25),
+                        mini("Chuu", 3, "inimigos/minibosses/chuu.png", "Pistola d'Agua", 30)),
                 r("BOSS — Arlong!", true,
                         boss("Arlong", 3, "inimigos/bosses/arlong.png",
-                                "Mandíbula de Tubarão", 55, "Nariz Viu?", 65))));
+                                "Mandíbula de Tubarão", 55, "Nariz Viu?", 65).comAliado(PersonagemFactory.criarNami()))));
     }
 
     private static Ilha criarLoguetown() {
@@ -203,7 +242,7 @@ public class IlhaFactory {
                         mini("Marimo", 6, "inimigos/minibosses/mr5.png", "Machado Pesado", 55)),
                 r("BOSS — Wapol!", true,
                         boss("Wapol", 6, "inimigos/bosses/wapol.png",
-                                "Boca-Canhão", 75, "Fusão Wapol", 88))));
+                                "Boca-Canhão", 75, "Fusão Wapol", 88).comAliado(PersonagemFactory.criarChopper()))));
     }
 
     private static Ilha criarAlabasta() {
@@ -219,7 +258,7 @@ public class IlhaFactory {
                         mini("Mr. 1 — Daz Bonez", 7, "inimigos/minibosses/mr1.png", "Lâminas de Aço", 70)),
                 r("BOSS — Sir Crocodile (Mr. 0)!", true,
                         boss("Sir Crocodile", 7, "inimigos/bosses/crocodile.png",
-                                "Desert Spada", 92, "Sables — Tempestade de Areia", 105))));
+                                "Desert Spada", 92, "Sables — Tempestade de Areia", 105).comAliado(PersonagemFactory.criarRobin()))));
     }
 
     private static Ilha criarJaya() {
@@ -258,7 +297,7 @@ public class IlhaFactory {
                         mini("Kaku", 10, "inimigos/minibosses/kaku.png", "Pasta Buster", 100)),
                 r("BOSS — Rob Lucci!", true,
                         boss("Rob Lucci", 10, "inimigos/bosses/rob_lucci.png",
-                                "Rokuogan", 130, "Seis Poderes — Impacto Supremo", 148))));
+                                "Rokuogan", 130, "Seis Poderes — Impacto Supremo", 148).comAliado(PersonagemFactory.criarFranky()))));
     }
 
     private static Ilha criarThrillerBark() {
@@ -272,7 +311,7 @@ public class IlhaFactory {
                         mini("Perona", 11, "inimigos/minibosses/perona.png", "Fantasmas Negativos", 98)),
                 r("BOSS — Gecko Moria!", true,
                         boss("Gecko Moria", 11, "inimigos/bosses/moria.png",
-                                "Sombra de Batalha — Doppelman", 140, "Shadow Asgard", 162))));
+                                "Sombra de Batalha — Doppelman", 140, "Shadow Asgard", 162).comAliado(PersonagemFactory.criarBrook()))));
     }
 
     private static Ilha criarSabaody() {
@@ -353,7 +392,7 @@ public class IlhaFactory {
                         mini("Diamante", 17, "inimigos/minibosses/diamante.png", "Hira Hira Slice", 162)),
                 r("BOSS — Donquixote Doflamingo!", true,
                         boss("Donquixote Doflamingo", 17, "inimigos/bosses/doflamingo.png",
-                                "Overheat — Fio Ardente", 218, "God Thread — Punição Divina", 248))));
+                                "Overheat — Fio Ardente", 218, "God Thread — Punição Divina", 248).comAliado(PersonagemFactory.criarLaw()))));
     }
 
     private static Ilha criarWholeCake() {
@@ -369,7 +408,7 @@ public class IlhaFactory {
                                 "Zan Giri Mochi", 228, "Kaki no Mi — Awakening", 258)),
                 r("BOSS — Big Mom (Charlotte Linlin)!", true,
                         boss("Big Mom", 18, "inimigos/bosses/bigmom.png",
-                                "Soul Pocus — Roubo de Alma", 235, "Ikoku Sovereignty", 268))));
+                                "Soul Pocus — Roubo de Alma", 235, "Ikoku Sovereignty", 268).comAliado(PersonagemFactory.criarJinbe()))));
     }
 
     private static Ilha criarWano() {
@@ -387,7 +426,7 @@ public class IlhaFactory {
                                 "Yamata no Orochi Bite", 210, "Veneno de Serpente", 225)),
                 r("BOSS — Kaido das Feras!", true,
                         boss("Kaido das Feras", 19, "inimigos/bosses/kaido.png",
-                                "Boro Breath — Sopro de Dragão", 255, "Raimei Hakke — Raio dos Oito Trigamas", 295))));
+                                "Boro Breath — Sopro de Dragão", 255, "Raimei Hakke — Raio dos Oito Trigamas", 295).comAliado(PersonagemFactory.criarYamato()))));
     }
 
     private static Ilha criarEgghead() {

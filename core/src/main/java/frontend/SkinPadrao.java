@@ -48,6 +48,10 @@ public class SkinPadrao {
         labelStyle.fontColor = Color.WHITE;
         skin.add("default", labelStyle);
 
+        // Estilo padrão de ScrollPane
+        com.badlogic.gdx.scenes.scene2d.ui.ScrollPane.ScrollPaneStyle scrollStyle = new com.badlogic.gdx.scenes.scene2d.ui.ScrollPane.ScrollPaneStyle();
+        skin.add("default", scrollStyle);
+
         return skin;
     }
 

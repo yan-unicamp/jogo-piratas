@@ -19,6 +19,12 @@ public class JogoPiratas extends Game {
 
     /** Fonte padrão compartilhada */
     public BitmapFont font;
+    
+    /** Gerenciador de Assets (texturas) */
+    public Assets assets;
+
+    /** Gerenciador do estado global do jogo (backend) */
+    public GameManager gameManager;
 
     @Override
     public void create() {
@@ -26,8 +32,11 @@ public class JogoPiratas extends Game {
         font = new BitmapFont(); // fonte padrão do libGDX
         font.setColor(Color.WHITE);
 
-        // Inicia com a tela de batalha para testes
-        setScreen(new TelaBatalha(this));
+        assets = new Assets();
+        assets.inicializar();
+
+        // Inicia com a tela inicial
+        setScreen(new frontend.TelaInicio(this));
     }
 
     @Override

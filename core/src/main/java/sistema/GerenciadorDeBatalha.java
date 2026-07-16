@@ -228,6 +228,12 @@ public class GerenciadorDeBatalha {
         for (Inimigo oponente : oponentes) {
             dinheiroTotal += oponente.getRecompensaDinheiro();
             xpTotal += oponente.getRecompensaExperiencia();
+            if (oponente.getRecompensaAliado() != null) {
+                progressao.Recompensa.darAliado(tripulacao, oponente.getRecompensaAliado());
+            }
+            if (oponente.getRecompensaItem() != null) {
+                progressao.Recompensa.darItem(tripulacao, oponente.getRecompensaItem());
+            }
         }
 
         int xpDividido = xpTotal / aliados.size();

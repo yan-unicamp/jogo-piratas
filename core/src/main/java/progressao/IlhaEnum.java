@@ -2,6 +2,7 @@ package progressao;
 
 public enum IlhaEnum {
     // East Blue
+    SHELLS_TOWN(RegiaoIlha.EAST_BLUE),
     ORANGE_TOWN(RegiaoIlha.EAST_BLUE),
     VILA_SYRUP(RegiaoIlha.EAST_BLUE),
     BARATIE(RegiaoIlha.EAST_BLUE),

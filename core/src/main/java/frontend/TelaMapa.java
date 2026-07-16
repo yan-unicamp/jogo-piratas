@@ -44,6 +44,8 @@ public class TelaMapa implements Screen {
 
     private Stage stage;
     private Skin  skin;
+    private Table overlayConfirmacao;
+    private Ilha  ilhaSelecionada;
 
     public TelaMapa(JogoPiratas jogo, GameManager gameManager) {
         this.jogo        = jogo;
@@ -60,19 +62,19 @@ public class TelaMapa implements Screen {
         Gdx.input.setInputProcessor(stage);
         skin  = SkinPadrao.criar();
 
-        Assets       assets = gameManager.getAssets();
-        List<Ilha>   ilhas  = gameManager.getMapa().getIlhas();
-        int          etapa  = gameManager.getMapa().getEtapaAtual(); // ilhas concluídas
+        Assets       assets = jogo.assets;
+        List<Ilha>   concluidas = gameManager.getMapa().getIlhasConcluidas();
+        List<Ilha>   opcoes     = gameManager.getMapa().getOpcoesAtuais();
+        int          etapa  = gameManager.getMapa().getEtapaAtual(); 
 
         // Stack: background + UI
         Stack stack = new Stack();
         stack.setFillParent(true);
         stage.addActor(stack);
 
-        // Fundo: thumbnail da próxima ilha disponível, ou cor sólida
-        Ilha proxima = etapa < ilhas.size() ? ilhas.get(etapa) : null;
-        if (proxima != null) {
-            Texture bgTex = assets.getTextura(proxima.getBgKey());
+        // Fundo: thumbnail da primeira opção disponível
+        if (!opcoes.isEmpty()) {
+            Texture bgTex = assets.getTextura(opcoes.get(0).getBgKey());
             Image bgImg = new Image(new TextureRegionDrawable(new TextureRegion(bgTex)));
             bgImg.setScaling(Scaling.fill);
             stack.add(bgImg);
@@ -83,21 +85,32 @@ public class TelaMapa implements Screen {
         stack.add(overlay);
 
         // UI principal
-        Table ui = montarUI(assets, ilhas, etapa);
+        Table ui = montarUI(assets, concluidas, opcoes, etapa);
         stack.add(ui);
+
+        // Overlay de confirmação
+        overlayConfirmacao = new Table();
+        overlayConfirmacao.setFillParent(true);
+        overlayConfirmacao.setVisible(false);
+        stack.add(overlayConfirmacao);
+
+        // Se houver apenas 1 opção, pular para a confirmação
+        if (opcoes.size() == 1) {
+            mostrarConfirmacao(opcoes.get(0), assets);
+        }
     }
 
     // ──────────────────────────────────────────────────────────────────────────
     // Montagem da UI
     // ──────────────────────────────────────────────────────────────────────────
 
-    private Table montarUI(Assets assets, List<Ilha> ilhas, int etapa) {
+    private Table montarUI(Assets assets, List<Ilha> concluidas, List<Ilha> opcoes, int etapa) {
         Table ui = new Table();
         ui.setFillParent(true);
         ui.top().pad(16);
 
         // ── HUD ───────────────────────────────────────────────────────────
-        ui.add(montarHud(etapa, ilhas.size())).fillX().expandX().padBottom(16).row();
+        ui.add(montarHud(etapa, 6)).fillX().expandX().padBottom(16).row(); // 5 genéricas + boss
 
         // ── Título ─────────────────────────────────────────────────────────
         Label titulo = new Label("Grand Line — Escolha sua próxima ilha", skin);
@@ -106,7 +119,7 @@ public class TelaMapa implements Screen {
         ui.add(titulo).padBottom(12).row();
 
         // ── Lista de ilhas em ScrollPane ───────────────────────────────────
-        Table listaIlhas = montarListaIlhas(assets, ilhas, etapa);
+        Table listaIlhas = montarListaIlhas(assets, concluidas, opcoes);
         ScrollPane scroll = new ScrollPane(listaIlhas, skin);
         scroll.setFadeScrollBars(false);
         scroll.setScrollingDisabled(true, false);
@@ -140,20 +153,32 @@ public class TelaMapa implements Screen {
         return hud;
     }
 
-    private Table montarListaIlhas(Assets assets, List<Ilha> ilhas, int etapa) {
+    private Table montarListaIlhas(Assets assets, List<Ilha> concluidas, List<Ilha> opcoes) {
         Table lista = new Table();
         lista.top();
         lista.pad(0, 20, 20, 20);
 
-        for (int i = 0; i < ilhas.size(); i++) {
-            Ilha ilha       = ilhas.get(i);
-            boolean concluida = i < etapa;
-            boolean atual     = i == etapa;
-            boolean bloqueada = i > etapa;
-
-            Table card = criarCardIlha(assets, ilha, i, concluida, atual, bloqueada);
+        // Histórico de ilhas concluídas
+        for (int i = 0; i < concluidas.size(); i++) {
+            Ilha ilha = concluidas.get(i);
+            Table card = criarCardIlha(assets, ilha, i, true, false, false);
             lista.add(card).fillX().expandX().padBottom(10).row();
         }
+
+        // Título para as opções atuais (se houver mais de uma)
+        if (opcoes.size() > 1) {
+            Label opcoesTitulo = new Label("--- Caminhos Disponíveis ---", skin);
+            opcoesTitulo.setColor(Color.LIGHT_GRAY);
+            lista.add(opcoesTitulo).padTop(10).padBottom(10).row();
+        }
+
+        // Opções disponíveis
+        for (int j = 0; j < opcoes.size(); j++) {
+            Ilha ilha = opcoes.get(j);
+            Table card = criarCardIlha(assets, ilha, concluidas.size() + j, false, true, false);
+            lista.add(card).fillX().expandX().padBottom(10).row();
+        }
+
         return lista;
     }
 
@@ -207,7 +232,7 @@ public class TelaMapa implements Screen {
             btn.addListener(new ClickListener() {
                 @Override
                 public void clicked(InputEvent event, float x, float y) {
-                    gameManager.entrarIlha(ilhaFinal);
+                    mostrarConfirmacao(ilhaFinal, assets);
                 }
             });
             card.add(btn).width(140).height(46).padLeft(10);
@@ -216,6 +241,48 @@ public class TelaMapa implements Screen {
         }
 
         return card;
+    }
+
+    private void mostrarConfirmacao(final Ilha ilha, Assets assets) {
+        this.ilhaSelecionada = ilha;
+        
+        overlayConfirmacao.clearChildren();
+        overlayConfirmacao.setBackground(new TextureRegionDrawable(SkinPadrao.textura1x1(0, 0, 0, 0.85f)));
+        
+        Table janela = new Table();
+        janela.setBackground(new TextureRegionDrawable(SkinPadrao.textura1x1(0.15f, 0.1f, 0.1f, 1f)));
+        janela.pad(40);
+        
+        Label titulo = new Label("Desbravar: " + ilha.getNome() + "?", skin);
+        titulo.setFontScale(1.6f);
+        titulo.setColor(Color.GOLD);
+        
+        Label desc = new Label("Você enfrentará " + ilha.getTotalRodadas() + " rodadas de batalha.", skin);
+        
+        TextButton btnConfirmar = new TextButton("Confirmar e Entrar", skin);
+        btnConfirmar.getLabel().setColor(Color.GREEN);
+        btnConfirmar.addListener(new ClickListener() {
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
+                gameManager.entrarIlha(ilha);
+            }
+        });
+        
+        TextButton btnVoltar = new TextButton("Voltar para o Mapa", skin);
+        btnVoltar.addListener(new ClickListener() {
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
+                overlayConfirmacao.setVisible(false);
+            }
+        });
+        
+        janela.add(titulo).padBottom(20).row();
+        janela.add(desc).padBottom(40).row();
+        janela.add(btnConfirmar).width(300).height(50).padBottom(15).row();
+        janela.add(btnVoltar).width(300).height(50).row();
+        
+        overlayConfirmacao.add(janela);
+        overlayConfirmacao.setVisible(true);
     }
 
     // ──────────────────────────────────────────────────────────────────────────

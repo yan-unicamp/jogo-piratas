@@ -215,6 +215,14 @@ public class PersonagemFactory {
         return boss;
     }
 
+    public static Inimigo criarMorgan(int nivel){
+        Inimigo morgan = new Inimigo("Morgan Mão de Machado", 300, 0.6f, 20, 500, 200, "morgan.png");
+        morgan.adicionarHabilidade(HabilidadeFactory.criarAtaqueBasicoInimigo(nivel));
+        morgan.adicionarHabilidade(HabilidadeFactory.criarDefesaHaki());
+        
+        return morgan;
+    }
+
     public static Inimigo criarMoria(int nivel){
         Inimigo moria = new Inimigo("Moria", 300, 0.6f, 20, 500, 200, "moria.png");
         moria.adicionarHabilidade(HabilidadeFactory.criarAtaqueBasicoInimigo(nivel));
