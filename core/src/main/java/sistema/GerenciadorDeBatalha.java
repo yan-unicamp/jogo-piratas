@@ -148,11 +148,18 @@ public class GerenciadorDeBatalha {
         estadoAtual = EstadoBatalha.EXECUCAO_TURNOS;
     }
 
+    private AcaoPlanejada ultimaAcaoExecutada;
+
+    public AcaoPlanejada getUltimaAcaoExecutada() {
+        return ultimaAcaoExecutada;
+    }
+
     public Personagem executarProximaAcao() {
         if (estadoAtual != EstadoBatalha.EXECUCAO_TURNOS)
             return null;
 
         Personagem personagemDaVez = null;
+        ultimaAcaoExecutada = null;
         
         // Pula os turnos de quem já morreu
         while (true) {
@@ -176,6 +183,7 @@ public class GerenciadorDeBatalha {
                     ultimoLog = personagemDaVez.getNome() + " usou " + acao.habilidade.getNome() + " em " + acao.alvo.getNome() + "!";
                     System.out.println("[" + ultimoLog + "]");
                     acao.habilidade.executarAcao(acao.alvo);
+                    ultimaAcaoExecutada = acao;
                 } else {
                     ultimoLog = personagemDaVez.getNome() + " tentou atacar, mas o alvo ja foi derrotado!";
                     System.out.println("[" + ultimoLog + "]");
@@ -217,6 +225,12 @@ public class GerenciadorDeBatalha {
 
     }
 
+    private int xpGanhoBatalha = 0;
+    private int dinheiroGanhoBatalha = 0;
+    
+    public int getXpGanho() { return xpGanhoBatalha; }
+    public int getDinheiroGanho() { return dinheiroGanhoBatalha; }
+
     public void recompensa() {
         int dinheiroTotal = 0;
         int xpTotal = 0;
@@ -236,6 +250,9 @@ public class GerenciadorDeBatalha {
                 progressao.Recompensa.darItem(tripulacao, oponente.getRecompensaItem());
             }
         }
+
+        this.xpGanhoBatalha = xpTotal;
+        this.dinheiroGanhoBatalha = dinheiroTotal;
 
         int xpDividido = xpTotal / aliados.size();
 

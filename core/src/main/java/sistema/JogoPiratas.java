@@ -7,6 +7,10 @@ import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import frontend.TelaMenu;
 import frontend.TelaBatalha;
+import entidades.Personagem;
+import entidades.ConfiguracaoBatalha;
+import factories.PersonagemFactory;
+import java.util.ArrayList;
 
 /**
  * Classe principal do jogo que estende Game do libGDX.
@@ -31,6 +35,23 @@ public class JogoPiratas extends Game {
         batch = new SpriteBatch();
         font = new BitmapFont(); // fonte padrão do libGDX
         font.setColor(Color.WHITE);
+        
+        // Filtro linear para a fonte não ficar pixelada ao esticar
+        font.getRegion().getTexture().setFilter(com.badlogic.gdx.graphics.Texture.TextureFilter.Linear, com.badlogic.gdx.graphics.Texture.TextureFilter.Linear);
+        font.getData().setScale(1.4f);
+        
+        // Espaçar mais as letras (aumenta a distância horizontal entre elas)
+        for (com.badlogic.gdx.graphics.g2d.BitmapFont.Glyph[] page : font.getData().glyphs) {
+            if (page != null) {
+                for (com.badlogic.gdx.graphics.g2d.BitmapFont.Glyph glyph : page) {
+                    if (glyph != null) {
+                        glyph.xadvance += 2;
+                    }
+                }
+            }
+        }
+
+        gameManager = new GameManager();
 
         assets = new Assets();
         assets.inicializar();
