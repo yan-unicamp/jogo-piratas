@@ -93,6 +93,94 @@ public class PersonagemFactory {
         return jinbe;
     }
 
+    public static Aliado criarVivi(){
+        Aliado vivi = new Aliado("Vivi", 70, 1, 6, 1, 0, "vivi.png");
+        vivi.adicionarHabilidade(HabilidadeFactory.criarAtaqueBasico(vivi));
+        
+        return vivi;
+    }
+
+    public static Aliado criarCarrot(){
+        Aliado carrot = new Aliado("Carrot", 70, 1, 6, 1, 0, "carrot.png");
+        carrot.adicionarHabilidade(HabilidadeFactory.criarAtaqueBasico(carrot));
+        
+        return carrot;
+    }
+
+    public static Aliado criarYamato() {
+        Aliado yamato = new Aliado("Yamato", 90, 0.9f, 8, 1, 0, "yamato.png");
+        yamato.adicionarHabilidade(HabilidadeFactory.criarAtaqueBasico(yamato));
+        yamato.adicionarHabilidade(HabilidadeFactory.criarDefesaHaki());
+        yamato.adicionarHabilidade(HabilidadeFactory.criarEspecialYamato(yamato));
+        
+        return yamato;
+    }
+
+    public static Aliado criarLaw(){
+        Aliado law = new Aliado("Law", 85, 0.95f, 9, 1, 0, "law.png");
+        law.adicionarHabilidade(HabilidadeFactory.criarAtaqueBasico(law));
+        law.adicionarHabilidade(HabilidadeFactory.criarDefesaHaki());
+        law.adicionarHabilidade(HabilidadeFactory.criarEspecialLaw(law));
+        
+        return law;
+    }
+
+    public static Aliado criarRebecca(){
+        Aliado rebecca = new Aliado("Rebecca", 70, 1, 6, 1, 0, "rebecca.png");
+        rebecca.adicionarHabilidade(HabilidadeFactory.criarAtaqueBasico(rebecca));
+        
+        return rebecca;
+    }
+
+    public static Aliado criarVegapunk(){
+        Aliado vegapunk = new Aliado("Vegapunk", 70, 1, 6, 1, 0, "vegapunk.png");
+        vegapunk.adicionarHabilidade(HabilidadeFactory.criarAtaqueBasico(vegapunk));
+        vegapunk.adicionarHabilidade(HabilidadeFactory.criarEspecialVegapunk(vegapunk));
+        
+        return vegapunk;
+    }
+
+    public static Aliado criarMomonosuke(){
+        Aliado momonosuke = new Aliado("Momonosuke", 70, 1, 6, 1, 0, "momonosuke.png");
+        momonosuke.adicionarHabilidade(HabilidadeFactory.criarAtaqueBasico(momonosuke));
+        
+        return momonosuke;
+    }
+
+    public static Aliado criarBonClay(){
+        Aliado bonClay = new Aliado("Bon Clay", 70, 1, 6, 1, 0, "bonclay.png");
+        bonClay.adicionarHabilidade(HabilidadeFactory.criarAtaqueBasico(bonClay));
+        
+        return bonClay;
+    }
+
+    public static Aliado criarKoby(){
+        Aliado koby = new Aliado("Koby", 70, 1, 6, 1, 0, "koby.png");
+        koby.adicionarHabilidade(HabilidadeFactory.criarAtaqueBasico(koby));
+        
+        return koby;
+    }
+
+    public static Aliado criarKaru(){
+        Aliado karu = new Aliado("Karu", 70, 1, 6, 1, 0, "karu.png");
+        karu.adicionarHabilidade(HabilidadeFactory.criarAtaqueBasico(karu));
+        
+        return karu;
+    }
+
+    public static Aliado criarAce(){
+        Aliado ace = new Aliado("Ace", 70, 1, 6, 1, 0, "ace.png");
+        ace.adicionarHabilidade(HabilidadeFactory.criarAtaqueBasico(ace));
+        
+        return ace;
+    }
+
+    public static Aliado criarLoki(){
+        Aliado loki = new Aliado("Loki", 120, 0.90f, 10, 1, 0, "loki.png");
+        loki.adicionarHabilidade(HabilidadeFactory.criarAtaqueBasico(loki));
+        
+        return loki;
+    }
     
     public static Inimigo criarMarinheiro(int nivel) { // (ta escalonando com o nivel atual, pode trocar dps)
         Recompensa loot = new Recompensa(10 * nivel, 5 * nivel); // dinheiro, xp 
