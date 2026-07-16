@@ -11,9 +11,13 @@ public class Habilidade {
         this.valorPoder = valorPoder;
     }
 
-    public void executarAcao(Personagem alvo) {
+    public void executarAcao(Personagem atacante, Personagem alvo) {
         switch (tipo) {
-            case DANO -> alvo.receberDano(valorPoder);
+            case DANO -> {
+                float mult = atacante != null ? atacante.getMultiplicadorAtaque() : 1.0f;
+                float extra = atacante != null ? atacante.getDanoFixoExtra() : 0f;
+                alvo.receberDano(valorPoder * mult + extra);
+            }
             case CURA -> alvo.curar(valorPoder);
             case DEFESA -> alvo.aumentarDefesaTemporaria(valorPoder);
         }

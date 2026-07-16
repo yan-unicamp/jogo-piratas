@@ -75,7 +75,7 @@ public class IlhaFactory {
         int inic = 8 + idx;
         int poder = 12 + idx * 5;
         Inimigo e = new Inimigo(nome, hp, def, inic,
-                new Recompensa(40 + idx * 20, 20 + idx * 10), spriteKey, false);
+                new Recompensa(40 + idx * 20, 20 + idx * 10), spriteKey);
         e.adicionarHabilidade(new Habilidade("Ataque", TipoHabilidade.DANO, poder));
         return e;
     }
@@ -87,7 +87,7 @@ public class IlhaFactory {
         int def = 5 + idx * 2;
         int inic = 10 + idx;
         Inimigo e = new Inimigo(nome, hp, def, inic,
-                new Recompensa(100 + idx * 40, 50 + idx * 20), spriteKey, false);
+                new Recompensa(100 + idx * 40, 50 + idx * 20), spriteKey);
         e.adicionarHabilidade(new Habilidade(habNome, TipoHabilidade.DANO, habPoder));
         return e;
     }
@@ -99,7 +99,7 @@ public class IlhaFactory {
         int def = 8 + idx * 3;
         int inic = 12 + idx * 2;
         Inimigo b = new Inimigo(nome, hp, def, inic,
-                new Recompensa(200 + idx * 100, 100 + idx * 50), spriteKey, true);
+                new Recompensa(200 + idx * 100, 100 + idx * 50), spriteKey);
         b.adicionarHabilidade(new Habilidade(hab1, TipoHabilidade.DANO, pod1));
         b.adicionarHabilidade(new Habilidade(hab2, TipoHabilidade.DANO, pod2));
         return b;

@@ -12,6 +12,7 @@ public abstract class Personagem {
     protected int iniciativa;
     protected List<Habilidade> habilidades;
     protected String caminhoImagem;
+    protected List<EfeitoTemporario> efeitos;
 
     public Personagem(String nome, int vidaMaxima, float defesa, int iniciativa, String caminhoImagem) {
         this.nome = nome;
@@ -22,11 +23,42 @@ public abstract class Personagem {
         this.iniciativa = iniciativa;
         this.habilidades = new ArrayList<>();
         this.caminhoImagem = caminhoImagem;
+        this.efeitos = new ArrayList<>();
     }
 
     public void receberDano(float valor) {
-        float dano = valor * defesaAtual; 
-        this.vidaAtual -= dano;
+        // Verifica imunidade
+        for (EfeitoTemporario e : efeitos) {
+            if (e.getTipo() == EfeitoTemporario.Tipo.IMUNIDADE) {
+                e.zerarTurnos(); // Consome a imunidade
+                return; // 0 dano
+            }
+        }
+
+        // Verifica multiplicadores de defesa (ex: -20% dano tomado = 0.8)
+        float multiplicadorDefesa = 1.0f;
+        for (EfeitoTemporario e : efeitos) {
+            if (e.getTipo() == EfeitoTemporario.Tipo.MULTIPLICADOR_DEFESA) {
+                multiplicadorDefesa *= e.getValor();
+            }
+        }
+        
+        float danoFinal = valor * defesaAtual * multiplicadorDefesa;
+
+        // Verifica barreira
+        for (EfeitoTemporario e : efeitos) {
+            if (e.getTipo() == EfeitoTemporario.Tipo.BARREIRA) {
+                float absorvido = Math.min(danoFinal, e.getValor());
+                e.setValor(e.getValor() - absorvido);
+                danoFinal -= absorvido;
+                if (e.getValor() <= 0) {
+                    e.zerarTurnos(); // Quebra a barreira
+                }
+                break; // Apenas uma barreira atua por vez
+            }
+        }
+
+        this.vidaAtual -= danoFinal;
         if (this.vidaAtual < 1) this.vidaAtual = 0; 
     }
 
@@ -39,12 +71,55 @@ public abstract class Personagem {
 
     public void aumentarDefesaTemporaria(float valor) { 
         float novadefesa = defesa - valor;
-        if (novadefesa < 0) novadefesa = 0; // Impede que a defesa fique negativa (o que faria o dano curar o personagem)
+        if (novadefesa < 0) novadefesa = 0; // Impede que a defesa fique negativa
         this.defesaAtual = novadefesa;
     }
 
     public void resetarDefesa() {
         this.defesaAtual = this.defesa;
+    }
+
+    public void adicionarEfeito(EfeitoTemporario efeito) {
+        this.efeitos.add(efeito);
+    }
+
+    public void processarEfeitosTurno() {
+        List<EfeitoTemporario> expirados = new ArrayList<>();
+        for (EfeitoTemporario e : efeitos) {
+            e.decrescerTurno();
+            if (e.expirou()) {
+                expirados.add(e);
+            }
+        }
+        efeitos.removeAll(expirados);
+    }
+    
+    public void limparEfeitos() {
+        efeitos.clear();
+    }
+
+    public float getMultiplicadorAtaque() {
+        float mult = 1.0f;
+        for (EfeitoTemporario e : efeitos) {
+            if (e.getTipo() == EfeitoTemporario.Tipo.MULTIPLICADOR_DANO || e.getTipo() == EfeitoTemporario.Tipo.REDUCAO_DANO_INIMIGO) {
+                mult *= e.getValor();
+            } else if (e.getTipo() == EfeitoTemporario.Tipo.PRENDER) {
+                mult *= e.getValor();
+                e.zerarTurnos(); // Consome a teia no próximo golpe
+            }
+        }
+        return mult;
+    }
+
+    public float getDanoFixoExtra() {
+        float extra = 0f;
+        for (EfeitoTemporario e : efeitos) {
+            if (e.getTipo() == EfeitoTemporario.Tipo.DANO_FIXO_EXTRA) {
+                extra += e.getValor();
+                e.zerarTurnos(); // Consome o dano extra
+            }
+        }
+        return extra;
     }
 
     public boolean estaVivo() {

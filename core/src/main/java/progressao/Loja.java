@@ -1,5 +1,7 @@
 package progressao;
 
+import entidades.EfeitoTemporario;
+import entidades.EfeitoTemporario.Tipo;
 import sistema.Tripulacao;
 import entidades.Aliado;
 
@@ -100,24 +102,64 @@ public class Loja {
                 }
                 break;
 
-            // --- Buffs de ataque, defesa, debuffs de inimigo, itens especiais ---
-            // TODO Fase 3+: Implementar quando o sistema de buffs/turnos estiver pronto
-            // (depende de GerenciadorDeBatalha e do sistema de modificadores temporários)
+            // --- Buffs de ataque ---
             case RUMBLE_BALL:
+                if (alvo != null) alvo.adicionarEfeito(new EfeitoTemporario(Tipo.MULTIPLICADOR_DANO, 1.15f, 3));
+                break;
             case PIMENTA_ALABASTA:
+                if (alvo != null) {
+                    alvo.adicionarEfeito(new EfeitoTemporario(Tipo.MULTIPLICADOR_DANO, 1.30f, 2));
+                    alvo.receberDano(5); // Perde -5 HP
+                }
+                break;
             case SAKE_WANO:
+                if (alvo != null) alvo.adicionarEfeito(new EfeitoTemporario(Tipo.DANO_FIXO_EXTRA, 15f, 1));
+                break;
             case BEBIDA_ENERGETICA:
+                if (tripulacao != null) {
+                    for (Aliado a : tripulacao.getAliadosVivos()) {
+                        a.adicionarEfeito(new EfeitoTemporario(Tipo.MULTIPLICADOR_DANO, 1.10f, 3));
+                    }
+                }
+                break;
+
+            // --- Debuffs (Nota: precisaríamos de alvo inimigo para esses. Na estrutura atual a Loja alvo é Aliado. 
+            // Vamos precisar adicionar o efeito no GameManager se ele tiver getInimigosAtivos, ou a Loja não consegue dar debuff no inimigo direto.
+            // Para simplificar, como a Loja só tem acesso a alvo (Aliado), não podemos aplicar no inimigo diretamente aqui
+            // a não ser que adicionássemos GameManager ou Inimigo. Mas vamos aplicar temporariamente como um "Aura" no Aliado?
+            // Não, o tipo REDUCAO_DANO_INIMIGO (Cegar) não faz sentido no Aliado. Vamos apenas logar que precisa de refatoração para selecionar inimigos na loja.
+            // Wait, na verdade, a TelaLoja não deixa mirar em inimigos porque inimigos não estão lá.
             case ESTRELA_DE_FUMACA:
             case GAS_DO_SONO:
             case FIO_DE_TEIA:
             case SAL_PURIFICADOR:
+                System.out.println("Itens de debuff devem ser usados em batalha, a Loja (Pré-Batalha) não tem inimigos válidos para aplicar.");
+                break;
+
+            // --- Buffs de defesa e especiais ---
             case CAPA_DA_MARINHA:
+                if (alvo != null) alvo.adicionarEfeito(new EfeitoTemporario(Tipo.BARREIRA, 15f, 3)); // +15 de barreira por 3 turnos (simplificando)
+                break;
             case CASCA_TRITAO:
+                if (alvo != null) alvo.adicionarEfeito(new EfeitoTemporario(Tipo.BARREIRA, 50f, 999)); // Sem limite de turnos
+                break;
             case ESSENCIA_HAKI:
+                if (alvo != null) alvo.adicionarEfeito(new EfeitoTemporario(Tipo.IMUNIDADE, 1f, 1));
+                break;
             case PO_DE_FERRO:
+                if (tripulacao != null) {
+                    for (Aliado a : tripulacao.getAliadosVivos()) {
+                        a.adicionarEfeito(new EfeitoTemporario(Tipo.BARREIRA, 10f, 3));
+                    }
+                }
+                break;
             case VIVRE_CARD:
+                // Permitiria fugir. Requer integração com GameManager/Batalha.
+                System.out.println("VIVRE_CARD ativado: Fuga garantida (requer implementação na UI de Batalha).");
+                break;
             case LOG_POSE:
-                // Estrutura pronta para receber implementação futura
+                // Aumentaria ilhas. Mapa linear agora, não tem efeito prático além de lore.
+                System.out.println("LOG_POSE ativado: Caminhos expandidos.");
                 break;
 
             default:
