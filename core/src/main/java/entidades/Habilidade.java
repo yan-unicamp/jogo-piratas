@@ -13,8 +13,8 @@ public class Habilidade {
 
     public void executarAcao(Personagem alvo) {
         switch (tipo) {
-            case DANO -> alvo.receberDano(valorPoder);
-            case CURA -> alvo.curar(valorPoder);
+            case DANO -> alvo.receberDano((int)valorPoder);
+            case CURA -> alvo.curar((int)valorPoder);
             case DEFESA -> alvo.aumentarDefesaTemporaria(valorPoder);
         }
     }

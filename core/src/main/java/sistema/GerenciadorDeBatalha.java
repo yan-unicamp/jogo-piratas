@@ -239,7 +239,7 @@ public class GerenciadorDeBatalha {
             }
         }
         for (Aliado amigo : amigos) {
-            amigo.addXp(xpDividido);
+            amigo.ganharExperiencia(xpDividido);
         }
         tripulacao.receberDinheiro(dinheiroTotal);
     }

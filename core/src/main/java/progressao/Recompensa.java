@@ -21,7 +21,7 @@ public class Recompensa {
 
     public static void darXp(Tripulacao tripulacao, int valor) {
         for (Aliado aliado : tripulacao.getAliadosAtivos()) {
-            aliado.addXp(valor);
+            aliado.ganharExperiencia(valor);
         }
     }
 }

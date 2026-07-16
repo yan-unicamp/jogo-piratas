@@ -12,12 +12,20 @@ public class Aliado extends Personagem {
 
     public int getNivel() { return nivel; }
     public int getExperiencia() { return experiencia; }
-    public void addXp(int xp) { this.experiencia += xp; }
 
-    public boolean ganharNivel() {
+    public void ganharExperiencia(int xp) {
+        this.experiencia += xp;
+        while (this.experiencia >= 100 * this.nivel) {
+            ganharNivel();
+        }
+    }
+
+    private boolean ganharNivel() {
         if (this.experiencia >= 100 * this.nivel) {
+            this.experiencia -= 100 * this.nivel;
             this.nivel++;
-            this.experiencia = 0;
+            System.out.println(this.getNome() + " subiu para o nível " + this.nivel + "!");
+            // Aqui você pode adicionar aumento de atributos (vidaMaxima, etc) no futuro
             return true;
         }
         return false;

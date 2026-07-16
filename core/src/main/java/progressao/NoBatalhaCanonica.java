@@ -2,15 +2,17 @@ package progressao;
 
 import sistema.GameManager;
 import entidades.Inimigo;
-import factories.PersonagemFactory;
 import java.util.ArrayList;
+import java.util.List;
 
 public class NoBatalhaCanonica implements NoMapa {
     
     private ArrayList<Inimigo> inimigos;
 
-    public NoBatalhaCanonica(int capitulo, int nivel) {
-        this.inimigos = PersonagemFactory.sortearInimigosCanonicos(capitulo, nivel);
+    public NoBatalhaCanonica(Inimigo chefeSorteado) {
+        this.inimigos = new ArrayList<>();
+        this.inimigos.add(chefeSorteado);
+        // Opcional: adicionar lacaios genéricos caso queira que o boss venha acompanhado.
     }
 
     public ArrayList<Inimigo> getInimigos() {

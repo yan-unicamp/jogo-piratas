@@ -86,13 +86,16 @@ public class ArvoreNaoBinaria {
     }
 
     private NoMapa instanciarNo(TipoNo tipo, int profundidade) {
+        int nivel = profundidade + 1;
         switch (tipo) {
             case BATALHA:
-                return new NoBatalha();
+                List<entidades.Inimigo> inimigos = new ArrayList<>();
+                inimigos.add(factories.PersonagemFactory.criarMarinheiro(nivel));
+                return new NoBatalha(inimigos);
             case BATALHA_CANONICA:
-                return new NoBatalhaCanonica(capitulo, profundidade + 1);
+                return new NoBatalhaCanonica(factories.PersonagemFactory.criarChefe(nivel));
             case BATALHA_FINAL:
-                return new NoBatalhaFinal(capitulo, profundidade + 1);
+                return new NoBatalhaFinal(factories.PersonagemFactory.criarChefe(nivel));
             case EVENTO:
                 return new NoEvento();
             case DESCANSO:

@@ -1,43 +1,117 @@
 package frontend;
 
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
-import com.badlogic.gdx.utils.ScreenUtils;
+import com.badlogic.gdx.graphics.Color;
+import com.badlogic.gdx.graphics.GL20;
+import com.badlogic.gdx.scenes.scene2d.InputEvent;
+import com.badlogic.gdx.scenes.scene2d.Stage;
+import com.badlogic.gdx.scenes.scene2d.ui.Label;
+import com.badlogic.gdx.scenes.scene2d.ui.Skin;
+import com.badlogic.gdx.scenes.scene2d.ui.Table;
+import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
+import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
+import com.badlogic.gdx.utils.viewport.ScreenViewport;
+import sistema.GameManager;
 import sistema.JogoPiratas;
 
 /**
- * Interface gráfica do Menu Principal.
+ * Tela de Menu Principal — funcional com botões Scene2D.
+ *
+ * Botões:
+ * "Novo Jogo" → gameManager.iniciarJogo() → muda para MAPA
+ * "Sair" → gameManager.encerrarJogo() → fecha o app
+ *
+ * TODO Fase 5: Substituir SkinPadrao por skin temático (piratas),
+ * adicionar logo animado, música de fundo, efeitos de hover.
  */
 public class TelaMenu implements Screen {
 
     private final JogoPiratas jogo;
+    private final GameManager gameManager;
 
-    public TelaMenu(JogoPiratas jogo) {
+    private Stage stage;
+    private Skin skin;
+
+    public TelaMenu(JogoPiratas jogo, GameManager gameManager) {
         this.jogo = jogo;
+        this.gameManager = gameManager;
     }
 
     @Override
     public void show() {
-        // Inicializar botões e tabelas aqui
+        stage = new Stage(new ScreenViewport());
+        Gdx.input.setInputProcessor(stage);
+        skin = SkinPadrao.criar();
+
+        // Layout centralizado com Table
+        Table tabela = new Table();
+        tabela.setFillParent(true);
+        tabela.center();
+
+        // Título
+        Label titulo = new Label("JOGO PIRATAS", skin);
+        titulo.setFontScale(2.5f, 2.5f);
+        titulo.setColor(Color.GOLD);
+
+        Label subtitulo = new Label("Uma aventura no Grand Line", skin);
+        subtitulo.setColor(Color.LIGHT_GRAY);
+
+        // Botões
+        TextButton btnNovoJogo = new TextButton("  Novo Jogo  ", skin);
+        TextButton btnSair = new TextButton("     Sair    ", skin);
+
+        btnNovoJogo.addListener(new ClickListener() {
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
+                gameManager.iniciarJogo();
+            }
+        });
+
+        btnSair.addListener(new ClickListener() {
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
+                gameManager.encerrarJogo();
+            }
+        });
+
+        // Montagem da tabela
+        tabela.add(titulo).padBottom(10).row();
+        tabela.add(subtitulo).padBottom(60).row();
+        tabela.add(btnNovoJogo).width(240).height(60).padBottom(20).row();
+        tabela.add(btnSair).width(240).height(60).row();
+
+        stage.addActor(tabela);
     }
 
     @Override
     public void render(float delta) {
-        ScreenUtils.clear(0, 0, 0, 1);
-        // palco.act() e palco.draw()
+        Gdx.gl.glClearColor(0f, 0f, 0.12f, 1f); // azul-noite marítimo
+        Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
+        stage.act(delta);
+        stage.draw();
     }
 
     @Override
-    public void resize(int width, int height) {}
+    public void resize(int width, int height) {
+        stage.getViewport().update(width, height, true);
+    }
 
     @Override
-    public void pause() {}
+    public void pause() {
+    }
 
     @Override
-    public void resume() {}
+    public void resume() {
+    }
 
     @Override
-    public void hide() {}
+    public void hide() {
+    }
 
     @Override
-    public void dispose() {}
+    public void dispose() {
+        stage.dispose();
+        skin.dispose();
+    }
 }

@@ -366,6 +366,15 @@ public class PersonagemFactory {
         
         return magellan;
     }
+
+    public static Inimigo criarImu(int nivel){
+        Inimigo imu = new Inimigo("Imu", 1000, 0.8f, 30, 2000, 1000, "imu.png");
+        imu.adicionarHabilidade(HabilidadeFactory.criarAtaqueBasicoInimigo(nivel * 2));
+        imu.adicionarHabilidade(HabilidadeFactory.criarDefesaHaki());
+        
+        return imu;
+    }
+    
     public static java.util.ArrayList<Inimigo> sortearInimigosCanonicos(int capitulo, int nivel) {
         java.util.ArrayList<Inimigo> inimigos = new java.util.ArrayList<>();
         java.util.Random rand = new java.util.Random();

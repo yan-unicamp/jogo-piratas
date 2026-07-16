@@ -5,7 +5,7 @@ import java.util.List;
 
 public abstract class Personagem {
     protected String nome;
-    protected float vidaAtual;
+    protected int vidaAtual;
     protected int vidaMaxima;
     protected float defesa;
     protected float defesaAtual; 
@@ -24,14 +24,14 @@ public abstract class Personagem {
         this.caminhoImagem = caminhoImagem;
     }
 
-    public void receberDano(float valor) {
-        float dano = valor * defesaAtual;
+    public void receberDano(int valor) {
+        int dano = (int)(valor * defesaAtual);
         this.vidaAtual -= dano;
         if (this.vidaAtual < 1)
             this.vidaAtual = 0;
     }
 
-    public void curar(float valor) {
+    public void curar(int valor) {
         this.vidaAtual += valor;
         if (this.vidaAtual > this.vidaMaxima) {
             this.vidaAtual = this.vidaMaxima;
@@ -58,12 +58,12 @@ public abstract class Personagem {
         return nome;
     }
 
-    public float getVidaAtual() {
+    public int getVidaAtual() {
 
         return vidaAtual;
     }
 
-    public float getVidaMaxima() {
+    public int getVidaMaxima() {
 
         return vidaMaxima;
     }

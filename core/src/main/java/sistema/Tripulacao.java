@@ -2,11 +2,12 @@ package sistema;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import entidades.Aliado;
 import entidades.Item;
 import entidades.Personagem;
-import progressao.Recompensa;
+import entidades.Inimigo;
 
 public class Tripulacao {
     private int dinheiro;
@@ -21,16 +22,48 @@ public class Tripulacao {
         this.itens = new ArrayList<>();
     }
 
-    public void receberDinheiro(int valor) { 
-        this.dinheiro += valor;
+    /**
+     * Recebe a recompensa de uma batalha vencida.
+     * O ouro é somado ao total da tripulação.
+     * A XP é dividida igualmente entre os aliados VIVOS.
+     */
+    public void receberRecompensa(List<Inimigo> inimigosDerrotados) {
+        int totalDinheiro = 0;
+        int totalXp = 0;
+        
+        for (Inimigo inimigo : inimigosDerrotados) {
+            totalDinheiro += inimigo.getRecompensaDinheiro();
+            totalXp += inimigo.getRecompensaExperiencia();
+            if (inimigo.getRecompensaItem() != null) {
+                receberItem(inimigo.getRecompensaItem());
+            }
+        }
+
+        this.dinheiro += totalDinheiro;
+
+        List<Aliado> aliadosVivos = getAliadosVivos();
+        if (!aliadosVivos.isEmpty() && totalXp > 0) {
+            int xpPorAliado = totalXp / aliadosVivos.size();
+            for (Aliado aliado : aliadosVivos) {
+                aliado.ganharExperiencia(xpPorAliado);
+            }
+        }
     }
 
-    public Boolean gastarDinheiro(int valor) {
+    /**
+     * Tenta gastar uma quantia de dinheiro.
+     * @return true se o saldo era suficiente e o valor foi debitado; false caso contrário.
+     */
+    public boolean gastarDinheiro(int valor) {
         if (this.dinheiro >= valor) {
             this.dinheiro -= valor;
             return true;
         }
         return false;
+    }
+
+    public void receberDinheiro(int valor) {
+        this.dinheiro += valor;
     }
 
     public void adicionarAliado(Aliado aliado) {
@@ -73,4 +106,16 @@ public class Tripulacao {
     public List<Aliado> getAliados() { return aliados; }
     public List<Aliado> getAliadosAtivos() { return aliadosAtivos; }
     public List<Item> getItens() { return itens; }
+
+    /** @return lista apenas com aliados que ainda têm vida (estaVivo() == true). */
+    public List<Aliado> getAliadosVivos() {
+        return aliados.stream()
+                .filter(Aliado::estaVivo)
+                .collect(Collectors.toList());
+    }
+
+    /** @return true se todos os aliados foram derrotados — condição de Game Over. */
+    public boolean todosMortos() {
+        return aliados.stream().noneMatch(Aliado::estaVivo);
+    }
 }

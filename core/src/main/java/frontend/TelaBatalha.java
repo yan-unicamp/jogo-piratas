@@ -127,7 +127,7 @@ public class TelaBatalha implements Screen {
         for (Personagem aliado : aliados) {
             if (aliado.estaVivo()) {
                 Table charTable = new Table();
-                String info = String.format("%s\nHP: %d/%d Lvl: 1\nDEF: %.1f", aliado.getNome(), (int)aliado.getVidaAtual(), (int)aliado.getVidaMaxima(), aliado.getDefesa());
+                String info = String.format("%s\nHP: %d/%d Lvl: 1\nDEF: %.1f", aliado.getNome(), aliado.getVidaAtual(), aliado.getVidaMaxima(), aliado.getDefesa());
                 Label lbl = new Label(info, skin);
                 lbl.setAlignment(Align.center);
                 charTable.add(lbl).padBottom(5).row();
@@ -143,7 +143,7 @@ public class TelaBatalha implements Screen {
         for (Personagem ini : inimigos) {
             if (ini.estaVivo()) {
                 Table charTable = new Table();
-                String info = String.format("%s\nHP: %d/%d Lvl: 1\nDEF: %.1f", ini.getNome(), (int)ini.getVidaAtual(), (int)ini.getVidaMaxima(), ini.getDefesa());
+                String info = String.format("%s\nHP: %d/%d Lvl: 1\nDEF: %.1f", ini.getNome(), ini.getVidaAtual(), ini.getVidaMaxima(), ini.getDefesa());
                 Label lbl = new Label(info, skin);
                 lbl.setAlignment(Align.center);
                 charTable.add(lbl).padBottom(5).row();
