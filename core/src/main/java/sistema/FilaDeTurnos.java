@@ -63,4 +63,12 @@ public class FilaDeTurnos {
     }
 
     public ArrayList<Personagem> getFila() { return fila; }
+
+    public java.util.List<Personagem> getTodosOrdenados() {
+        java.util.List<Personagem> todos = new ArrayList<>();
+        todos.addAll(fila);
+        todos.addAll(espera);
+        todos.sort(Comparator.comparing(Personagem::getIniciativa).reversed());
+        return todos;
+    }
 }

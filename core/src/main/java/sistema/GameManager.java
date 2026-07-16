@@ -5,7 +5,6 @@ import progressao.NoMapa;
 import progressao.NoBatalha;
 import progressao.NoBatalhaCanonica;
 import progressao.NoBatalhaFinal;
-import progressao.NoDescanso;
 import progressao.NoEvento;
 import entidades.Personagem;
 import entidades.Inimigo;
@@ -36,6 +35,11 @@ public class GameManager {
     public GameManager() {
         this.mapa = new Mapa();
         this.tripulacao = new Tripulacao();
+        
+        entidades.Aliado luffy = factories.PersonagemFactory.criarLuffy();
+        this.tripulacao.adicionarAliado(luffy);
+        this.tripulacao.adicionarAliadoAtivo(luffy);
+
         this.gerenciadorDeBatalha = new GerenciadorDeBatalha();
         this.jogoRodando = false;
         this.scanner = new Scanner(System.in);
@@ -135,7 +139,7 @@ public class GameManager {
                 List<String> opcoesDesc = Arrays.asList("Batalha Genérica", "Loja", "Descanso");
                 List<Inimigo> inimigosBasicos = new ArrayList<>();
                 inimigosBasicos.add(PersonagemFactory.criarMarinheiro(etapaAtual));
-                List<NoMapa> opcoesObj = Arrays.asList(new NoBatalha(inimigosBasicos), new progressao.NoLoja(), new progressao.NoDescanso());
+                List<NoMapa> opcoesObj = Arrays.asList(new NoBatalha(inimigosBasicos), new NoBatalha(inimigosBasicos), new NoBatalha(inimigosBasicos));
                 
                 List<Integer> indices = Arrays.asList(0, 1, 2);
                 Collections.shuffle(indices);
@@ -223,6 +227,18 @@ public class GameManager {
         System.out.println("Transição de estado: " + novoEstado);
         // Em um sistema puramente terminal, apenas registramos o estado.
         // Quando a GUI voltar, aqui ficaria a troca de Telas.
+    }
+
+    public void setTelaAtual(com.badlogic.gdx.Screen screen) {
+        // Método de compatibilidade se necessário
+    }
+
+    public boolean gastarOuro(int valor) {
+        return tripulacao.gastarDinheiro(valor);
+    }
+
+    public int getOuro() {
+        return tripulacao.getDinheiro();
     }
 
     public void entrarIlha(progressao.Ilha ilha) {

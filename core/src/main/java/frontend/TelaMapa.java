@@ -23,6 +23,8 @@ import com.badlogic.gdx.utils.Scaling;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
 
 import progressao.Ilha;
+import progressao.IlhaDescanso;
+import progressao.IlhaLoja;
 import sistema.Assets;
 import sistema.GameManager;
 import sistema.JogoPiratas;
@@ -147,9 +149,18 @@ public class TelaMapa implements Screen {
         Label lblOuro = new Label("Ouro: " + ouro, skin);
         lblOuro.setColor(new Color(1f, 0.85f, 0.2f, 1f));
 
+        TextButton btnTripulacao = new TextButton("Ver Tripulacao", skin);
+        btnTripulacao.addListener(new ClickListener() {
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
+                jogo.setScreen(new TelaTripulacao(jogo, gameManager, TelaMapa.this));
+            }
+        });
+
         hud.add(lblIlhas).left().expandX();
         hud.add(lblHP).center().expandX();
-        hud.add(lblOuro).right().expandX();
+        hud.add(lblOuro).center().expandX();
+        hud.add(btnTripulacao).right().expandX();
         return hud;
     }
 
@@ -167,7 +178,7 @@ public class TelaMapa implements Screen {
 
         // Título para as opções atuais (se houver mais de uma)
         if (opcoes.size() > 1) {
-            Label opcoesTitulo = new Label("--- Caminhos Disponíveis ---", skin);
+            Label opcoesTitulo = new Label("--- Caminhos Disponiveis ---", skin);
             opcoesTitulo.setColor(Color.LIGHT_GRAY);
             lista.add(opcoesTitulo).padTop(10).padBottom(10).row();
         }
@@ -206,8 +217,8 @@ public class TelaMapa implements Screen {
         info.left();
 
         // Status icon + nome
-        String icone = concluida ? "✅ " : atual ? "⚔  " : "🔒 ";
-        Label nomeLbl = new Label(icone + (indice + 1) + ". " + ilha.getNome(), skin);
+        String icone = concluida ? "[X] " : atual ? "[!]  " : "[L] ";
+        Label nomeLbl = new Label(icone + (indice + 1) + ". " + removerAcentos(ilha.getNome()), skin);
         nomeLbl.setFontScale(1.15f);
         nomeLbl.setColor(concluida ? Color.GRAY
                 : atual ? Color.GOLD
@@ -215,12 +226,19 @@ public class TelaMapa implements Screen {
         info.add(nomeLbl).left().row();
 
         // Rodadas / status
-        String statusTxt = concluida ? "Conquistada!"
+        String statusTxt = concluida ? "Conquistada"
                 : atual ? "Rodada " + (ilha.getRodadaAtualIdx() + 1) + " / " + ilha.getTotalRodadas()
                 : "Bloqueada";
         Label statusLbl = new Label(statusTxt, skin);
         statusLbl.setColor(new Color(0.75f, 0.75f, 0.75f, 1f));
         info.add(statusLbl).left().row();
+        
+        entidades.Aliado recompensa = ilha.getRecompensaAliadoDaIlha();
+        if (recompensa != null && !concluida) {
+            Label recompensaLbl = new Label("Recompensa: " + removerAcentos(recompensa.getNome()), skin);
+            recompensaLbl.setColor(Color.CYAN);
+            info.add(recompensaLbl).left().row();
+        }
 
         card.add(info).expandX().fillX();
 
@@ -253,18 +271,27 @@ public class TelaMapa implements Screen {
         janela.setBackground(new TextureRegionDrawable(SkinPadrao.textura1x1(0.15f, 0.1f, 0.1f, 1f)));
         janela.pad(40);
         
-        Label titulo = new Label("Desbravar: " + ilha.getNome() + "?", skin);
+        Label titulo = new Label("Desbravar: " + removerAcentos(ilha.getNome()) + "?", skin);
         titulo.setFontScale(1.6f);
         titulo.setColor(Color.GOLD);
         
-        Label desc = new Label("Você enfrentará " + ilha.getTotalRodadas() + " rodadas de batalha.", skin);
+        Label desc = new Label("Voce enfrentara " + ilha.getTotalRodadas() + " rodadas de batalha.", skin);
         
         TextButton btnConfirmar = new TextButton("Confirmar e Entrar", skin);
         btnConfirmar.getLabel().setColor(Color.GREEN);
         btnConfirmar.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
-                gameManager.entrarIlha(ilha);
+                if (ilha instanceof IlhaDescanso) {
+                    jogo.setScreen(new TelaDescanso(jogo, gameManager, ilha));
+                } else if (ilha instanceof IlhaLoja) {
+                    jogo.setScreen(new TelaLoja(jogo, gameManager, ilha));
+                } else {
+                    progressao.Rodada rodada = ilha.getRodadaAtual();
+                    if (rodada != null) {
+                        jogo.setScreen(new TelaBatalha(jogo, gameManager, ilha, rodada));
+                    }
+                }
             }
         });
         
@@ -308,5 +335,11 @@ public class TelaMapa implements Screen {
     public void dispose() {
         stage.dispose();
         skin.dispose();
+    }
+    
+    private String removerAcentos(String str) {
+        if (str == null) return null;
+        return java.text.Normalizer.normalize(str, java.text.Normalizer.Form.NFD)
+                .replaceAll("[^\\p{ASCII}]", "");
     }
 }

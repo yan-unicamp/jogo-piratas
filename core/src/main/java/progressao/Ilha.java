@@ -59,4 +59,18 @@ public class Ilha {
     public int         getRodadaAtualIdx() { return rodadaAtualIdx; }
     public int         getTotalRodadas()   { return rodadas.size(); }
     public boolean     isCompleta()        { return completa; }
+
+    public entidades.Aliado getRecompensaAliadoDaIlha() {
+        if (rodadas != null && !rodadas.isEmpty()) {
+            Rodada ultima = rodadas.get(rodadas.size() - 1);
+            if (ultima.isBoss() && ultima.getInimigos() != null) {
+                for (entidades.Inimigo inimigo : ultima.getInimigos()) {
+                    if (inimigo.getRecompensaAliado() != null) {
+                        return inimigo.getRecompensaAliado();
+                    }
+                }
+            }
+        }
+        return null;
+    }
 }

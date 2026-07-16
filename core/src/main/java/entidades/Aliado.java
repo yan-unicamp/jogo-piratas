@@ -3,6 +3,7 @@ package entidades;
 public class Aliado extends Personagem {
     private int nivel;
     private int experiencia;
+    private java.util.Map<Integer, java.util.function.Supplier<Habilidade>> habilidadesDesbloqueaveis = new java.util.HashMap<>();
 
     public Aliado(String nome, int vidaMaxima, float defesa, int iniciativa, int nivel, int experiencia, String caminhoImagem) {
         super(nome, vidaMaxima, defesa, iniciativa, caminhoImagem);
@@ -10,14 +11,24 @@ public class Aliado extends Personagem {
         this.experiencia = experiencia;
     }
 
+    public void adicionarHabilidadeDesbloqueavel(int nivelDesbloqueio, java.util.function.Supplier<Habilidade> supplier) {
+        habilidadesDesbloqueaveis.put(nivelDesbloqueio, supplier);
+    }
+
     public int getNivel() { return nivel; }
     public int getExperiencia() { return experiencia; }
 
-    public void ganharExperiencia(int xp) {
+    public java.util.List<Habilidade> ganharExperiencia(int xp) {
+        java.util.List<Habilidade> destravadas = new java.util.ArrayList<>();
         this.experiencia += xp;
         while (this.experiencia >= 100 * this.nivel) {
-            ganharNivel();
+            if (ganharNivel()) {
+                if (habilidadesDesbloqueaveis.containsKey(this.nivel)) {
+                    destravadas.add(habilidadesDesbloqueaveis.get(this.nivel).get());
+                }
+            }
         }
+        return destravadas;
     }
 
     private boolean ganharNivel() {
@@ -25,7 +36,7 @@ public class Aliado extends Personagem {
             this.experiencia -= 100 * this.nivel;
             this.nivel++;
             System.out.println(this.getNome() + " subiu para o nível " + this.nivel + "!");
-            // Aqui você pode adicionar aumento de atributos (vidaMaxima, etc) no futuro
+            subirStatus();
             return true;
         }
         return false;
@@ -35,7 +46,7 @@ public class Aliado extends Personagem {
         vidaMaxima += 10;
         defesa -= 0.05f;
         iniciativa += 2;
-        vidaAtual = vidaMaxima;
+        vidaAtual += 10;
         defesaAtual = defesa;
     }
 

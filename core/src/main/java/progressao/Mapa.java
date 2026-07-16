@@ -11,7 +11,7 @@ import factories.IlhaFactory;
 public class Mapa {
     private int etapaAtual;
     private int capitulo;
-    private final int MAX_ETAPAS_POR_CAPITULO = 5;
+    private final int MAX_ETAPAS_POR_CAPITULO = 9;
     private NoMapa noAtual;
     
     private List<Ilha> ilhasConcluidas;
@@ -36,37 +36,47 @@ public class Mapa {
         opcoesAtuais.clear();
 
         if (etapaAtual == 0) {
-            // Início do capítulo (Canon)
             if (capitulo == 1) opcoesAtuais.add(IlhaFactory.criar(IlhaEnum.SHELLS_TOWN));
-            else if (capitulo == 2) opcoesAtuais.add(IlhaFactory.criar(IlhaEnum.LITTLE_GARDEN));
-            else if (capitulo == 3) opcoesAtuais.add(IlhaFactory.criar(IlhaEnum.ILHA_HOMENS_PEIXE));
+            else if (capitulo == 2) opcoesAtuais.add(IlhaFactory.criar(IlhaEnum.LOGUETOWN));
+            else if (capitulo == 3) opcoesAtuais.add(IlhaFactory.criar(IlhaEnum.THRILLER_BARK));
+            else opcoesAtuais.add(IlhaFactory.criar(IlhaEnum.PUNK_HAZARD));
+        } else if (etapaAtual == 3) {
+            if (capitulo == 1) opcoesAtuais.add(IlhaFactory.criar(IlhaEnum.VILA_SYRUP));
+            else if (capitulo == 2) opcoesAtuais.add(IlhaFactory.criar(IlhaEnum.ILHA_DRUM));
+            else if (capitulo == 3) opcoesAtuais.add(IlhaFactory.criar(IlhaEnum.SABAODY));
+            else opcoesAtuais.add(IlhaFactory.criar(IlhaEnum.WANO));
+        } else if (etapaAtual == 6) {
+            if (capitulo == 1) opcoesAtuais.add(IlhaFactory.criar(IlhaEnum.BARATIE));
+            else if (capitulo == 2) opcoesAtuais.add(IlhaFactory.criar(IlhaEnum.ALABASTA));
+            else if (capitulo == 3) opcoesAtuais.add(IlhaFactory.criar(IlhaEnum.DRESSROSA));
             else opcoesAtuais.add(IlhaFactory.criar(IlhaEnum.EGGHEAD));
-        } else if (etapaAtual == MAX_ETAPAS_POR_CAPITULO) {
-            // Fim do capítulo (Canon)
+        } else if (etapaAtual == 9) {
             if (capitulo == 1) opcoesAtuais.add(IlhaFactory.criar(IlhaEnum.ARLONG_PARK));
-            else if (capitulo == 2) opcoesAtuais.add(IlhaFactory.criar(IlhaEnum.MARINEFORD));
-            else if (capitulo == 3) opcoesAtuais.add(IlhaFactory.criar(IlhaEnum.WANO));
+            else if (capitulo == 2) opcoesAtuais.add(IlhaFactory.criar(IlhaEnum.ENIES_LOBBY));
+            else if (capitulo == 3) opcoesAtuais.add(IlhaFactory.criar(IlhaEnum.WHOLE_CAKE));
             else opcoesAtuais.add(IlhaFactory.criar(IlhaEnum.ELBAPH));
         } else {
-            // Ilhas Genéricas (2 a 3 opções)
-            List<IlhasGenericasEnum> disponiveis = new ArrayList<>();
-            for (IlhasGenericasEnum ig : IlhasGenericasEnum.values()) {
-                if (!ilhasMostradas.contains(ig) && (ig.getCapitulo() == capitulo || ig.getCapitulo() == 0)) {
-                    disponiveis.add(ig);
-                }
-            }
-
-            int qtd = Math.min(3, disponiveis.size());
-            if (qtd == 0) {
-                // Fallback caso fiquemos sem ilhas genéricas
-                opcoesAtuais.add(IlhaFactory.criarGenerica(IlhasGenericasEnum.BARCO_PIRATA_INIMIGO));
-            } else {
-                for (int i = 0; i < qtd; i++) {
-                    int idx = random.nextInt(disponiveis.size());
-                    IlhasGenericasEnum sorteada = disponiveis.get(idx);
-                    disponiveis.remove(idx);
-                    ilhasMostradas.add(sorteada);
-                    opcoesAtuais.add(IlhaFactory.criarGenerica(sorteada));
+            // Aleatório (1, 2, 4, 5, 7, 8)
+            int nNodes = 3;
+            for (int i = 0; i < nNodes; i++) {
+                int tipo = random.nextInt(10);
+                if (tipo < 2) {
+                    opcoesAtuais.add(new IlhaLoja());
+                } else if (tipo < 4) {
+                    opcoesAtuais.add(new IlhaDescanso());
+                } else {
+                    // Genérica
+                    List<IlhasGenericasEnum> disponiveis = new ArrayList<>();
+                    for (IlhasGenericasEnum ig : IlhasGenericasEnum.values()) {
+                        if (ig.getCapitulo() == capitulo || ig.getCapitulo() == 0) {
+                            disponiveis.add(ig);
+                        }
+                    }
+                    if (disponiveis.isEmpty()) {
+                        opcoesAtuais.add(IlhaFactory.criarGenerica(IlhasGenericasEnum.BARCO_PIRATA_INIMIGO));
+                    } else {
+                        opcoesAtuais.add(IlhaFactory.criarGenerica(disponiveis.get(random.nextInt(disponiveis.size()))));
+                    }
                 }
             }
         }

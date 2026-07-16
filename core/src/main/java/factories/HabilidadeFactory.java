@@ -23,7 +23,15 @@ public class HabilidadeFactory {
     }
 
     public static Habilidade criarEspecialLuffy(Aliado p) {
-        return new Habilidade("Gomu Gomu no Jet", TipoHabilidade.DANO, p.getVidaMaxima() * 0.3f);
+        return new Habilidade("Gomu Gomu no Pistol", TipoHabilidade.DANO, p.getVidaMaxima() * 0.3f);
+    }
+
+    public static Habilidade criarEspecialGatling(Aliado p) {
+        return new Habilidade("Gomu Gomu no Gatling", TipoHabilidade.DANO, p.getVidaMaxima() * 0.5f);
+    }
+
+    public static Habilidade criarEspecialGearSecond(Aliado p) {
+        return new Habilidade("Gear Second", TipoHabilidade.DANO, p.getVidaMaxima() * 0.8f);
     }
 
     public static Habilidade criarEspecialZoro(Aliado p) {

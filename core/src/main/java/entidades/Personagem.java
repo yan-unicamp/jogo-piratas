@@ -24,6 +24,7 @@ public abstract class Personagem {
         this.caminhoImagem = caminhoImagem;
     }
 
+
     public void receberDano(int valor) {
         int dano = (int)(valor * defesaAtual);
         this.vidaAtual -= dano;

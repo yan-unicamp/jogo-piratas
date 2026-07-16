@@ -23,6 +23,7 @@ import entidades.Inimigo;
 import entidades.Personagem;
 import entidades.TipoHabilidade;
 import factories.PersonagemFactory;
+import sistema.GameManager;
 import sistema.GerenciadorDeBatalha;
 import sistema.JogoPiratas;
 import sistema.Tripulacao;
@@ -48,8 +49,15 @@ public class TelaBatalha implements Screen {
     private Habilidade habilidadeSelecionada;
     private boolean escolhendoAlvo = false;
 
-    public TelaBatalha(JogoPiratas jogo) {
+    private GameManager gameManager;
+    private progressao.Ilha ilhaAtual;
+    private progressao.Rodada rodadaAtual;
+
+    public TelaBatalha(JogoPiratas jogo, GameManager gameManager, progressao.Ilha ilha, progressao.Rodada rodada) {
         this.jogo = jogo;
+        this.gameManager = gameManager;
+        this.ilhaAtual = ilha;
+        this.rodadaAtual = rodada;
     }
 
     @Override
@@ -95,18 +103,14 @@ public class TelaBatalha implements Screen {
     }
 
     private void inicializarBatalha() {
-        aliados = new ArrayList<>();
-        aliados.add(PersonagemFactory.criarLuffy());
-        aliados.add(PersonagemFactory.criarZoro());
-        aliados.add(PersonagemFactory.criarChopper());
+        this.tripulacao = gameManager.getTripulacao();
+        this.aliados = new ArrayList<>(tripulacao.getAliadosAtivos());
         
-        inimigos = new ArrayList<>();
-        inimigos.add(PersonagemFactory.criarMarinheiro(1));
-        inimigos.add(PersonagemFactory.criarPirataInimigo(1));
-        
-        tripulacao = new Tripulacao();
-        for (Personagem aliado : aliados) {
-            tripulacao.getAliados().add((Aliado) aliado);
+        // Clona os inimigos para a batalha não afetar o blueprint
+        this.inimigos = new ArrayList<>();
+        for(Personagem e : rodadaAtual.getInimigos()) {
+            Inimigo clone = (Inimigo) e; // Em um jogo completo deve-se clonar a instância de inimigo
+            this.inimigos.add(clone);
         }
 
         gerenciador = new GerenciadorDeBatalha();
@@ -119,6 +123,47 @@ public class TelaBatalha implements Screen {
     private void atualizarUI(boolean desenharBotoes) {
         uiTable.clear();
         
+        // --- TIMELINE DE INICIATIVA ---
+        Table timelineTable = new Table();
+        timelineTable.add(new Label("Iniciativa:", skin)).padRight(10);
+        
+        java.util.List<Personagem> ordem = gerenciador.getFilaDeTurnos().getTodosOrdenados();
+        Personagem personagemDaVez = null;
+        if (!gerenciador.getFilaDeTurnos().getFila().isEmpty()) {
+            personagemDaVez = gerenciador.getFilaDeTurnos().getFila().get(0);
+        } else if (desenharBotoes) {
+            personagemDaVez = gerenciador.getAliadoAguardandoAcao();
+        }
+
+        for (Personagem p : ordem) {
+            if (!p.estaVivo()) continue;
+            
+            Table portraitBox = new Table();
+            boolean isActing = (p == personagemDaVez);
+            
+            // Fundo verde se for a vez do personagem
+            com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable bg = 
+                new com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable(
+                    frontend.SkinPadrao.textura1x1(0f, isActing ? 0.6f : 0f, 0f, 1f));
+            
+            if (isActing) {
+                portraitBox.setBackground(bg);
+            }
+            
+            Image placeholder = new Image(skin.newDrawable(isActing ? "dark" : "gray"));
+            portraitBox.add(placeholder).size(30, 30).pad(2).row();
+            
+            String shortName = p.getNome().split(" ")[0];
+            Label nameLbl = new Label(shortName, skin);
+            nameLbl.setFontScale(0.8f);
+            if (isActing) nameLbl.setColor(Color.GREEN);
+            portraitBox.add(nameLbl);
+
+            timelineTable.add(portraitBox).padRight(5);
+        }
+        
+        uiTable.add(timelineTable).padTop(10).padBottom(20).row();
+        
         Table battleArea = new Table();
         Table leftColumn = new Table();
         Table rightColumn = new Table();
@@ -127,7 +172,8 @@ public class TelaBatalha implements Screen {
         for (Personagem aliado : aliados) {
             if (aliado.estaVivo()) {
                 Table charTable = new Table();
-                String info = String.format("%s\nHP: %d/%d Lvl: 1\nDEF: %.1f", aliado.getNome(), aliado.getVidaAtual(), aliado.getVidaMaxima(), aliado.getDefesa());
+                int nivel = (aliado instanceof Aliado a) ? a.getNivel() : 1;
+                String info = String.format("%s\nHP: %d/%d Lvl: %d\nDEF: %.1f", aliado.getNome(), aliado.getVidaAtual(), aliado.getVidaMaxima(), nivel, aliado.getDefesa());
                 Label lbl = new Label(info, skin);
                 lbl.setAlignment(Align.center);
                 charTable.add(lbl).padBottom(5).row();
@@ -143,7 +189,7 @@ public class TelaBatalha implements Screen {
         for (Personagem ini : inimigos) {
             if (ini.estaVivo()) {
                 Table charTable = new Table();
-                String info = String.format("%s\nHP: %d/%d Lvl: 1\nDEF: %.1f", ini.getNome(), ini.getVidaAtual(), ini.getVidaMaxima(), ini.getDefesa());
+                String info = String.format("%s\nHP: %d/%d\nDEF: %.1f", ini.getNome(), ini.getVidaAtual(), ini.getVidaMaxima(), ini.getDefesa());
                 Label lbl = new Label(info, skin);
                 lbl.setAlignment(Align.center);
                 charTable.add(lbl).padBottom(5).row();
@@ -248,20 +294,56 @@ public class TelaBatalha implements Screen {
                     delayAcumulado = 0;
                     Personagem quemAgiu = gerenciador.executarProximaAcao();
                     if (quemAgiu != null) {
-                        logLabel.setText(quemAgiu.getNome() + " agiu!");
+                        logLabel.setText(gerenciador.getUltimoLog());
                         atualizarUI(false);
                     }
                 }
                 break;
                 
             case VITORIA:
-                logLabel.setText("Vitoria! XP e Dinheiro ganhos.");
-                atualizarUI(false);
+                if (delayAcumulado == 0) { // Flag para rodar apenas uma vez
+                    logLabel.setText("Vitoria! A rodada foi concluida.");
+                    boolean completa = ilhaAtual.avancarRodada();
+                    if (completa) {
+                        gameManager.getMapa().entrarIlha(ilhaAtual);
+                        logLabel.setText("Vitoria! A ilha foi completamente dominada.");
+                    }
+                    
+                    uiTable.clear();
+                    TextButton btnContinuar = new TextButton("Continuar", skin);
+                    btnContinuar.addListener(new ClickListener() {
+                        @Override
+                        public void clicked(InputEvent event, float x, float y) {
+                            java.util.List<sistema.HabilidadePendente> pendentes = gerenciador.getHabilidadesPendentes();
+                            if (!pendentes.isEmpty()) {
+                                jogo.setScreen(new TelaAprenderHabilidade(jogo, gameManager, pendentes));
+                            } else {
+                                jogo.setScreen(new TelaMapa(jogo, gameManager));
+                            }
+                        }
+                    });
+                    uiTable.add(logLabel).padBottom(20).row();
+                    uiTable.add(btnContinuar).size(250, 60);
+                    
+                    delayAcumulado = 1;
+                }
                 break;
                 
             case DERROTA:
-                logLabel.setText("Derrota... Game Over.");
-                atualizarUI(false);
+                if (delayAcumulado == 0) {
+                    logLabel.setText("Sua tripulação foi derrotada... Game Over.");
+                    uiTable.clear();
+                    TextButton btnMenu = new TextButton("Voltar ao Menu", skin);
+                    btnMenu.addListener(new ClickListener() {
+                        @Override
+                        public void clicked(InputEvent event, float x, float y) {
+                            jogo.setScreen(new TelaInicio(jogo));
+                        }
+                    });
+                    uiTable.add(logLabel).padBottom(20).row();
+                    uiTable.add(btnMenu).size(250, 60);
+                    delayAcumulado = 1;
+                }
                 break;
                 
             default:

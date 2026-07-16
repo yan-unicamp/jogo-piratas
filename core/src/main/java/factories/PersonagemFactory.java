@@ -13,6 +13,9 @@ public class PersonagemFactory {
         luffy.adicionarHabilidade(HabilidadeFactory.criarDefesaHaki());
         luffy.adicionarHabilidade(HabilidadeFactory.criarEspecialLuffy(luffy));
         
+        luffy.adicionarHabilidadeDesbloqueavel(2, () -> HabilidadeFactory.criarEspecialGatling(luffy));
+        luffy.adicionarHabilidadeDesbloqueavel(3, () -> HabilidadeFactory.criarEspecialGearSecond(luffy));
+        
         return luffy;
     }
 

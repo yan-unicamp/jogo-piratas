@@ -38,13 +38,15 @@ public class TelaDescanso implements Screen {
 
     private final JogoPiratas jogo;
     private final GameManager gameManager;
+    private final progressao.Ilha ilhaAtual;
 
     private Stage stage;
     private Skin skin;
 
-    public TelaDescanso(JogoPiratas jogo, GameManager gameManager) {
+    public TelaDescanso(JogoPiratas jogo, GameManager gameManager, progressao.Ilha ilha) {
         this.jogo = jogo;
         this.gameManager = gameManager;
+        this.ilhaAtual = ilha;
     }
 
     @Override
@@ -100,14 +102,16 @@ public class TelaDescanso implements Screen {
                     int cura = (int)(a.getVidaMaxima() * CURA_PERCENTUAL);
                     a.curar(cura);
                 }
-                gameManager.mudarEstado(EstadoJogo.MAPA);
+                gameManager.getMapa().entrarIlha(ilhaAtual);
+                jogo.setScreen(new frontend.TelaMapa(jogo, gameManager));
             }
         });
 
         btnContinuar.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
-                gameManager.mudarEstado(EstadoJogo.MAPA);
+                gameManager.getMapa().entrarIlha(ilhaAtual);
+                jogo.setScreen(new frontend.TelaMapa(jogo, gameManager));
             }
         });
 

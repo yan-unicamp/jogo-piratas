@@ -99,7 +99,7 @@ public class ArvoreNaoBinaria {
             case EVENTO:
                 return new NoEvento();
             case DESCANSO:
-                return new NoDescanso();
+                return null;
             default:
                 return new NoEvento();
         }

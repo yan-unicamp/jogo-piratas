@@ -30,6 +30,7 @@ public class GerenciadorDeBatalha {
 
     private EstadoBatalha estadoAtual;
     private List<Personagem> aliadosAguardandoAcao;
+    private String ultimoLog = "Batalha Iniciada!";
 
     public static class AcaoPlanejada {
         public Habilidade habilidade;
@@ -172,12 +173,12 @@ public class GerenciadorDeBatalha {
             AcaoPlanejada acao = acoesPlanejadas.get(personagemDaVez);
             if (acao != null && acao.habilidade != null && acao.alvo != null) {
                 if (acao.alvo.getVidaAtual() > 0 || acao.habilidade.getTipo() == entidades.TipoHabilidade.CURA) {
-                    System.out.println("[" + personagemDaVez.getNome() + " usa " + acao.habilidade.getNome() + " em "
-                            + acao.alvo.getNome() + "]");
+                    ultimoLog = personagemDaVez.getNome() + " usou " + acao.habilidade.getNome() + " em " + acao.alvo.getNome() + "!";
+                    System.out.println("[" + ultimoLog + "]");
                     acao.habilidade.executarAcao(acao.alvo);
                 } else {
-                    System.out
-                            .println("[" + personagemDaVez.getNome() + " tenta atacar, mas o alvo já foi derrotado!]");
+                    ultimoLog = personagemDaVez.getNome() + " tentou atacar, mas o alvo ja foi derrotado!";
+                    System.out.println("[" + ultimoLog + "]");
                 }
             }
         }
@@ -245,9 +246,23 @@ public class GerenciadorDeBatalha {
             }
         }
         for (Aliado amigo : amigos) {
-            amigo.ganharExperiencia(xpDividido);
+            java.util.List<entidades.Habilidade> novas = amigo.ganharExperiencia(xpDividido);
+            for (entidades.Habilidade h : novas) {
+                if (amigo.getHabilidades().size() < 4) {
+                    amigo.adicionarHabilidade(h);
+                    System.out.println(amigo.getNome() + " aprendeu " + h.getNome() + "!");
+                } else {
+                    habilidadesPendentes.add(new sistema.HabilidadePendente(amigo, h));
+                }
+            }
         }
         tripulacao.receberDinheiro(dinheiroTotal);
+    }
+
+    private java.util.List<sistema.HabilidadePendente> habilidadesPendentes = new java.util.ArrayList<>();
+    
+    public java.util.List<sistema.HabilidadePendente> getHabilidadesPendentes() {
+        return habilidadesPendentes;
     }
 
     public EstadoBatalha getEstadoAtual() {
@@ -260,5 +275,17 @@ public class GerenciadorDeBatalha {
 
     public ArrayList<Personagem> getInimigos() {
         return inimigos;
+    }
+
+    public FilaDeTurnos getFilaDeTurnos() {
+        return filaDeTurnos;
+    }
+
+    public String getUltimoLog() {
+        return ultimoLog;
+    }
+
+    public void setUltimoLog(String msg) {
+        this.ultimoLog = msg;
     }
 }
