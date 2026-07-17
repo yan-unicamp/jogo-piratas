@@ -165,6 +165,8 @@ public class TelaTripulacao implements Screen {
                         gameManager.getTripulacao().removerAliadoAtivo(aliado);
                         atualizarPainelEsquerdo();
                         mostrarDetalhes(aliado);
+                    } else {
+                        lblAviso.setText("A equipe de ataque nao pode ficar vazia!");
                     }
                 } else {
                     if (ativos < 3) {

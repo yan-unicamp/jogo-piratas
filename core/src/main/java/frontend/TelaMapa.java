@@ -291,14 +291,23 @@ public class TelaMapa implements Screen {
         btnConfirmar.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
+                Screen proximaTela = null;
                 if (ilha instanceof IlhaDescanso) {
-                    jogo.setScreen(new TelaDescanso(jogo, gameManager, ilha));
+                    proximaTela = new TelaDescanso(jogo, gameManager, ilha);
                 } else if (ilha instanceof IlhaLoja) {
-                    jogo.setScreen(new TelaLoja(jogo, gameManager, ilha));
+                    proximaTela = new TelaLoja(jogo, gameManager, ilha);
                 } else {
                     progressao.Rodada rodada = ilha.getRodadaAtual();
                     if (rodada != null) {
-                        jogo.setScreen(new TelaBatalha(jogo, gameManager, ilha, rodada));
+                        proximaTela = new TelaBatalha(jogo, gameManager, ilha, rodada);
+                    }
+                }
+
+                if (proximaTela != null) {
+                    if (ilha.getDescricao() != null && !ilha.getDescricao().isEmpty()) {
+                        jogo.setScreen(new TelaTransicaoIlha(jogo, ilha, proximaTela));
+                    } else {
+                        jogo.setScreen(proximaTela);
                     }
                 }
             }

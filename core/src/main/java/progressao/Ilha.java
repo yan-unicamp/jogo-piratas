@@ -17,6 +17,7 @@ public class Ilha {
     private final String nome;
     private final String bgKey;
     private final List<Rodada> rodadas;
+    private String descricao;
 
     private int rodadaAtualIdx = 0;
     private boolean completa   = false;
@@ -25,6 +26,14 @@ public class Ilha {
         this.nome    = nome;
         this.bgKey   = bgKey;
         this.rodadas = rodadas;
+    }
+
+    public void setDescricao(String descricao) {
+        this.descricao = descricao;
+    }
+
+    public String getDescricao() {
+        return descricao;
     }
 
     /** @return A rodada atual, ou null se a ilha ja foi concluida. */

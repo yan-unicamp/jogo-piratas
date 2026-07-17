@@ -14,58 +14,61 @@ import progressao.Rodada;
 public class IlhaFactory {
 
         public static Ilha criar(IlhaEnum ilhaEnum) {
+                Ilha ilha;
                 switch (ilhaEnum) {
                         case SHELLS_TOWN:
-                                return criarShellsTown();
+                                ilha = criarShellsTown(); break;
                         case ORANGE_TOWN:
-                                return criarOrangeTown();
+                                ilha = criarOrangeTown(); break;
                         case VILA_SYRUP:
-                                return criarVilaSyrup();
+                                ilha = criarVilaSyrup(); break;
                         case BARATIE:
-                                return criarBaratie();
+                                ilha = criarBaratie(); break;
                         case ARLONG_PARK:
-                                return criarArlongPark();
+                                ilha = criarArlongPark(); break;
                         case LOGUETOWN:
-                                return criarLoguetown();
+                                ilha = criarLoguetown(); break;
                         case WHISKY_PEAK:
-                                return criarWhiskyPeak();
+                                ilha = criarWhiskyPeak(); break;
                         case LITTLE_GARDEN:
-                                return criarLittleGarden();
+                                ilha = criarLittleGarden(); break;
                         case ILHA_DRUM:
-                                return criarIlhaDrum();
+                                ilha = criarIlhaDrum(); break;
                         case ALABASTA:
-                                return criarAlabasta();
+                                ilha = criarAlabasta(); break;
                         case JAYA:
-                                return criarJaya();
+                                ilha = criarJaya(); break;
                         case SKYPIEA:
-                                return criarSkypiea();
+                                ilha = criarSkypiea(); break;
                         case ENIES_LOBBY:
-                                return criarEniesLobby();
+                                ilha = criarEniesLobby(); break;
                         case THRILLER_BARK:
-                                return criarThrillerBark();
+                                ilha = criarThrillerBark(); break;
                         case SABAODY:
-                                return criarSabaody();
+                                ilha = criarSabaody(); break;
                         case IMPEL_DOWN:
-                                return criarImpelDown();
+                                ilha = criarImpelDown(); break;
                         case MARINEFORD:
-                                return criarMarineford();
+                                ilha = criarMarineford(); break;
                         case ILHA_HOMENS_PEIXE:
-                                return criarIlhaHomeisPeixe();
+                                ilha = criarIlhaHomeisPeixe(); break;
                         case PUNK_HAZARD:
-                                return criarPunkHazard();
+                                ilha = criarPunkHazard(); break;
                         case DRESSROSA:
-                                return criarDressrosa();
+                                ilha = criarDressrosa(); break;
                         case WHOLE_CAKE:
-                                return criarWholeCake();
+                                ilha = criarWholeCake(); break;
                         case WANO:
-                                return criarWano();
+                                ilha = criarWano(); break;
                         case EGGHEAD:
-                                return criarEgghead();
+                                ilha = criarEgghead(); break;
                         case ELBAPH:
-                                return criarElbaph();
+                                ilha = criarElbaph(); break;
                         default:
                                 throw new IllegalArgumentException("Ilha desconhecida: " + ilhaEnum);
                 }
+                ilha.setDescricao(ilhaEnum.getDescricao());
+                return ilha;
         }
 
         public static Ilha criarGenerica(progressao.IlhasGenericasEnum genEnum) {
@@ -98,7 +101,9 @@ public class IlhaFactory {
                 String bgKey = (genEnum == progressao.IlhasGenericasEnum.BARCO_PIRATA_INIMIGO) 
                         ? "backgrounds/navio_generico.png" 
                         : "backgrounds/" + genEnum.name().toLowerCase() + ".png";
-                return new Ilha(nome, bgKey, rodadas);
+                Ilha ilha = new Ilha(nome, bgKey, rodadas);
+                ilha.setDescricao("Um local desconhecido nas rotas do oceano. Suas habilidades serão testadas aqui.");
+                return ilha;
         }
 
         // --------------------------------------------------------------------------
