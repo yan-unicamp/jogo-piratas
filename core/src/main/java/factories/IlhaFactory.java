@@ -133,8 +133,8 @@ public class IlhaFactory {
         private static Ilha criarOrangeTown() {
                 return new Ilha("Orange Town", "backgrounds/orange_town.png", Arrays.asList(
                                 r("Rodada 1 - Piratas de Buggy", false,
-                                                PersonagemFactory.criarCapanga("Pirata de Buggy", 0, "inimigos/capangas/capanga_pirata.png"),
-                                                PersonagemFactory.criarCapanga("Pirata de Buggy", 0, "inimigos/capangas/capanga_pirata.png")),
+                                                PersonagemFactory.criarCapanga("Pirata de Buggy", 0, "inimigos/capangas/capanga_buggy.png"),
+                                                PersonagemFactory.criarCapanga("Pirata de Buggy", 0, "inimigos/capangas/capanga_buggy.png")),
                                 r("Rodada 2 - Lugartenentes", false,
                                                 PersonagemFactory.criarMiniBoss("Mohji & Richie", 0, "inimigos/minibosses/mohji.png",
                                                                 "Richie Ataca!", 22),
@@ -148,9 +148,9 @@ public class IlhaFactory {
         private static Ilha criarVilaSyrup() {
                 return new Ilha("Vila Syrup", "backgrounds/vila_syrup.png", Arrays.asList(
                                 r("Rodada 1 - Servos da Mansao", false,
-                                                PersonagemFactory.criarCapanga("Servo de Kuro", 1, "inimigos/capangas/capanga_pirata.png"),
-                                                PersonagemFactory.criarCapanga("Servo de Kuro", 1, "inimigos/capangas/capanga_pirata.png"),
-                                                PersonagemFactory.criarCapanga("Servo de Kuro", 1, "inimigos/capangas/capanga_pirata.png")),
+                                                PersonagemFactory.criarCapanga("Servo de Kuro", 1, "inimigos/capangas/capanga_kuro.png"),
+                                                PersonagemFactory.criarCapanga("Servo de Kuro", 1, "inimigos/capangas/capanga_kuro.png"),
+                                                PersonagemFactory.criarCapanga("Servo de Kuro", 1, "inimigos/capangas/capanga_kuro.png")),
                                 r("Rodada 2 - Jango", false,
                                                 PersonagemFactory.criarMiniBoss("Jango", 1, "inimigos/minibosses/jango.png", "Hipnose!", 28)),
                                 r("BOSS - Capitao Kuro!", true,
@@ -176,8 +176,8 @@ public class IlhaFactory {
         private static Ilha criarArlongPark() {
                 return new Ilha("Arlong Park", "backgrounds/arlong_park.png", Arrays.asList(
                                 r("Rodada 1 - Homens-Peixe", false,
-                                                PersonagemFactory.criarCapanga("Homem-Peixe", 3, "inimigos/capangas/capanga_pirata.png"),
-                                                PersonagemFactory.criarCapanga("Homem-Peixe", 3, "inimigos/capangas/capanga_pirata.png")),
+                                                PersonagemFactory.criarCapanga("Homem-Peixe", 3, "inimigos/capangas/capanga_arlong.png"),
+                                                PersonagemFactory.criarCapanga("Homem-Peixe", 3, "inimigos/capangas/capanga_arlong.png")),
                                 r("Rodada 2 — Tripulação de Arlong", false,
                                                 PersonagemFactory.criarMiniBoss("Hatchan", 3, "inimigos/minibosses/hacchi.png", "Seis Espadas",
                                                                 38),
@@ -257,9 +257,9 @@ public class IlhaFactory {
         private static Ilha criarAlabasta() {
                 return new Ilha("Reino de Alabasta", "backgrounds/alabasta.png", Arrays.asList(
                                 r("Rodada 1 - Agentes Cobra", false,
-                                                PersonagemFactory.criarCapanga("Agente Baroque", 7, "inimigos/capangas/capanga_pirata.png"),
-                                                PersonagemFactory.criarCapanga("Agente Baroque", 7, "inimigos/capangas/capanga_pirata.png"),
-                                                PersonagemFactory.criarCapanga("Agente Baroque", 7, "inimigos/capangas/capanga_pirata.png")),
+                                                PersonagemFactory.criarCapanga("Agente Baroque", 7, "inimigos/capangas/capanga_alabasta.png"),
+                                                PersonagemFactory.criarCapanga("Agente Baroque", 7, "inimigos/capangas/capanga_alabasta.png"),
+                                                PersonagemFactory.criarCapanga("Agente Baroque", 7, "inimigos/capangas/capanga_alabasta.png")),
                                 r("Rodada 2 - Mr. 4 & Mr. 2", false,
                                                 PersonagemFactory.criarMiniBoss("Mr. 4", 7, "inimigos/minibosses/mr4.png", "Bola Explosiva L4",
                                                                 60),
@@ -290,9 +290,9 @@ public class IlhaFactory {
         private static Ilha criarSkypiea() {
                 return new Ilha("Skypiea", "backgrounds/skypiea.png", Arrays.asList(
                                 r("Rodada 1 - Guerreiros do Ceu", false,
-                                                PersonagemFactory.criarCapanga("Guerreiro de Skypiea", 9, "inimigos/capangas/capanga_pirata.png"),
+                                                PersonagemFactory.criarCapanga("Guerreiro de Skypiea", 9, "inimigos/capangas/capanga_skypiea.png"),
                                                 PersonagemFactory.criarCapanga("Guerreiro de Skypiea", 9,
-                                                                "inimigos/capangas/capanga_pirata.png")),
+                                                                "inimigos/capangas/capanga_skypiea.png")),
                                 r("Rodada 2 - Satori & Ohm", false,
                                                 PersonagemFactory.criarMiniBoss("Satori", 9, "inimigos/minibosses/satori.png", "Nuvem Explosiva",
                                                                 85),
@@ -306,8 +306,8 @@ public class IlhaFactory {
         private static Ilha criarEniesLobby() {
                 return new Ilha("Enies Lobby", "backgrounds/enies_lobby.png", Arrays.asList(
                                 r("Rodada 1 - Agentes CP9", false,
-                                                PersonagemFactory.criarCapanga("Agente CP9", 10, "inimigos/capangas/capanga_pirata.png"),
-                                                PersonagemFactory.criarCapanga("Agente CP9", 10, "inimigos/capangas/capanga_pirata.png")),
+                                                PersonagemFactory.criarCapanga("Agente CP9", 10, "inimigos/capangas/capanga_cp9.png"),
+                                                PersonagemFactory.criarCapanga("Agente CP9", 10, "inimigos/capangas/capanga_cp9.png")),
                                 r("Rodada 2 - Jabura & Kaku", false,
                                                 PersonagemFactory.criarMiniBoss("Jabura", 10, "inimigos/minibosses/jabura.png", "Rankyaku Lupus",
                                                                 95),
@@ -321,9 +321,9 @@ public class IlhaFactory {
         private static Ilha criarThrillerBark() {
                 return new Ilha("Thriller Bark", "backgrounds/thriller_bark.png", Arrays.asList(
                                 r("Rodada 1 - Zumbis de Moria", false,
-                                                PersonagemFactory.criarCapanga("Zumbi Guerreiro", 11, "inimigos/capangas/capanga_pirata.png"),
-                                                PersonagemFactory.criarCapanga("Zumbi Guerreiro", 11, "inimigos/capangas/capanga_pirata.png"),
-                                                PersonagemFactory.criarCapanga("Zumbi Guerreiro", 11, "inimigos/capangas/capanga_pirata.png")),
+                                                PersonagemFactory.criarCapanga("Zumbi Guerreiro", 11, "inimigos/capangas/capanga_thriller_bark.png"),
+                                                PersonagemFactory.criarCapanga("Zumbi Guerreiro", 11, "inimigos/capangas/capanga_thriller_bark.png"),
+                                                PersonagemFactory.criarCapanga("Zumbi Guerreiro", 11, "inimigos/capangas/capanga_thriller_bark.png")),
                                 r("Rodada 2 - Absalom & Perona", false,
                                                 PersonagemFactory.criarMiniBoss("Absalom", 11, "inimigos/minibosses/absalom.png", "Carne de Besta",
                                                                 105),
@@ -339,9 +339,9 @@ public class IlhaFactory {
                 return new Ilha("Arquipelago Sabaody", "backgrounds/sabaody.png", Arrays.asList(
                                 r("Rodada 1 - Guardas dos Dragoes Celestiais", false,
                                                 PersonagemFactory.criarCapanga("Guarda Tenryuubito", 12,
-                                                                "inimigos/capangas/capanga_marinha.png"),
+                                                                "inimigos/capangas/capanga_sabaody.png"),
                                                 PersonagemFactory.criarCapanga("Guarda Tenryuubito", 12,
-                                                                "inimigos/capangas/capanga_marinha.png")),
+                                                                "inimigos/capangas/capanga_sabaody.png")),
                                 r("Rodada 2 - Sentomaru & Pacifistas", false,
                                                 PersonagemFactory.criarMiniBoss("Sentomaru", 12, "inimigos/minibosses/sentomaru.png",
                                                                 "Ashigara Dokkoi", 118)),
@@ -354,9 +354,9 @@ public class IlhaFactory {
         private static Ilha criarImpelDown() {
                 return new Ilha("Impel Down", "backgrounds/impel_down.png", Arrays.asList(
                                 r("Rodada 1 - Guardas da Prisao", false,
-                                                PersonagemFactory.criarCapanga("Guarda Impel Down", 13, "inimigos/capangas/capanga_marinha.png"),
-                                                PersonagemFactory.criarCapanga("Guarda Impel Down", 13, "inimigos/capangas/capanga_marinha.png"),
-                                                PersonagemFactory.criarCapanga("Guarda Impel Down", 13, "inimigos/capangas/capanga_marinha.png")),
+                                                PersonagemFactory.criarCapanga("Guarda Impel Down", 13, "inimigos/capangas/capanga_impel_down.png"),
+                                                PersonagemFactory.criarCapanga("Guarda Impel Down", 13, "inimigos/capangas/capanga_impel_down.png"),
+                                                PersonagemFactory.criarCapanga("Guarda Impel Down", 13, "inimigos/capangas/capanga_impel_down.png")),
                                 r("Rodada 2 - Sadi-chan & Hannyabal", false,
                                                 PersonagemFactory.criarMiniBoss("Sadi-chan", 13, "inimigos/minibosses/sadi.png",
                                                                 "Chicote Venenoso", 125),
@@ -416,8 +416,8 @@ public class IlhaFactory {
         private static Ilha criarDressrosa() {
                 return new Ilha("Dressrosa", "backgrounds/dressrosa.png", Arrays.asList(
                                 r("Rodada 1 - Membros DONQUIXOTE", false,
-                                                PersonagemFactory.criarCapanga("Membro Donquixote", 17, "inimigos/capangas/capanga_pirata.png"),
-                                                PersonagemFactory.criarCapanga("Membro Donquixote", 17, "inimigos/capangas/capanga_pirata.png")),
+                                                PersonagemFactory.criarCapanga("Membro Donquixote", 17, "inimigos/capangas/capanga_dressrosa.png"),
+                                                PersonagemFactory.criarCapanga("Membro Donquixote", 17, "inimigos/capangas/capanga_dressrosa.png")),
                                 r("Rodada 2 - Trebol, Pica & Diamante", false,
                                                 PersonagemFactory.criarMiniBoss("Trebol", 17, "inimigos/minibosses/trebol.png", "Beta Beta Mochi",
                                                                 165),
@@ -434,8 +434,8 @@ public class IlhaFactory {
         private static Ilha criarWholeCake() {
                 return new Ilha("Whole Cake Island", "backgrounds/whole_cake.png", Arrays.asList(
                                 r("Rodada 1 - Familia Charlotte", false,
-                                                PersonagemFactory.criarCapanga("Soldado Charlotte", 18, "inimigos/capangas/capanga_pirata.png"),
-                                                PersonagemFactory.criarCapanga("Soldado Charlotte", 18, "inimigos/capangas/capanga_pirata.png")),
+                                                PersonagemFactory.criarCapanga("Soldado Charlotte", 18, "inimigos/capangas/capanga_whole_cake.png"),
+                                                PersonagemFactory.criarCapanga("Soldado Charlotte", 18, "inimigos/capangas/capanga_whole_cake.png")),
                                 r("Rodada 2 - Cracker & Smoothie", false,
                                                 PersonagemFactory.criarMiniBoss("Cracker", 18, "inimigos/minibosses/cracker.png",
                                                                 "Biscuit Soldiers", 175),
@@ -453,9 +453,9 @@ public class IlhaFactory {
         private static Ilha criarWano() {
                 return new Ilha("Wano Kuni", "backgrounds/wano.png", Arrays.asList(
                                 r("Rodada 1 - Soldados de Orochi & Kaido", false,
-                                                PersonagemFactory.criarCapanga("Samurai de Orochi", 19, "inimigos/capangas/capanga_pirata.png"),
-                                                PersonagemFactory.criarCapanga("Samurai de Orochi", 19, "inimigos/capangas/capanga_pirata.png"),
-                                                PersonagemFactory.criarCapanga("Samurai de Orochi", 19, "inimigos/capangas/capanga_pirata.png")),
+                                                PersonagemFactory.criarCapanga("Samurai de Orochi", 19, "inimigos/capangas/capanga_wano.png"),
+                                                PersonagemFactory.criarCapanga("Samurai de Orochi", 19, "inimigos/capangas/capanga_wano.png"),
+                                                PersonagemFactory.criarCapanga("Samurai de Orochi", 19, "inimigos/capangas/capanga_wano.png")),
                                 r("Rodada 2 - Jack, Queen & King", false,
                                                 PersonagemFactory.criarMiniBoss("Jack", 19, "inimigos/minibosses/jack.png", "Mammoth Charge", 185),
                                                 PersonagemFactory.criarMiniBoss("Queen", 19, "inimigos/minibosses/queen.png", "Black Coffee Beam",
@@ -476,8 +476,8 @@ public class IlhaFactory {
         private static Ilha criarEgghead() {
                 return new Ilha("Egghead - Ilha do Futuro", "backgrounds/egghead.png", Arrays.asList(
                                 r("Rodada 1 - CP0 & Pacifistas Seraphim", false,
-                                                PersonagemFactory.criarCapanga("Agente CP0", 20, "inimigos/capangas/capanga_marinha.png"),
-                                                PersonagemFactory.criarCapanga("Seraphim", 20, "inimigos/capangas/capanga_marinha.png")),
+                                                PersonagemFactory.criarCapanga("Agente CP0", 20, "inimigos/capangas/capanga_egghead.png"),
+                                                PersonagemFactory.criarCapanga("Seraphim", 20, "inimigos/capangas/capanga_egghead.png")),
                                 r("Rodada 2 — Almirante Kizaru (Colapso)", false,
                                                 PersonagemFactory.criarMiniBoss("Kizaru — Conflito Interior", 20,
                                                                 "inimigos/minibosses/kizaru_egghead.png",
@@ -491,8 +491,8 @@ public class IlhaFactory {
         private static Ilha criarElbaph() {
                 return new Ilha("Elbaph - Terra dos Gigantes", "backgrounds/elbaph.png", Arrays.asList(
                                 r("Rodada 1 - Cavaleiros Sagrados", false,
-                                                PersonagemFactory.criarCapanga("Cavaleiro Sagrado", 21, "inimigos/capangas/capanga_pirata.png"),
-                                                PersonagemFactory.criarCapanga("Cavaleiro Sagrado", 21, "inimigos/capangas/capanga_pirata.png")),
+                                                PersonagemFactory.criarCapanga("Cavaleiro Sagrado", 21, "inimigos/capangas/capanga_elbaph.png"),
+                                                PersonagemFactory.criarCapanga("Cavaleiro Sagrado", 21, "inimigos/capangas/capanga_elbaph.png")),
                                 r("Rodada 2 — Cavaleiros Sagrados Élite", false,
                                                 PersonagemFactory.criarMiniBoss("Gunko", 21, "inimigos/minibosses/gunko.png",
                                                                 "Espada Divina dos Cavaleiros", 288)),
