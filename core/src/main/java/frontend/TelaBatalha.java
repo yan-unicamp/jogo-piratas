@@ -369,6 +369,8 @@ public class TelaBatalha implements Screen {
                     controlPanel.add().width(440);
                     controlPanel.add(optionsTable).expandX().center();
                     
+                    Table debugTable = new Table();
+
                     TextButton btnDebug = new TextButton("Vencer (Debug)", skin);
                     btnDebug.getLabel().setColor(Color.RED);
                     btnDebug.addListener(new ClickListener() {
@@ -381,7 +383,23 @@ public class TelaBatalha implements Screen {
                             atualizarUI(false);
                         }
                     });
-                    controlPanel.add(btnDebug).size(400, 60).pad(10).padLeft(30);
+                    debugTable.add(btnDebug).size(400, 60).padBottom(5).row();
+
+                    TextButton btnPerder = new TextButton("Perder (Debug)", skin);
+                    btnPerder.getLabel().setColor(Color.RED);
+                    btnPerder.addListener(new ClickListener() {
+                        @Override
+                        public void clicked(InputEvent event, float x, float y) {
+                            for (Personagem ali : aliados) {
+                                if (ali.estaVivo()) ali.receberDano(999999);
+                            }
+                            gerenciador.verificarVitoriaOuDerrota();
+                            atualizarUI(false);
+                        }
+                    });
+                    debugTable.add(btnPerder).size(400, 60).padTop(5);
+
+                    controlPanel.add(debugTable).padLeft(30);
                 } else {
                     boolean isCuraOuDefesa = (habilidadeSelecionada.getTipo() == TipoHabilidade.CURA || habilidadeSelecionada.getTipo() == TipoHabilidade.DEFESA);
                     ArrayList<Personagem> possiveisAlvos = isCuraOuDefesa ? aliados : inimigos;
