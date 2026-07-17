@@ -71,7 +71,7 @@ public class GerenciadorDeBatalha {
         aliadosAguardandoAcao.clear();
 
         for (Personagem aliado : aliados) {
-            if (aliado.getVidaAtual() > 0) {
+            if (aliado.getVidaAtual() > 0 && aliado.getTurnosDePausa() == 0) {
                 aliadosAguardandoAcao.add(aliado);
             }
         }
@@ -119,7 +119,7 @@ public class GerenciadorDeBatalha {
             return;
 
         for (Personagem inimigo : inimigos) {
-            if (inimigo.getVidaAtual() > 0) {
+            if (inimigo.getVidaAtual() > 0 && inimigo.getTurnosDePausa() == 0) {
                 List<Habilidade> habs = inimigo.getHabilidades();
                 if (!habs.isEmpty()) {
                     Habilidade habEscolhida = habs.get(random.nextInt(habs.size()));
@@ -172,6 +172,12 @@ public class GerenciadorDeBatalha {
                 return null;
             }
             if (personagemDaVez.getVidaAtual() > 0) {
+                if (personagemDaVez.getTurnosDePausa() > 0) {
+                    personagemDaVez.decrementarTurnoDePausa();
+                    ultimoLog = personagemDaVez.getNome() + " esta exausto e perdeu o turno!";
+                    System.out.println("[" + ultimoLog + "]");
+                    return personagemDaVez;
+                }
                 break;
             }
         }
@@ -180,6 +186,9 @@ public class GerenciadorDeBatalha {
             ultimaAcaoExecutada = acoesPlanejadas.get(personagemDaVez);
             if (ultimaAcaoExecutada != null) {
                 ultimoLog = personagemDaVez.getNome() + " vai usar " + ultimaAcaoExecutada.habilidade.getNome() + "!";
+                if (ultimaAcaoExecutada.habilidade.isEspecial()) {
+                    personagemDaVez.setTurnosDePausa(1);
+                }
             }
         }
         return personagemDaVez;
@@ -237,6 +246,9 @@ public class GerenciadorDeBatalha {
     public int getDinheiroGanho() { return dinheiroGanhoBatalha; }
     public java.util.List<entidades.Aliado> getAliadosDesbloqueados() { return aliadosDesbloqueados; }
 
+    private java.util.List<String> recompensasExtras = new java.util.ArrayList<>();
+    public java.util.List<String> getRecompensasExtras() { return recompensasExtras; }
+
     public void recompensa() {
         int dinheiroTotal = 0;
         int xpTotal = 0;
@@ -246,15 +258,18 @@ public class GerenciadorDeBatalha {
                 oponentes.add(oponente);
             }
         }
+        recompensasExtras.clear();
         for (Inimigo oponente : oponentes) {
             dinheiroTotal += oponente.getRecompensaDinheiro();
             xpTotal += oponente.getRecompensaExperiencia();
             if (oponente.getRecompensaAliado() != null) {
                 progressao.Recompensa.darAliado(tripulacao, oponente.getRecompensaAliado());
                 aliadosDesbloqueados.add(oponente.getRecompensaAliado());
+                recompensasExtras.add("Novo aliado: " + oponente.getRecompensaAliado().getNome());
             }
             if (oponente.getRecompensaItem() != null) {
                 progressao.Recompensa.darItem(tripulacao, oponente.getRecompensaItem());
+                recompensasExtras.add("Novo item: " + oponente.getRecompensaItem().getNome());
             }
         }
 
@@ -270,13 +285,20 @@ public class GerenciadorDeBatalha {
             }
         }
         for (Aliado amigo : amigos) {
+            int nivelAntigo = amigo.getNivel();
             java.util.List<entidades.Habilidade> novas = amigo.ganharExperiencia(xpDividido);
+            int nivelNovo = amigo.getNivel();
+            if (nivelNovo > nivelAntigo) {
+                recompensasExtras.add(amigo.getNome() + " subiu para o nivel " + nivelNovo + "!");
+            }
             for (entidades.Habilidade h : novas) {
                 if (amigo.getHabilidades().size() < 4) {
                     amigo.adicionarHabilidade(h);
                     System.out.println(amigo.getNome() + " aprendeu " + h.getNome() + "!");
+                    recompensasExtras.add(amigo.getNome() + " aprendeu " + h.getNome() + "!");
                 } else {
                     habilidadesPendentes.add(new sistema.HabilidadePendente(amigo, h));
+
                 }
             }
         }

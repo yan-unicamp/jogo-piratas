@@ -153,6 +153,9 @@ public class TelaTripulacao implements Screen {
         } else {
             btnConvocar.getLabel().setColor(new Color(0.4f, 1f, 0.4f, 1f));
         }
+        final Label lblAviso = new Label("", skin);
+        lblAviso.setColor(Color.RED);
+
         btnConvocar.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
@@ -160,17 +163,22 @@ public class TelaTripulacao implements Screen {
                 if (isAtivo) {
                     if (ativos > 1) {
                         gameManager.getTripulacao().removerAliadoAtivo(aliado);
+                        atualizarPainelEsquerdo();
+                        mostrarDetalhes(aliado);
                     }
                 } else {
                     if (ativos < 3) {
                         gameManager.getTripulacao().adicionarAliadoAtivo(aliado);
+                        atualizarPainelEsquerdo();
+                        mostrarDetalhes(aliado);
+                    } else {
+                        lblAviso.setText("A equipe de ataque esta cheia (Max: 3)!");
                     }
                 }
-                atualizarPainelEsquerdo();
-                mostrarDetalhes(aliado);
             }
         });
         painelDetalhes.add(btnConvocar).colspan(2).padTop(20).width(200).height(45).row();
+        painelDetalhes.add(lblAviso).colspan(2).padTop(10).row();
     }
 
     private String removerAcentos(String str) {

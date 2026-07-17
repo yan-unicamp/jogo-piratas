@@ -315,15 +315,23 @@ public class TelaBatalha implements Screen {
         
         uiTable.add(battleArea).expand().fill().row();
         
-        uiTable.add(logLabel).pad(10).row();
+        Table logBox = new Table();
+        logBox.setBackground(new com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable(SkinPadrao.textura1x1(0.1f, 0.1f, 0.15f, 0.8f)));
+        logBox.add(logLabel).pad(15);
+        uiTable.add(logBox).expandX().fillX().pad(10).padLeft(20).padRight(20).row();
         
         Table controlPanel = new Table();
+        controlPanel.setBackground(new com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable(SkinPadrao.textura1x1(0.05f, 0.05f, 0.08f, 0.9f)));
         if (desenharBotoes) {
             Personagem aliadoVez = gerenciador.getAliadoAguardandoAcao();
             if (aliadoVez != null) {
                 int buttonCount = 0;
                 if (!escolhendoAlvo) {
                     Table optionsTable = new Table();
+                    Label lblTurno = new Label("Vez de: " + aliadoVez.getNome(), skin);
+                    lblTurno.setFontScale(1.3f);
+                    lblTurno.setColor(Color.GOLD);
+                    optionsTable.add(lblTurno).colspan(2).padBottom(15).center().row();
                     for (final Habilidade hab : aliadoVez.getHabilidades()) {
                         String poderFormatado = (hab.getTipo() == TipoHabilidade.DEFESA) 
                             ? String.format("%.1f", hab.getValorPoder()) 
@@ -332,15 +340,23 @@ public class TelaBatalha implements Screen {
                         btn.addListener(new ClickListener() {
                             @Override
                             public void clicked(InputEvent event, float x, float y) {
-                                if (hab.isSelfcast()) {
-                                    aguardandoAcaoJogador = false;
-                                    gerenciador.registrarAcaoJogador(hab, aliadoVez);
-                                    logLabel.setText(aliadoVez.getNome() + " preparou " + hab.getNome());
-                                    atualizarUI(false);
+                                Runnable acaoConfirmada = () -> {
+                                    if (hab.isSelfcast()) {
+                                        aguardandoAcaoJogador = false;
+                                        gerenciador.registrarAcaoJogador(hab, aliadoVez);
+                                        logLabel.setText(aliadoVez.getNome() + " preparou " + hab.getNome());
+                                        atualizarUI(false);
+                                    } else {
+                                        habilidadeSelecionada = hab;
+                                        escolhendoAlvo = true;
+                                        atualizarUI(true);
+                                    }
+                                };
+                                
+                                if (hab.isEspecial()) {
+                                    exibirConfirmacaoEspecial(hab, acaoConfirmada);
                                 } else {
-                                    habilidadeSelecionada = hab;
-                                    escolhendoAlvo = true;
-                                    atualizarUI(true);
+                                    acaoConfirmada.run();
                                 }
                             }
                         });
@@ -357,7 +373,7 @@ public class TelaBatalha implements Screen {
                         @Override
                         public void clicked(InputEvent event, float x, float y) {
                             for (Personagem ini : inimigos) {
-                                if (ini.estaVivo()) ini.receberDano(ini.getVidaAtual());
+                                if (ini.estaVivo()) ini.receberDano(999999);
                             }
                             gerenciador.verificarVitoriaOuDerrota();
                             atualizarUI(false);
@@ -371,6 +387,11 @@ public class TelaBatalha implements Screen {
                     logLabel.setText("Selecione alvo para " + habilidadeSelecionada.getNome());
                     
                     Table optionsTable = new Table();
+                    Label lblTurno = new Label("Vez de: " + aliadoVez.getNome(), skin);
+                    lblTurno.setFontScale(1.3f);
+                    lblTurno.setColor(Color.GOLD);
+                    optionsTable.add(lblTurno).padBottom(15).center().row();
+
                     for (final Personagem alvo : possiveisAlvos) {
                         if (alvo.estaVivo()) {
                             TextButton btnAlvo = new TextButton("Alvo: " + alvo.getNome(), skin);
@@ -514,6 +535,19 @@ public class TelaBatalha implements Screen {
                         warningLabel.setFontScale(1.3f);
                         unlockTable.add(warningLabel).padBottom(30).row();
                     }
+
+                    winTable.add(title).padBottom(30).row();
+                    if (!desbloqueados.isEmpty()) {
+                        winTable.add(unlockTable).padBottom(20).row();
+                    }
+                    winTable.add(xpLabel).padBottom(10).row();
+                    winTable.add(coinLabel).padBottom(20).row();
+                    
+                    for (String rec : gerenciador.getRecompensasExtras()) {
+                        Label recLabel = new Label(rec, skin);
+                        recLabel.setColor(Color.GREEN);
+                        winTable.add(recLabel).padBottom(10).row();
+                    }
                     
                     TextButton btnSair = new TextButton("Continuar", skin);
                     btnSair.addListener(new ClickListener() {
@@ -536,13 +570,7 @@ public class TelaBatalha implements Screen {
                         }
                     });
                     
-                    winTable.add(title).padBottom(30).row();
-                    if (!desbloqueados.isEmpty()) {
-                        winTable.add(unlockTable).padBottom(20).row();
-                    }
-                    winTable.add(xpLabel).padBottom(10).row();
-                    winTable.add(coinLabel).padBottom(40).row();
-                    winTable.add(btnSair).size(400, 80);
+                    winTable.add(btnSair).size(400, 80).padTop(20);
                     
                     uiTable.add(winTable).expand().center();
                     
@@ -583,6 +611,44 @@ public class TelaBatalha implements Screen {
 
         stage.act(delta);
         stage.draw();
+    }
+    
+    private void exibirConfirmacaoEspecial(Habilidade hab, Runnable acaoConfirmada) {
+        uiTable.clear();
+        
+        Table confTable = new Table();
+        Label titulo = new Label("Atencao!", skin);
+        titulo.setColor(Color.YELLOW);
+        titulo.setFontScale(2.0f);
+        
+        Label aviso = new Label("O ataque especial '" + hab.getNome() + "' deixara o personagem exausto.\nEle perdera o proximo turno. Deseja continuar?", skin);
+        aviso.setAlignment(Align.center);
+        
+        Table botoes = new Table();
+        TextButton btnSim = new TextButton("Sim", skin);
+        btnSim.addListener(new ClickListener() {
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
+                acaoConfirmada.run();
+            }
+        });
+        
+        TextButton btnNao = new TextButton("Nao", skin);
+        btnNao.addListener(new ClickListener() {
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
+                atualizarUI(true);
+            }
+        });
+        
+        botoes.add(btnSim).size(200, 60).pad(10);
+        botoes.add(btnNao).size(200, 60).pad(10);
+        
+        confTable.add(titulo).padBottom(20).row();
+        confTable.add(aviso).padBottom(40).row();
+        confTable.add(botoes);
+        
+        uiTable.add(confTable).expand().center();
     }
 
     @Override
