@@ -66,9 +66,7 @@ public class TelaInicio implements Screen {
     public void render(float delta) {
         // Handle input
         if (Gdx.input.isKeyJustPressed(Input.Keys.ENTER) || Gdx.input.justTouched()) {
-            if (jogo.gameManager == null) {
-                jogo.gameManager = new GameManager(); // Initialize the game manager
-            }
+            jogo.gameManager = new GameManager(); // Always initialize a new game manager
             jogo.setScreen(new TelaMapa(jogo, jogo.gameManager));
             return;
         }
