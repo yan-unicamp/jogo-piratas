@@ -44,7 +44,7 @@ public abstract class Personagem {
     public void aumentarDefesaTemporaria(float valor) {
         float novadefesa = defesa - valor;
         if (novadefesa < 0)
-            novadefesa = 0; // Impede que a defesa fique negativa (o que faria o dano curar o personagem)
+            novadefesa = 0;
         
         if (novadefesa < this.defesaAtual) {
             this.defesaAtual = novadefesa;

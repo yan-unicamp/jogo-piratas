@@ -33,7 +33,6 @@ public class Assets {
         Pixmap px = new Pixmap(64, 64, Pixmap.Format.RGBA8888);
         px.setColor(0.25f, 0.25f, 0.30f, 0.85f);
         px.fill();
-        // Borda escura para indicar visualmente que falta o asset
         px.setColor(0.5f, 0.5f, 0.6f, 1f);
         px.drawRectangle(0, 0, 63, 63);
         placeholder = new Texture(px);
@@ -59,7 +58,6 @@ public class Assets {
             Gdx.app.log("Assets", "Falha ao carregar: " + caminho + " - " + e.getMessage());
         }
 
-        // Fallbacks
         String fallback = null;
         if (!caminho.equals("backgrounds/ilha_generica.png") && caminho.startsWith("backgrounds/")) {
             fallback = "backgrounds/ilha_generica.png";

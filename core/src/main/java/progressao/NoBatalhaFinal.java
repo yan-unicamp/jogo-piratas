@@ -19,6 +19,5 @@ public class NoBatalhaFinal implements NoMapa {
 
     @Override
     public void entrarNo(GameManager controle) { 
-        // A logica de combate sera acionada pelo GameManager
     }
 }

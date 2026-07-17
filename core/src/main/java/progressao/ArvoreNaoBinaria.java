@@ -36,11 +36,10 @@ public class ArvoreNaoBinaria {
         BATALHA_FINAL,
         EVENTO,
         DESCANSO
-        // Pode adicionar LOJA no futuro
     }
 
-    private int quantidadeFilhos; // n
-    private int profundidadeMax;  // p
+    private int quantidadeFilhos;
+    private int profundidadeMax;
     private int capitulo;
     private Random random;
 
@@ -72,7 +71,6 @@ public class ArvoreNaoBinaria {
         } else if (profundidadeAtual == 0) {
             opcoes.add(TipoNo.BATALHA);
         } else if (profundidadeAtual == profundidadeMax) {
-            // Se profundidadeMax for 9, ja cai acima, mas mantendo para outros tamanhos
             opcoes.add(TipoNo.BATALHA_FINAL);
         } else if (profundidadeAtual == profundidadeMax - 1) {
             opcoes.add(TipoNo.DESCANSO);
@@ -112,17 +110,13 @@ public class ArvoreNaoBinaria {
         NoMapa noMapa = instanciarNo(tipoAtual, profundidade);
         NoDaArvore node = new NoDaArvore(noMapa);
 
-        // Caso base
         if (profundidade == profundidadeMax) {
             return node;
         }
 
-        // Gera a lista de eventos possiveis para os filhos do no atual
         List<TipoNo> tiposFilhos = escolherEvento(profundidade + 1);
 
-        // Cria os filhos
         for (int i = 0; i < quantidadeFilhos; i++) {
-            // Escolhe um tipo aleatorio entre as opcoes permitidas para aquele nivel
             TipoNo tipoSorteado = tiposFilhos.get(random.nextInt(tiposFilhos.size()));
             NoDaArvore novoFilho = criarArvore(profundidade + 1, tipoSorteado);
             node.adicionarFilho(novoFilho);

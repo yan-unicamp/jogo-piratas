@@ -30,6 +30,7 @@ public class TelaInicio implements Screen {
     private Stage stage;
     private Skin skin;
     private Texture placeholderImage;
+    private Texture backgroundTexture;
 
     public TelaInicio(JogoPiratas jogo) {
         this.jogo = jogo;
@@ -43,26 +44,28 @@ public class TelaInicio implements Screen {
 
         Table root = new Table();
         root.setFillParent(true);
+        
+        backgroundTexture = new Texture(Gdx.files.internal("background_inicio.png"));
+        root.setBackground(new TextureRegionDrawable(new TextureRegion(backgroundTexture)));
+        
         stage.addActor(root);
 
-        // Carrega o logo do jogo
         placeholderImage = new Texture(Gdx.files.internal("logo-onepiece.png"));
         Image img = new Image(placeholderImage);
         img.setScaling(Scaling.fit);
         
-        // No title label
-        root.add(img).width(400).height(300).padBottom(40).row();
+        root.add(img).width(1200).height(800).padBottom(40).row();
         
         TextButton btnNovoJogo = new TextButton("  Novo Jogo  ", skin);
         TextButton btnContinuar = new TextButton("  Continuar  ", skin);
         TextButton btnSair = new TextButton("     Sair    ", skin);
 
-        Table overlayConfirmacao = new Table();
+        final Table overlayConfirmacao = new Table();
         overlayConfirmacao.setFillParent(true);
         overlayConfirmacao.setVisible(false);
         stage.addActor(overlayConfirmacao);
 
-        Runnable iniciarNovoJogo = () -> {
+        final Runnable iniciarNovoJogo = () -> {
             if (sistema.SaveManager.temSave()) {
                 sistema.SaveManager.deletarSave();
             }
@@ -78,6 +81,17 @@ public class TelaInicio implements Screen {
             
             jogo.setScreen(new frontend.TelaMapa(jogo, gm));
         };
+
+        stage.addListener(new com.badlogic.gdx.scenes.scene2d.InputListener() {
+            @Override
+            public boolean keyDown(InputEvent event, int keycode) {
+                if (keycode == Input.Keys.ENTER && overlayConfirmacao.isVisible()) {
+                    iniciarNovoJogo.run();
+                    return true;
+                }
+                return super.keyDown(event, keycode);
+            }
+        });
 
         btnNovoJogo.addListener(new ClickListener() {
             @Override
@@ -164,7 +178,6 @@ public class TelaInicio implements Screen {
 
     @Override
     public void render(float delta) {
-        // Draw screen
         Gdx.gl.glClearColor(0.05f, 0.05f, 0.08f, 1f);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 
@@ -186,5 +199,6 @@ public class TelaInicio implements Screen {
         if (stage != null) stage.dispose();
         if (skin != null) skin.dispose();
         if (placeholderImage != null) placeholderImage.dispose();
+        if (backgroundTexture != null) backgroundTexture.dispose();
     }
 }

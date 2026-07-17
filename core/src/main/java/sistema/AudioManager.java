@@ -58,7 +58,7 @@ public class AudioManager {
         Music m = getMusica(caminho);
         if (m != null) {
             m.setLooping(loop);
-            m.setVolume(0.1f); // Volume agradavel
+            m.setVolume(0.1f);
             m.play();
             musicaAtual = m;
             caminhoAtual = caminho;

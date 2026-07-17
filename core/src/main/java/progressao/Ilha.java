@@ -70,7 +70,6 @@ public class Ilha {
         completa       = false;
     }
 
-    // -- Getters ---------------------------------------------------------------
     public String      getNome()           { return nome; }
     public String      getBgKey()          { return bgKey; }
     public List<Rodada> getRodadas()       { return rodadas; }

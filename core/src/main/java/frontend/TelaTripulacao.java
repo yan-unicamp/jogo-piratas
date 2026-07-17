@@ -27,18 +27,17 @@ public class TelaTripulacao implements Screen {
     private Stage stage;
     private Skin skin;
 
-    // Cores da Paleta RPG One Piece
-    private final Color COR_PERGAMINHO = new Color(0.85f, 0.76f, 0.60f, 1f); // #D9C299
-    private final Color COR_MADEIRA_ESCURA = new Color(0.35f, 0.20f, 0.10f, 1f); // #593315
-    private final Color COR_MADEIRA_CLARA = new Color(0.55f, 0.35f, 0.23f, 1f); // #8C593B
-    private final Color COR_TEXTO_ESCURO = new Color(0.15f, 0.08f, 0.04f, 1f); // #26140A
-    private final Color COR_BARRA_HP = new Color(0.1f, 0.4f, 0.6f, 1f); // Azul petroleo
-    private final Color COR_BARRA_DEF = new Color(0.6f, 0.2f, 0.2f, 1f); // Grena
+    private final Color COR_PERGAMINHO = new Color(0.85f, 0.76f, 0.60f, 1f);
+    private final Color COR_MADEIRA_ESCURA = new Color(0.35f, 0.20f, 0.10f, 1f);
+    private final Color COR_MADEIRA_CLARA = new Color(0.55f, 0.35f, 0.23f, 1f);
+    private final Color COR_TEXTO_ESCURO = new Color(0.15f, 0.08f, 0.04f, 1f);
+    private final Color COR_BARRA_HP = new Color(0.1f, 0.4f, 0.6f, 1f);
+    private final Color COR_BARRA_DEF = new Color(0.6f, 0.2f, 0.2f, 1f);
 
     private Table painelInferior; // Seletor de tripulacao
-    private Table painelEsquerdo; // Status
-    private Table painelCentral;  // Imagem
-    private Table painelDireito;  // Tecnicas
+    private Table painelEsquerdo;
+    private Table painelCentral;
+    private Table painelDireito;
 
     public TelaTripulacao(JogoPiratas jogo, GameManager gameManager, Screen telaAnterior) {
         this.jogo = jogo;
@@ -52,13 +51,11 @@ public class TelaTripulacao implements Screen {
         Gdx.input.setInputProcessor(stage);
         skin = SkinPadrao.criar();
 
-        // ROOT com fundo pergaminho
         Table root = new Table();
         root.setFillParent(true);
         root.setBackground(new TextureRegionDrawable(SkinPadrao.textura1x1(COR_PERGAMINHO.r, COR_PERGAMINHO.g, COR_PERGAMINHO.b, 1f)));
         stage.addActor(root);
 
-        // HEADER
         Table header = new Table();
         Label titulo = new Label("VER TRIPULACAO", skin);
         titulo.setFontScale(1.8f);
@@ -88,7 +85,6 @@ public class TelaTripulacao implements Screen {
 
         root.add(conteudo).expand().fill().row();
 
-        // BARRA INFERIOR (Seletor horizontal + Botoes de acao)
         Table bottomBar = new Table();
         bottomBar.setBackground(new TextureRegionDrawable(SkinPadrao.textura1x1(COR_MADEIRA_ESCURA.r, COR_MADEIRA_ESCURA.g, COR_MADEIRA_ESCURA.b, 1f)));
         bottomBar.pad(10);
@@ -111,7 +107,6 @@ public class TelaTripulacao implements Screen {
         
         root.add(bottomBar).fillX().height(150).row();
 
-        // Inicializar com o primeiro aliado
         if (!gameManager.getTripulacao().getAliados().isEmpty()) {
             Aliado primeiro = gameManager.getTripulacao().getAliados().get(0);
             atualizarPainelInferior(primeiro);
@@ -125,11 +120,9 @@ public class TelaTripulacao implements Screen {
             boolean isSelecionado = (aliado == aliadoSelecionado);
             boolean isAtivo = gameManager.getTripulacao().getAliadosAtivos().contains(aliado);
             
-            // Botao representando o rosto do aliado
             Table btnContainer = new Table();
             btnContainer.setTouchable(com.badlogic.gdx.scenes.scene2d.Touchable.enabled);
             
-            // Borda amarela/ouro se selecionado, verde se ativo na equipe
             if (isSelecionado) {
                 btnContainer.setBackground(new TextureRegionDrawable(SkinPadrao.textura1x1(0.9f, 0.8f, 0.2f, 1f)));
                 btnContainer.pad(5);
@@ -145,7 +138,7 @@ public class TelaTripulacao implements Screen {
             } else {
                 img = new Image(new TextureRegionDrawable(SkinPadrao.textura1x1(0.3f, 0.3f, 0.3f, 1f)));
             }
-            btnContainer.add(img).size(100, 100); // Rosto maior
+            btnContainer.add(img).size(100, 100);
 
             btnContainer.addListener(new ClickListener() {
                 @Override
@@ -160,7 +153,6 @@ public class TelaTripulacao implements Screen {
     }
 
     private void mostrarDetalhes(final Aliado aliado) {
-        // PAINEL ESQUERDO (Status)
         painelEsquerdo.clear();
         painelEsquerdo.setBackground(new TextureRegionDrawable(SkinPadrao.textura1x1(COR_MADEIRA_ESCURA.r, COR_MADEIRA_ESCURA.g, COR_MADEIRA_ESCURA.b, 1f)));
         painelEsquerdo.pad(5);
@@ -179,7 +171,6 @@ public class TelaTripulacao implements Screen {
         lblFuncao.setColor(COR_TEXTO_ESCURO);
         statusInner.add(lblFuncao).colspan(2).padBottom(20).left().row();
 
-        // Atributos
         adicionarBarraAtributo(statusInner, "Vitalidade (HP)", aliado.getVidaAtual(), aliado.getVidaMaxima(), COR_BARRA_HP);
         
         int xpBase = 100 * aliado.getNivel();
@@ -195,7 +186,6 @@ public class TelaTripulacao implements Screen {
 
         statusInner.add().expandY().fillY().row();
 
-        // PAINEL CENTRAL (Personagem em destaque)
         painelCentral.clear();
         if (aliado.getTextura() != null) {
             Image imgCentral = new Image(aliado.getTextura());
@@ -203,14 +193,13 @@ public class TelaTripulacao implements Screen {
             painelCentral.add(imgCentral).expand().fill().pad(20);
         }
 
-        // PAINEL DIREITO (Habilidades)
         painelDireito.clear();
         painelDireito.setBackground(new TextureRegionDrawable(SkinPadrao.textura1x1(COR_MADEIRA_ESCURA.r, COR_MADEIRA_ESCURA.g, COR_MADEIRA_ESCURA.b, 1f)));
         painelDireito.pad(15);
 
         Label lblHabilidades = new Label("TECNICAS DE COMBATE", skin);
         lblHabilidades.setFontScale(1.2f);
-        lblHabilidades.setColor(COR_PERGAMINHO); // Texto claro na madeira escura
+        lblHabilidades.setColor(COR_PERGAMINHO);
         painelDireito.add(lblHabilidades).padBottom(20).center().row();
 
         for (Habilidade hab : aliado.getHabilidades()) {
@@ -232,7 +221,6 @@ public class TelaTripulacao implements Screen {
         
         painelDireito.add().expandY().fillY().row();
 
-        // Botao Convocar/Desconvocar (fica no final do painel direito)
         final boolean isAtivo = gameManager.getTripulacao().getAliadosAtivos().contains(aliado);
         String txtBotao = isAtivo ? "Desconvocar Tripulante" : "Convocar Tripulante";
         TextButton btnConvocar = new TextButton(txtBotao, skin);
@@ -272,18 +260,15 @@ public class TelaTripulacao implements Screen {
         lblNome.setColor(COR_TEXTO_ESCURO);
         tabela.add(lblNome).left().padTop(10).row();
 
-        // Container da barra (fundo cinza escuro/borda)
         Table bgBarra = new Table();
         bgBarra.setBackground(new TextureRegionDrawable(SkinPadrao.textura1x1(0.2f, 0.2f, 0.2f, 1f)));
         
-        // Barra preenchida
         Table fgBarra = new Table();
         fgBarra.setBackground(new TextureRegionDrawable(SkinPadrao.textura1x1(corBarra.r, corBarra.g, corBarra.b, 1f)));
         
         float pct = maximo > 0 ? atual / maximo : 0;
         if (pct > 1) pct = 1;
         
-        // Precisamos adicionar a barra no fundo garantindo que ela fique ancorada na esquerda.
         bgBarra.add(fgBarra).width(300 * pct).height(20).left().expandX();
         
         Label lblValor = new Label((int)atual + "/" + (int)maximo, skin);

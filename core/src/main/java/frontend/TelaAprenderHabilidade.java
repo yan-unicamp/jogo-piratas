@@ -77,7 +77,6 @@ public class TelaAprenderHabilidade implements Screen {
         uiTable.add(lblTitulo).padBottom(10).row();
         uiTable.add(lblDesc).padBottom(30).row();
 
-        // Botoes das habilidades atuais
         for (Habilidade habAtual : aliado.getHabilidades()) {
             TextButton btnHab = new TextButton("Esquecer: " + habAtual.getNome(), skin);
             btnHab.addListener(new ClickListener() {
@@ -91,7 +90,6 @@ public class TelaAprenderHabilidade implements Screen {
             uiTable.add(btnHab).size(350, 50).padBottom(10).row();
         }
 
-        // Botao para cancelar
         TextButton btnCancelar = new TextButton("Desistir de aprender " + novaHab.getNome(), skin);
         btnCancelar.getLabel().setColor(Color.SALMON);
         btnCancelar.addListener(new ClickListener() {

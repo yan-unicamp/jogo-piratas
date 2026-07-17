@@ -44,12 +44,10 @@ public class TelaMenu implements Screen {
         Gdx.input.setInputProcessor(stage);
         skin = SkinPadrao.criar();
 
-        // Layout centralizado com Table
         Table tabela = new Table();
         tabela.setFillParent(true);
         tabela.center();
 
-        // Titulo
         Label titulo = new Label("JOGO PIRATAS", skin);
         titulo.setFontScale(2.5f, 2.5f);
         titulo.setColor(Color.GOLD);
@@ -94,7 +92,6 @@ public class TelaMenu implements Screen {
             }
         });
 
-        // Montagem da tabela
         tabela.add(titulo).padBottom(10).row();
         tabela.add(subtitulo).padBottom(60).row();
         
@@ -110,7 +107,7 @@ public class TelaMenu implements Screen {
 
     @Override
     public void render(float delta) {
-        Gdx.gl.glClearColor(0f, 0f, 0.12f, 1f); // azul-noite maritimo
+        Gdx.gl.glClearColor(0f, 0f, 0.12f, 1f);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
         stage.act(delta);
         stage.draw();

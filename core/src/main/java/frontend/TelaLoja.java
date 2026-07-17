@@ -45,18 +45,34 @@ public class TelaLoja implements Screen {
         
         stage = new Stage(new FitViewport(1920, 1080), jogo.batch);
         Gdx.input.setInputProcessor(stage);
+        
+        final Runnable acaoVoltar = () -> {
+            gameManager.getMapa().entrarIlha(ilhaAtual);
+            jogo.setScreen(new frontend.TelaMapa(jogo, gameManager));
+        };
+        
+        stage.addListener(new com.badlogic.gdx.scenes.scene2d.InputListener() {
+            @Override
+            public boolean keyDown(com.badlogic.gdx.scenes.scene2d.InputEvent event, int keycode) {
+                if (keycode == com.badlogic.gdx.Input.Keys.B) {
+                    acaoVoltar.run();
+                    return true;
+                }
+                return super.keyDown(event, keycode);
+            }
+        });
+        
         skin = SkinPadrao.criar();
 
         Stack stack = new Stack();
         stack.setFillParent(true);
         stage.addActor(stack);
 
-        // Fundo Pergaminho
         Texture texPerg = jogo.assets.getTextura("backgrounds/pergaminho.png");
         if (texPerg != null) {
             Image bgImg = new Image(new TextureRegionDrawable(new TextureRegion(texPerg)));
             bgImg.setScaling(Scaling.fill);
-            bgImg.setColor(0.5f, 0.5f, 0.5f, 1f); // Fundo escurecido para contraste
+            bgImg.setColor(0.5f, 0.5f, 0.5f, 1f);
             stack.add(bgImg);
         } else {
             Table bg = new Table();
@@ -64,16 +80,13 @@ public class TelaLoja implements Screen {
             stack.add(bg);
         }
 
-        // Layout Principal
         Table root = new Table();
         root.setFillParent(true);
         root.pad(30);
         stack.add(root);
 
-        // --- HEADER ---
         Table header = new Table();
         
-        // Titulo Central
         Table tituloContainer = new Table();
         tituloContainer.setBackground(new TextureRegionDrawable(SkinPadrao.textura1x1(0f, 0f, 0f, 0.7f)));
         tituloContainer.pad(10, 30, 10, 30);
@@ -89,9 +102,8 @@ public class TelaLoja implements Screen {
         tituloContainer.add(subTitulo).row();
         tituloContainer.add(titulo);
         
-        // Painel Info (Direita)
         Table infoPanel = new Table();
-        infoPanel.setBackground(new TextureRegionDrawable(SkinPadrao.textura1x1(0.35f, 0.2f, 0.1f, 0.9f))); // Madeira
+        infoPanel.setBackground(new TextureRegionDrawable(SkinPadrao.textura1x1(0.35f, 0.2f, 0.1f, 0.9f)));
         infoPanel.pad(10, 20, 10, 20);
         
         ouroLbl = new Label("Carteira: " + formatarBerries(gameManager.getOuro()), skin);
@@ -105,17 +117,15 @@ public class TelaLoja implements Screen {
         infoPanel.add(ouroLbl).right().row();
         infoPanel.add(descLbl).right();
         
-        header.add(new Table()).expandX(); // spacer left
+        header.add(new Table()).expandX();
         header.add(tituloContainer).expandX().center();
         header.add(infoPanel).expandX().right();
         
         root.add(header).fillX().padBottom(40).row();
 
-        // --- ITEM GRID ---
         Table grid = new Table();
         grid.defaults().pad(15).width(450).height(120);
         
-        // Row 1
         grid.add(criarCardLoja("Carne de Rei dos Mares", 50, "itens/icon_carne.png", (card) -> {
             if (gameManager.gastarOuro(50)) {
                 for (Aliado aliado : gameManager.getTripulacao().getAliados()) {
@@ -141,10 +151,8 @@ public class TelaLoja implements Screen {
         grid.add(criarCardLoja("Fragmento de Akuma no Mi", 1000, "itens/icon_akumanomi.png", null, false));
         grid.row();
         
-        // Row 2 (Novos Itens)
         grid.add(criarCardLoja("Bussola de Grand Line (Log Pose)", 150, "itens/icon_logpose.png", (card) -> {
             if (gameManager.gastarOuro(150)) {
-                // Apenas animacao e gasto por enquanto
                 atualizarOuro();
                 mostrarAnimacaoGasto(card, 150);
             }
@@ -188,26 +196,23 @@ public class TelaLoja implements Screen {
         }, true));
         grid.row();
         
-        // Row 3
         grid.add(criarCardLoja("Material de Reparo da Franky Family", 40, "itens/icon_ferramentas.png", null, false));
-        grid.add(); grid.add(); grid.add(); // spacers
+        grid.add(); grid.add(); grid.add();
         
         root.add(grid).expand().center().row();
 
-        // --- FOOTER ---
         Table footer = new Table();
         footer.setBackground(new TextureRegionDrawable(SkinPadrao.textura1x1(0f, 0f, 0f, 0.7f)));
         footer.pad(10);
         
-        Label lblDicas = new Label("[A: Comprar Item]  [B: Voltar]", skin);
+        Label lblDicas = new Label("[B: Voltar]", skin);
         lblDicas.setColor(Color.CYAN);
         
         TextButton btnVoltar = new TextButton("Voltar para o Mapa", skin);
         btnVoltar.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
-                gameManager.getMapa().entrarIlha(ilhaAtual);
-                jogo.setScreen(new frontend.TelaMapa(jogo, gameManager));
+                acaoVoltar.run();
             }
         });
         
@@ -244,7 +249,6 @@ public class TelaLoja implements Screen {
         Table card = new Table();
         card.setBackground(new TextureRegionDrawable(SkinPadrao.textura1x1(0.35f, 0.2f, 0.1f, disponivel ? 0.95f : 0.5f)));
         
-        // Icon area
         Table iconBox = new Table();
         iconBox.setBackground(new TextureRegionDrawable(SkinPadrao.textura1x1(0.85f, 0.76f, 0.60f, disponivel ? 1f : 0.5f)));
         
@@ -263,7 +267,6 @@ public class TelaLoja implements Screen {
         
         card.add(iconBox).size(90, 90).pad(10);
         
-        // Info area
         Table infoBox = new Table();
         infoBox.left();
         
