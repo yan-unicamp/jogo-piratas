@@ -22,6 +22,10 @@ public class Inimigo extends Personagem {
         this.recompensaAliado = aliado;
     }
 
+    public void setRecompensaItem(Item item) {
+        this.recompensaItem = item;
+    }
+
     public Inimigo comAliado(Aliado aliado) {
         this.recompensaAliado = aliado;
         return this;
