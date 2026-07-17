@@ -9,8 +9,14 @@ import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Pixmap;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
+import com.badlogic.gdx.math.Interpolation;
+import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.scenes.scene2d.Group;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
+import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.ProgressBar;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
@@ -18,23 +24,15 @@ import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
+import com.badlogic.gdx.utils.Align;
+import com.badlogic.gdx.utils.Scaling;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 
 import entidades.Aliado;
-import sistema.EstadoJogo;
 import sistema.GameManager;
 import sistema.JogoPiratas;
 
-/**
- * Interface grafica do No de Descanso.
- *
- * Exibe cards com HP atual/maximo de cada aliado vivo.
- * Botao "Descansar" cura 30% do HP maximo de cada aliado e avanca para o mapa.
- * Botao "Continuar" avanca para o mapa sem curar.
- */
 public class TelaDescanso implements Screen {
-
-    private static final float CURA_PERCENTUAL = 0.30f;
 
     private final JogoPiratas jogo;
     private final GameManager gameManager;
@@ -42,187 +40,309 @@ public class TelaDescanso implements Screen {
 
     private Stage stage;
     private Skin skin;
+    private ShapeRenderer shapeRenderer;
+
+    private float tempoFogo = 0f;
+    private boolean curando = false;
+    private float tempoCura = 0f;
+    private final float DURACAO_CURA = 2.5f;
+
+    private Vector2 centroFogueira = new Vector2(960, 250);
+    private java.util.ArrayList<CardAliado> cardsAliados = new java.util.ArrayList<>();
 
     public TelaDescanso(JogoPiratas jogo, GameManager gameManager, progressao.Ilha ilha) {
         this.jogo = jogo;
         this.gameManager = gameManager;
         this.ilhaAtual = ilha;
+        this.shapeRenderer = new ShapeRenderer();
     }
 
     @Override
     public void show() {
         jogo.audio.tocar(sistema.AudioManager.MUSICA_DESCANSO, true);
-        
+
         stage = new Stage(new FitViewport(1920, 1080), jogo.batch);
         Gdx.input.setInputProcessor(stage);
         skin = SkinPadrao.criar();
-
-        // Skin extra: barra de HP (verde sobre fundo escuro)
         adicionarEstilosBarraHp(skin);
 
-        // Adiciona fundo do Sunny
-        Texture bgTex = jogo.assets.getTextura("backgrounds/sunny.png");
-        com.badlogic.gdx.scenes.scene2d.ui.Image bgImg = new com.badlogic.gdx.scenes.scene2d.ui.Image(
-                new com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable(
-                        new com.badlogic.gdx.graphics.g2d.TextureRegion(bgTex)));
-        bgImg.setFillParent(true);
-        bgImg.setScaling(com.badlogic.gdx.utils.Scaling.fill);
-        stage.addActor(bgImg);
-
-        // Overlay escuro
-        Table overlayEscuro = new Table();
-        overlayEscuro.setFillParent(true);
-        overlayEscuro.setBackground(new TextureRegionDrawable(texturaCor(0, 0, 0, 0.65f)));
-        stage.addActor(overlayEscuro);
-
-        Table raiz = new Table();
-        raiz.setFillParent(true);
-        raiz.center();
-
-        // --- Titulo ---
-        Label titulo = new Label("Descansar no Sunny", skin);
-        titulo.setFontScale(2f);
-        titulo.setColor(new Color(0.95f, 0.80f, 0.40f, 1f)); // dourado quente
-
-        Label subtitulo = new Label("Sua tripulacao pode recuperar forcas antes de continuar.", skin);
-        subtitulo.setColor(Color.LIGHT_GRAY);
-
-        raiz.add(titulo).padBottom(8).row();
-        raiz.add(subtitulo).padBottom(40).row();
-
-        // --- Cards dos aliados ---
-        List<Aliado> aliados = gameManager.getTripulacao().getAliados();
-        Table cardsTable = new Table();
-
-        for (Aliado aliado : aliados) {
-            Table card = criarCardAliado(aliado);
-            cardsTable.add(card).width(220).padRight(20);
+        // Fundo Sunny
+        Texture texPerg = jogo.assets.getTextura("backgrounds/sunny.png");
+        if (texPerg != null) {
+            Image bgImg = new Image(new TextureRegionDrawable(new TextureRegion(texPerg)));
+            bgImg.setFillParent(true);
+            bgImg.setScaling(Scaling.fill);
+            bgImg.setColor(0.5f, 0.4f, 0.6f, 1f); // Tom escuro azulado para noite
+            stage.addActor(bgImg);
         }
-        raiz.add(cardsTable).padBottom(50).row();
 
-        // --- Calculo da cura para o label informativo ---
-        int curaPorAliado = calcularCura(aliados);
-        Label infoLabel = new Label("Descansar recupera ~" + curaPorAliado + " HP por aliado (30% do maximo).", skin);
-        infoLabel.setColor(new Color(0.6f, 0.9f, 0.6f, 1f));
-        raiz.add(infoLabel).padBottom(30).row();
+        // Layout Principal (HUD)
+        Table root = new Table();
+        root.setFillParent(true);
+        root.pad(30);
 
-        // --- Botoes ---
-        Table botoesTable = new Table();
+        // --- HEADER removido a pedido ---
+        root.add(new Table()).expand().row(); // Spacer pro centro
 
-        TextButton btnDescansar  = new TextButton("  Descansar  ", skin);
-        TextButton btnContinuar  = new TextButton("  Continuar sem descansar  ", skin);
+        // --- FOOTER (Controles) ---
+        Table footer = new Table();
+        footer.setBackground(new TextureRegionDrawable(SkinPadrao.textura1x1(0.8f, 0.7f, 0.5f, 0.6f)));
+        footer.pad(15);
 
+        Label lblDicas = new Label("A: Descansar   B: Voltar ao Mapa", skin);
+        lblDicas.setColor(Color.BROWN);
+
+        TextButton btnDescansar = new TextButton("Descansar", skin);
         btnDescansar.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
-                for (Aliado a : gameManager.getTripulacao().getAliadosVivos()) {
-                    int cura = (int)(a.getVidaMaxima() * CURA_PERCENTUAL);
-                    a.curar(cura);
-                }
-                gameManager.getMapa().entrarIlha(ilhaAtual);
-                jogo.setScreen(new frontend.TelaMapa(jogo, gameManager));
+                iniciarCura(0.30f); // 30% placeholder for the mode
             }
         });
 
-        btnContinuar.addListener(new ClickListener() {
+        TextButton btnVoltar = new TextButton("Sair", skin);
+        btnVoltar.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
-                gameManager.getMapa().entrarIlha(ilhaAtual);
-                jogo.setScreen(new frontend.TelaMapa(jogo, gameManager));
+                if(!curando) {
+                    gameManager.getMapa().entrarIlha(ilhaAtual);
+                    jogo.setScreen(new frontend.TelaMapa(jogo, gameManager));
+                }
             }
         });
 
-        botoesTable.add(btnDescansar).width(200).height(55).padRight(20);
-        botoesTable.add(btnContinuar).width(300).height(55);
-        raiz.add(botoesTable).row();
+        Table containerBotoes = new Table();
+        containerBotoes.add(btnDescansar).padRight(20).width(250).height(60);
+        containerBotoes.add(btnVoltar).width(180).height(60);
 
-        stage.addActor(raiz);
+        footer.add(lblDicas).padRight(100);
+        footer.add(containerBotoes).right();
+
+        root.add(footer).fillX().bottom();
+        stage.addActor(root);
+
+        // --- PERSONAGENS (Radial Layout) ---
+        Table groupPersonagens = new Table();
+        groupPersonagens.setFillParent(true);
+
+        List<Aliado> aliados = gameManager.getTripulacao().getAliados();
+        // Separando em duas fileiras
+        List<Aliado> filaFrente = new java.util.ArrayList<>();
+        List<Aliado> filaTras = new java.util.ArrayList<>();
+
+        for (int i = 0; i < aliados.size(); i++) {
+            if (i < 6) filaFrente.add(aliados.get(i));
+            else filaTras.add(aliados.get(i));
+        }
+
+        posicionarArco(filaFrente, 750, 320, 165, 15, groupPersonagens);
+        posicionarArco(filaTras, 880, 550, 150, 30, groupPersonagens);
+
+        stage.addActor(groupPersonagens);
     }
 
-    /** Monta um card visual para um aliado com nome, nivel e barra de HP. */
-    private Table criarCardAliado(Aliado aliado) {
-        Table card = new Table();
-        card.setBackground(new TextureRegionDrawable(texturaCor(0.10f, 0.07f, 0.02f, 0.85f)));
+    private void posicionarArco(List<Aliado> lista, float raioX, float raioY, float anguloInicio, float anguloFim, Table group) {
+        if (lista.isEmpty()) return;
+        float anguloPasso = lista.size() > 1 ? (anguloFim - anguloInicio) / (lista.size() - 1) : 0;
+        
+        for (int i = 0; i < lista.size(); i++) {
+            Aliado a = lista.get(i);
+            float angulo = anguloInicio + (i * anguloPasso);
+            float rad = (float) Math.toRadians(angulo);
 
-        // Nome e nivel
-        Label nomeLabel = new Label(aliado.getNome(), skin);
-        nomeLabel.setColor(Color.WHITE);
+            float cx = centroFogueira.x + raioX * (float) Math.cos(rad);
+            float cy = centroFogueira.y + raioY * (float) Math.sin(rad);
 
-        Label nivelLabel = new Label("Nv. " + aliado.getNivel(), skin);
-        nivelLabel.setColor(new Color(0.8f, 0.8f, 0.5f, 1f));
-
-        // HP texto
-        String hpTexto = aliado.getVidaAtual() + " / " + aliado.getVidaMaxima() + " HP";
-        Color corHp = aliado.estaVivo() ? new Color(0.4f, 1f, 0.4f, 1f) : Color.RED;
-        Label hpLabel = new Label(hpTexto, skin);
-        hpLabel.setColor(corHp);
-
-        // Barra de HP
-        float hpRatio = aliado.getVidaMaxima() > 0
-                ? (float) aliado.getVidaAtual() / aliado.getVidaMaxima()
-                : 0f;
-        ProgressBar barraHp = new ProgressBar(0f, 1f, 0.01f, false, skin, "hp");
-        barraHp.setValue(hpRatio);
-
-        card.pad(14);
-        card.add(nomeLabel).left().row();
-        card.add(nivelLabel).left().padBottom(10).row();
-        card.add(barraHp).width(180).height(14).padBottom(4).row();
-        card.add(hpLabel).left().row();
-
-        return card;
+            CardAliado card = new CardAliado(a);
+            // Center the card on cx, cy
+            card.setPosition(cx - card.getWidth() / 2, cy - card.getHeight() / 2);
+            cardsAliados.add(card);
+            group.addActor(card);
+        }
     }
 
-    /** Calcula um valor representativo de cura (usa o primeiro aliado como referencia). */
-    private int calcularCura(List<Aliado> aliados) {
-        if (aliados.isEmpty()) return 0;
-        return (int)(aliados.get(0).getVidaMaxima() * CURA_PERCENTUAL);
-    }
 
-    /** Adiciona estilo de ProgressBar ao skin para a barra de HP. */
-    private void adicionarEstilosBarraHp(Skin s) {
-        BitmapFont font = s.get("default-font", BitmapFont.class);
 
-        Texture fundoBarra = texturaCor(0.15f, 0.15f, 0.15f, 1f);
-        Texture preenchimento = texturaCor(0.20f, 0.80f, 0.20f, 1f);
+    private void iniciarCura(float percentualCura) {
+        if (curando) return;
+        curando = true;
+        tempoCura = 0f;
 
-        ProgressBar.ProgressBarStyle barStyle = new ProgressBar.ProgressBarStyle();
-        barStyle.background  = new TextureRegionDrawable(fundoBarra);
-        barStyle.knob        = new TextureRegionDrawable(texturaCor(0f, 0f, 0f, 0f));  // invisivel
-        barStyle.knobBefore  = new TextureRegionDrawable(preenchimento);
-        s.add("hp", barStyle);
-    }
-
-    /** Cria uma Texture 1A—1 de cor solida. */
-    private static Texture texturaCor(float r, float g, float b, float a) {
-        Pixmap px = new Pixmap(1, 1, Pixmap.Format.RGBA8888);
-        px.setColor(r, g, b, a);
-        px.fill();
-        Texture tex = new Texture(px);
-        px.dispose();
-        return tex;
+        for (CardAliado card : cardsAliados) {
+            float hpAtual = card.aliado.getVidaAtual();
+            float maxHp = card.aliado.getVidaMaxima();
+            float hpCura = maxHp * percentualCura;
+            float hpFinal = Math.min(maxHp, hpAtual + hpCura);
+            
+            card.hpInicialAnim = hpAtual;
+            card.hpFinalAnim = hpFinal;
+            
+            // Aplica no modelo
+            card.aliado.curar((int) hpCura);
+        }
     }
 
     @Override
     public void render(float delta) {
-        Gdx.gl.glClearColor(0.10f, 0.06f, 0.01f, 1f); // sepia quente de acampamento
+        Gdx.gl.glClearColor(0.05f, 0.03f, 0.01f, 1f); // Black/Dark
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
+
+        tempoFogo += delta;
+
+        // Update Animations
+        if (curando) {
+            tempoCura += delta;
+            float progress = Math.min(1f, tempoCura / DURACAO_CURA);
+            float easeProgress = Interpolation.pow2Out.apply(progress);
+
+            for (CardAliado card : cardsAliados) {
+                float currentVisualHp = card.hpInicialAnim + (card.hpFinalAnim - card.hpInicialAnim) * easeProgress;
+                card.atualizarVisual(currentVisualHp);
+            }
+
+            if (tempoCura >= DURACAO_CURA + 1f) {
+                curando = false;
+                // Volta ao mapa após a animação e um tempinho
+                gameManager.getMapa().entrarIlha(ilhaAtual);
+                jogo.setScreen(new frontend.TelaMapa(jogo, gameManager));
+            }
+        }
+
         stage.act(delta);
         stage.draw();
+
+        // Draw Bonfire + Healing Lines
+        shapeRenderer.setProjectionMatrix(stage.getCamera().combined);
+        
+        Gdx.gl.glEnable(GL20.GL_BLEND);
+        Gdx.gl.glBlendFunc(GL20.GL_SRC_ALPHA, GL20.GL_ONE_MINUS_SRC_ALPHA);
+        shapeRenderer.begin(ShapeRenderer.ShapeType.Filled);
+
+        // Bonfire glowing center and flames
+        shapeRenderer.setColor(1f, 0.4f, 0f, 0.3f);
+        shapeRenderer.circle(centroFogueira.x, centroFogueira.y, 80 + (float)Math.sin(tempoFogo*8)*15);
+        shapeRenderer.setColor(1f, 0.6f, 0f, 0.5f);
+        shapeRenderer.circle(centroFogueira.x, centroFogueira.y, 50 + (float)Math.sin(tempoFogo*12)*10);
+
+        // Chama Vermelha/Laranja escuro
+        shapeRenderer.setColor(0.9f, 0.2f, 0.05f, 0.9f);
+        shapeRenderer.triangle(
+            centroFogueira.x - 45, centroFogueira.y - 15,
+            centroFogueira.x + 45, centroFogueira.y - 15,
+            centroFogueira.x + (float)Math.sin(tempoFogo * 15)*25, centroFogueira.y + 110 + (float)Math.sin(tempoFogo * 20)*20
+        );
+
+        // Chama Laranja viva
+        shapeRenderer.setColor(1f, 0.5f, 0f, 0.95f);
+        shapeRenderer.triangle(
+            centroFogueira.x - 30, centroFogueira.y - 15,
+            centroFogueira.x + 30, centroFogueira.y - 15,
+            centroFogueira.x - 20 + (float)Math.sin(tempoFogo * 12)*20, centroFogueira.y + 85 + (float)Math.sin(tempoFogo * 17)*25
+        );
+        shapeRenderer.triangle(
+            centroFogueira.x, centroFogueira.y - 15,
+            centroFogueira.x + 40, centroFogueira.y - 15,
+            centroFogueira.x + 30 + (float)Math.cos(tempoFogo * 14)*15, centroFogueira.y + 75 + (float)Math.sin(tempoFogo * 11)*20
+        );
+
+        // Chama Amarela (nucleo)
+        shapeRenderer.setColor(1f, 0.9f, 0.1f, 1f);
+        shapeRenderer.triangle(
+            centroFogueira.x - 18, centroFogueira.y - 15,
+            centroFogueira.x + 18, centroFogueira.y - 15,
+            centroFogueira.x + (float)Math.sin(tempoFogo * 18)*10, centroFogueira.y + 55 + (float)Math.sin(tempoFogo * 10)*15
+        );
+
+        // Healing Lines
+        if (curando) {
+            float progress = Math.min(1f, tempoCura / DURACAO_CURA);
+            float alpha = 1f - progress;
+            if (alpha < 0) alpha = 0;
+
+            for (CardAliado card : cardsAliados) {
+                Vector2 target = new Vector2(card.getX() + 45, card.getY() + card.getHeight() / 2); // Center of portrait
+                
+                // Draw a thick line using rectLine
+                shapeRenderer.setColor(0.3f, 1f, 0.3f, alpha * 0.8f); // Bright green
+                shapeRenderer.rectLine(centroFogueira, target, 4f);
+                
+                // Aura around character portrait
+                shapeRenderer.setColor(0.3f, 1f, 0.3f, alpha * 0.4f);
+                shapeRenderer.circle(target.x, target.y, 50);
+            }
+        }
+        
+        shapeRenderer.end();
+        Gdx.gl.glDisable(GL20.GL_BLEND);
     }
 
-    @Override
-    public void resize(int width, int height) {
-        stage.getViewport().update(width, height, true);
+    private void adicionarEstilosBarraHp(Skin s) {
+        Texture fundoBarra = SkinPadrao.textura1x1(0.15f, 0.15f, 0.15f, 1f);
+        Texture preenchimento = SkinPadrao.textura1x1(0.20f, 0.80f, 0.20f, 1f);
+
+        ProgressBar.ProgressBarStyle barStyle = new ProgressBar.ProgressBarStyle();
+        barStyle.background = new TextureRegionDrawable(fundoBarra);
+        barStyle.knob = new TextureRegionDrawable(SkinPadrao.textura1x1(0f, 0f, 0f, 0f));
+        barStyle.knobBefore = new TextureRegionDrawable(preenchimento);
+        s.add("hp", barStyle);
     }
 
+    class CardAliado extends Table {
+        public Aliado aliado;
+        public ProgressBar barraHp;
+        public Label hpLabel;
+        
+        public float hpInicialAnim;
+        public float hpFinalAnim;
+
+        public CardAliado(Aliado a) {
+            this.aliado = a;
+            this.setSize(260, 90);
+            this.setBackground(new TextureRegionDrawable(SkinPadrao.textura1x1(0.85f, 0.75f, 0.55f, 0.9f))); // Pergaminho
+
+            // Portrait Box
+            Table portraitBox = new Table();
+            portraitBox.setBackground(new TextureRegionDrawable(SkinPadrao.textura1x1(0.1f, 0.1f, 0.1f, 1f)));
+            
+            Texture tex = a.getTextura();
+            if (tex != null) {
+                Image img = new Image(new TextureRegionDrawable(new TextureRegion(tex)));
+                img.setScaling(Scaling.fit);
+                portraitBox.add(img).expand().fill().pad(2);
+            }
+            
+            // Round masking or background (we just use a square portrait box to keep it simple, ShapeRenderer draws green aura over it)
+            this.add(portraitBox).size(80, 80).padLeft(5).padRight(10);
+
+            // Info Box
+            Table info = new Table();
+            Label nome = new Label(a.getNome(), skin);
+            nome.setColor(Color.BLACK);
+            info.add(nome).left().row();
+
+            barraHp = new ProgressBar(0, a.getVidaMaxima(), 0.1f, false, skin, "hp");
+            barraHp.setValue(a.getVidaAtual());
+            info.add(barraHp).width(140).height(12).padTop(5).padBottom(5).row();
+
+            int pct = (int)((a.getVidaAtual() * 100f) / a.getVidaMaxima());
+            hpLabel = new Label("HP: " + pct + "% / 100%", skin);
+            hpLabel.setColor(Color.DARK_GRAY);
+            hpLabel.setFontScale(0.9f);
+            info.add(hpLabel).left();
+
+            this.add(info).expand().fill().padTop(10);
+        }
+
+        public void atualizarVisual(float hpVisual) {
+            barraHp.setValue(hpVisual);
+            int pct = (int)((hpVisual * 100f) / aliado.getVidaMaxima());
+            hpLabel.setText("HP: " + pct + "% / 100%");
+        }
+    }
+
+    @Override public void resize(int width, int height) { stage.getViewport().update(width, height, true); }
     @Override public void pause() {}
     @Override public void resume() {}
     @Override public void hide() {}
-
-    @Override
-    public void dispose() {
-        stage.dispose();
-        skin.dispose();
-    }
+    @Override public void dispose() { stage.dispose(); skin.dispose(); shapeRenderer.dispose(); }
 }
