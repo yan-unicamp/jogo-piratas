@@ -58,6 +58,8 @@ public class TelaInicio implements Screen {
         root.add(title).padBottom(20).row();
         root.add(img).width(400).height(300).padBottom(40).row();
         root.add(lblEnter).row();
+        
+        jogo.audio.tocar(sistema.AudioManager.MUSICA_MENU, true);
     }
 
     @Override

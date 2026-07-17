@@ -98,6 +98,8 @@ public class TelaMapa implements Screen {
         if (opcoes.size() == 1) {
             mostrarConfirmacao(opcoes.get(0), assets);
         }
+        
+        jogo.audio.tocar(sistema.AudioManager.MUSICA_MAPA, true);
     }
 
     // --------------------------------------------------------------------------

@@ -69,6 +69,8 @@ public class TelaBatalha implements Screen {
 
     @Override
     public void show() {
+        jogo.audio.tocar(sistema.AudioManager.MUSICA_BATALHA, true);
+        
         stage = new Stage(new com.badlogic.gdx.utils.viewport.FitViewport(1920, 1080), jogo.batch);
         Gdx.input.setInputProcessor(stage);
         

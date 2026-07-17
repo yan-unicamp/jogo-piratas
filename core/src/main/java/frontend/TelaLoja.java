@@ -38,6 +38,8 @@ public class TelaLoja implements Screen {
 
     @Override
     public void show() {
+        jogo.audio.tocar(sistema.AudioManager.MUSICA_LOJA, true);
+        
         stage = new Stage(new ScreenViewport(), jogo.batch);
         Gdx.input.setInputProcessor(stage);
         skin = SkinPadrao.criar();
