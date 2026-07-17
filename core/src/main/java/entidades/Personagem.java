@@ -41,6 +41,15 @@ public abstract class Personagem {
         }
     }
 
+    public void aumentarVidaMaxima(int valor) {
+        this.vidaMaxima += valor;
+        this.vidaAtual += valor;
+    }
+
+    public void aumentarIniciativa(int valor) {
+        this.iniciativa += valor;
+    }
+
     public void aumentarDefesaTemporaria(float valor) {
         float novadefesa = defesa - valor;
         if (novadefesa < 0)

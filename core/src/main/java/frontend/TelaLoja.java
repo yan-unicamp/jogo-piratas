@@ -126,77 +126,94 @@ public class TelaLoja implements Screen {
         Table grid = new Table();
         grid.defaults().pad(15).width(450).height(120);
         
-        grid.add(criarCardLoja("Carne de Rei dos Mares", 50, "itens/icon_carne.png", (card) -> {
-            if (gameManager.gastarOuro(50)) {
+        grid.add(criarCardLoja("Carne de Rei dos Mares", "Cura 100% da vida de todos os aliados vivos.", 300, "itens/icon_carne.png", (card) -> {
+            if (gameManager.gastarOuro(300)) {
                 for (Aliado aliado : gameManager.getTripulacao().getAliados()) {
                     if (aliado.getVidaAtual() > 0) aliado.curar(aliado.getVidaMaxima());
                 }
                 atualizarOuro();
-                mostrarAnimacaoGasto(card, 50);
+                mostrarAnimacaoGasto(card, 300);
+                desativarCard(card);
             }
         }, true));
         
-        grid.add(criarCardLoja("Garrafa de Cola de Alta Pressao", 100, "itens/icon_cola.png", (card) -> {
-            if (gameManager.gastarOuro(100)) {
+        grid.add(criarCardLoja("Garrafa de Cola de Alta Pressao", "Revive aliados caídos e cura 100% da vida.", 800, "itens/icon_cola.png", (card) -> {
+            if (gameManager.gastarOuro(800)) {
                 for (Aliado aliado : gameManager.getTripulacao().getAliados()) {
                     aliado.curar(aliado.getVidaMaxima());
                 }
                 atualizarOuro();
-                mostrarAnimacaoGasto(card, 100);
+                mostrarAnimacaoGasto(card, 800);
+                desativarCard(card);
             }
         }, true));
         
-        grid.add(criarCardLoja("Sake de Qualidade do Shaky's Bar", 30, "itens/icon_sake.png", null, false));
+        grid.add(criarCardLoja("Sake de Qualidade do Shaky's Bar", "Uma bebida revigorante. Concede 100 XP para todos.", 150, "itens/icon_sake.png", (card) -> {
+            if (gameManager.gastarOuro(150)) {
+                darXpParaTodos(100, 150, card);
+                desativarCard(card);
+            }
+        }, true));
         
-        grid.add(criarCardLoja("Fragmento de Akuma no Mi", 1000, "itens/icon_akumanomi.png", null, false));
+        grid.add(criarCardLoja("SMILE (Fruta do Diabo)", "Poder misterioso! Concede 250 XP para todos.", 500, "itens/icon_akumanomi.png", (card) -> {
+            if (gameManager.gastarOuro(500)) {
+                darXpParaTodos(250, 500, card);
+                desativarCard(card);
+            }
+        }, true));
         grid.row();
         
-        grid.add(criarCardLoja("Bussola de Grand Line (Log Pose)", 150, "itens/icon_logpose.png", (card) -> {
+        grid.add(criarCardLoja("Bussola de Grand Line (Log Pose)", "Melhora a navegação. +20 Vida Maxima para todos.", 350, "itens/icon_logpose.png", (card) -> {
+            if (gameManager.gastarOuro(350)) {
+                for (Aliado aliado : gameManager.getTripulacao().getAliados()) {
+                    aliado.aumentarVidaMaxima(20);
+                }
+                atualizarOuro();
+                mostrarAnimacaoGasto(card, 350);
+                desativarCard(card);
+            }
+        }, true));
+        
+        grid.add(criarCardLoja("Espada de Qualidade (Wazamono)", "Lâmina afiada. +4 Iniciativa para todos.", 400, "itens/icon_espada.png", (card) -> {
+            if (gameManager.gastarOuro(400)) {
+                for (Aliado aliado : gameManager.getTripulacao().getAliados()) {
+                    aliado.aumentarIniciativa(4);
+                }
+                atualizarOuro();
+                mostrarAnimacaoGasto(card, 400);
+                desativarCard(card);
+            }
+        }, true));
+        
+        grid.add(criarCardLoja("Pecas de Reparo Avancado", "Melhorias estruturais. +10 Vida Maxima para todos.", 150, "itens/icon_ferramentas.png", (card) -> {
             if (gameManager.gastarOuro(150)) {
+                for (Aliado aliado : gameManager.getTripulacao().getAliados()) {
+                    aliado.aumentarVidaMaxima(10);
+                }
                 atualizarOuro();
                 mostrarAnimacaoGasto(card, 150);
+                desativarCard(card);
             }
         }, true));
         
-        grid.add(criarCardLoja("Espada de Qualidade (Wazamono)", 500, "itens/icon_espada.png", (card) -> {
-            if (gameManager.gastarOuro(500)) {
-                atualizarOuro();
-                mostrarAnimacaoGasto(card, 500);
-            }
-        }, true));
-        
-        grid.add(criarCardLoja("Pecas de Reparo Avancado", 200, "itens/icon_ferramentas.png", (card) -> {
-            if (gameManager.gastarOuro(200)) {
-                atualizarOuro();
-                mostrarAnimacaoGasto(card, 200);
-            }
-        }, true));
-        
-        grid.add(criarCardLoja("Manual de Navegacao Avancada", 75, "itens/icon_manual.png", (card) -> {
-            if (gameManager.gastarOuro(75)) {
-                java.util.List<sistema.HabilidadePendente> pendentes = new java.util.ArrayList<>();
-                for (Aliado aliado : gameManager.getTripulacao().getAliadosAtivos()) {
-                    java.util.List<entidades.Habilidade> destravadas = aliado.ganharExperiencia(100);
-                    for (entidades.Habilidade h : destravadas) {
-                        if (aliado.getHabilidades().size() < 4) {
-                            aliado.adicionarHabilidade(h);
-                        } else {
-                            pendentes.add(new sistema.HabilidadePendente(aliado, h));
-                        }
-                    }
-                }
-                atualizarOuro();
-                mostrarAnimacaoGasto(card, 75);
-                
-                if (!pendentes.isEmpty()) {
-                    Runnable onComplete = () -> jogo.setScreen(new frontend.TelaLoja(jogo, gameManager, ilhaAtual));
-                    jogo.setScreen(new frontend.TelaAprenderHabilidade(jogo, gameManager, pendentes, onComplete));
-                }
+        grid.add(criarCardLoja("Manual de Navegacao Avancada", "Conhecimento é poder. Concede 50 XP para todos.", 80, "itens/icon_manual.png", (card) -> {
+            if (gameManager.gastarOuro(80)) {
+                darXpParaTodos(50, 80, card);
+                desativarCard(card);
             }
         }, true));
         grid.row();
         
-        grid.add(criarCardLoja("Material de Reparo da Franky Family", 40, "itens/icon_ferramentas.png", null, false));
+        grid.add(criarCardLoja("Material de Reparo da Franky Family", "Reparo rápido. Cura 50% da vida de todos.", 150, "itens/icon_ferramentas.png", (card) -> {
+            if (gameManager.gastarOuro(150)) {
+                for (Aliado aliado : gameManager.getTripulacao().getAliados()) {
+                    if (aliado.getVidaAtual() > 0) aliado.curar(aliado.getVidaMaxima() / 2);
+                }
+                atualizarOuro();
+                mostrarAnimacaoGasto(card, 150);
+                desativarCard(card);
+            }
+        }, true));
         grid.add(); grid.add(); grid.add();
         
         root.add(grid).expand().center().row();
@@ -223,6 +240,32 @@ public class TelaLoja implements Screen {
         root.add(footer).fillX().bottom();
     }
 
+    private void desativarCard(Table card) {
+        card.setTouchable(com.badlogic.gdx.scenes.scene2d.Touchable.disabled);
+        card.getColor().a = 0.4f; // Dim the whole card to indicate it was bought
+    }
+
+    private void darXpParaTodos(int xp, int preco, Table card) {
+        java.util.List<sistema.HabilidadePendente> pendentes = new java.util.ArrayList<>();
+        for (Aliado aliado : gameManager.getTripulacao().getAliadosAtivos()) {
+            java.util.List<entidades.Habilidade> destravadas = aliado.ganharExperiencia(xp);
+            for (entidades.Habilidade h : destravadas) {
+                if (aliado.getHabilidades().size() < 4) {
+                    aliado.adicionarHabilidade(h);
+                } else {
+                    pendentes.add(new sistema.HabilidadePendente(aliado, h));
+                }
+            }
+        }
+        atualizarOuro();
+        mostrarAnimacaoGasto(card, preco); 
+        
+        if (!pendentes.isEmpty()) {
+            Runnable onComplete = () -> jogo.setScreen(new frontend.TelaLoja(jogo, gameManager, ilhaAtual));
+            jogo.setScreen(new frontend.TelaAprenderHabilidade(jogo, gameManager, pendentes, onComplete));
+        }
+    }
+
     private void mostrarAnimacaoGasto(Table card, int valorBase) {
         String texto = "- " + formatarBerries(valorBase);
         Label lblAnim = new Label(texto, skin);
@@ -245,7 +288,7 @@ public class TelaLoja implements Screen {
         return String.format("%,d", berries).replace(',', '.') + " B";
     }
 
-    private Table criarCardLoja(String nome, int precoBase, String iconPath, Consumer<Table> acao, boolean disponivel) {
+    private Table criarCardLoja(String nome, String descricao, int precoBase, String iconPath, Consumer<Table> acao, boolean disponivel) {
         Table card = new Table();
         card.setBackground(new TextureRegionDrawable(SkinPadrao.textura1x1(0.35f, 0.2f, 0.1f, disponivel ? 0.95f : 0.5f)));
         
@@ -281,6 +324,14 @@ public class TelaLoja implements Screen {
         precoLbl.setFontScale(1.1f);
         
         infoBox.add(nomeLbl).width(280).left().row();
+        
+        Label descLbl = new Label(descricao, skin);
+        descLbl.setWrap(true);
+        descLbl.setAlignment(Align.left);
+        descLbl.setColor(Color.LIGHT_GRAY);
+        descLbl.setFontScale(0.8f);
+        infoBox.add(descLbl).width(280).left().padTop(5).row();
+        
         infoBox.add(precoLbl).padTop(10).left();
         
         card.add(infoBox).expand().fill().pad(10);
