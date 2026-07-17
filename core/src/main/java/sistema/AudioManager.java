@@ -1,9 +1,10 @@
 package sistema;
 
-import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.audio.Music;
 import java.util.HashMap;
 import java.util.Map;
+
+import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.audio.Music;
 
 /**
  * Gerenciador de audio do jogo.
@@ -57,7 +58,7 @@ public class AudioManager {
         Music m = getMusica(caminho);
         if (m != null) {
             m.setLooping(loop);
-            m.setVolume(0.4f); // Volume agradavel
+            m.setVolume(0.1f); // Volume agradavel
             m.play();
             musicaAtual = m;
             caminhoAtual = caminho;

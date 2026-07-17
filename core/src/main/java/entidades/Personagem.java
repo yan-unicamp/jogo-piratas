@@ -45,11 +45,15 @@ public abstract class Personagem {
         float novadefesa = defesa - valor;
         if (novadefesa < 0)
             novadefesa = 0; // Impede que a defesa fique negativa (o que faria o dano curar o personagem)
-        this.defesaAtual = novadefesa;
+        
+        if (novadefesa < this.defesaAtual) {
+            this.defesaAtual = novadefesa;
+        }
     }
 
     public void resetarDefesa() {
         this.defesaAtual = this.defesa;
+        this.turnosDePausa = 0;
     }
 
     public boolean estaVivo() {
