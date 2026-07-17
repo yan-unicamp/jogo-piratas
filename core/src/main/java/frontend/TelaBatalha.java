@@ -66,6 +66,7 @@ public class TelaBatalha implements Screen {
 
     private Texture bgTexture;
     private Texture overlayTexture;
+    private Runnable acaoContinuarVitoria = null;
 
     @Override
     public void show() {
@@ -73,6 +74,28 @@ public class TelaBatalha implements Screen {
         
         stage = new Stage(new com.badlogic.gdx.utils.viewport.FitViewport(1920, 1080), jogo.batch);
         Gdx.input.setInputProcessor(stage);
+        
+        stage.addListener(new com.badlogic.gdx.scenes.scene2d.InputListener() {
+            @Override
+            public boolean keyDown(InputEvent event, int keycode) {
+                if (keycode == com.badlogic.gdx.Input.Keys.U) {
+                    if (gerenciador.getEstadoAtual() == sistema.GerenciadorDeBatalha.EstadoBatalha.PLANEJAMENTO_JOGADOR && aguardandoAcaoJogador && !escolhendoAlvo) {
+                        for (Personagem ini : inimigos) {
+                            if (ini.estaVivo()) ini.receberDano(999999);
+                        }
+                        gerenciador.verificarVitoriaOuDerrota();
+                        atualizarUI(false);
+                    }
+                    return true;
+                } else if (keycode == com.badlogic.gdx.Input.Keys.ENTER) {
+                    if (gerenciador.getEstadoAtual() == sistema.GerenciadorDeBatalha.EstadoBatalha.VITORIA && acaoContinuarVitoria != null) {
+                        acaoContinuarVitoria.run();
+                    }
+                    return true;
+                }
+                return super.keyDown(event, keycode);
+            }
+        });
         
         criarSkin();
         
@@ -569,24 +592,32 @@ public class TelaBatalha implements Screen {
                         winTable.add(recLabel).padBottom(10).row();
                     }
                     
+                    acaoContinuarVitoria = () -> {
+                        java.util.List<sistema.HabilidadePendente> pendentes = gerenciador.getHabilidadesPendentes();
+                        Runnable onComplete = () -> {
+                            if (completa) {
+                                if (gameManager.getMapa().getCapitulo() > 3) {
+                                    jogo.setScreen(new frontend.TelaVitoria(jogo, gameManager));
+                                } else {
+                                    jogo.setScreen(new frontend.TelaMapa(jogo, gameManager));
+                                }
+                            } else {
+                                jogo.setScreen(new frontend.TelaBatalha(jogo, gameManager, ilhaAtual, ilhaAtual.getRodadaAtual()));
+                            }
+                        };
+                        
+                        if (!pendentes.isEmpty()) {
+                            jogo.setScreen(new frontend.TelaAprenderHabilidade(jogo, gameManager, pendentes, onComplete));
+                        } else {
+                            onComplete.run();
+                        }
+                    };
+
                     TextButton btnSair = new TextButton("Continuar", skin);
                     btnSair.addListener(new ClickListener() {
                         @Override
                         public void clicked(InputEvent event, float x, float y) {
-                            java.util.List<sistema.HabilidadePendente> pendentes = gerenciador.getHabilidadesPendentes();
-                            Runnable onComplete = () -> {
-                                if (completa) {
-                                    jogo.setScreen(new frontend.TelaMapa(jogo, gameManager));
-                                } else {
-                                    jogo.setScreen(new frontend.TelaBatalha(jogo, gameManager, ilhaAtual, ilhaAtual.getRodadaAtual()));
-                                }
-                            };
-                            
-                            if (!pendentes.isEmpty()) {
-                                jogo.setScreen(new frontend.TelaAprenderHabilidade(jogo, gameManager, pendentes, onComplete));
-                            } else {
-                                onComplete.run();
-                            }
+                            if (acaoContinuarVitoria != null) acaoContinuarVitoria.run();
                         }
                     });
                     

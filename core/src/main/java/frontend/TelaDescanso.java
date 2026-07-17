@@ -63,10 +63,27 @@ public class TelaDescanso implements Screen {
 
         stage = new Stage(new FitViewport(1920, 1080), jogo.batch);
         Gdx.input.setInputProcessor(stage);
+        
+        stage.addListener(new com.badlogic.gdx.scenes.scene2d.InputListener() {
+            @Override
+            public boolean keyDown(com.badlogic.gdx.scenes.scene2d.InputEvent event, int keycode) {
+                if (keycode == com.badlogic.gdx.Input.Keys.A) {
+                    iniciarCura(0.30f);
+                    return true;
+                } else if (keycode == com.badlogic.gdx.Input.Keys.B) {
+                    if (!curando) {
+                        gameManager.getMapa().entrarIlha(ilhaAtual);
+                        jogo.setScreen(new frontend.TelaMapa(jogo, gameManager));
+                    }
+                    return true;
+                }
+                return super.keyDown(event, keycode);
+            }
+        });
+        
         skin = SkinPadrao.criar();
         adicionarEstilosBarraHp(skin);
 
-        // Fundo Sunny
         Texture texPerg = jogo.assets.getTextura("backgrounds/sunny.png");
         if (texPerg != null) {
             Image bgImg = new Image(new TextureRegionDrawable(new TextureRegion(texPerg)));
@@ -76,15 +93,12 @@ public class TelaDescanso implements Screen {
             stage.addActor(bgImg);
         }
 
-        // Layout Principal (HUD)
         Table root = new Table();
         root.setFillParent(true);
         root.pad(30);
 
-        // --- HEADER removido a pedido ---
         root.add(new Table()).expand().row(); // Spacer pro centro
 
-        // --- FOOTER (Controles) ---
         Table footer = new Table();
         footer.setBackground(new TextureRegionDrawable(SkinPadrao.textura1x1(0.8f, 0.7f, 0.5f, 0.6f)));
         footer.pad(15);
@@ -121,12 +135,10 @@ public class TelaDescanso implements Screen {
         root.add(footer).fillX().bottom();
         stage.addActor(root);
 
-        // --- PERSONAGENS (Radial Layout) ---
         Table groupPersonagens = new Table();
         groupPersonagens.setFillParent(true);
 
         List<Aliado> aliados = gameManager.getTripulacao().getAliados();
-        // Separando em duas fileiras
         List<Aliado> filaFrente = new java.util.ArrayList<>();
         List<Aliado> filaTras = new java.util.ArrayList<>();
 
@@ -154,7 +166,6 @@ public class TelaDescanso implements Screen {
             float cy = centroFogueira.y + raioY * (float) Math.sin(rad);
 
             CardAliado card = new CardAliado(a);
-            // Center the card on cx, cy
             card.setPosition(cx - card.getWidth() / 2, cy - card.getHeight() / 2);
             cardsAliados.add(card);
             group.addActor(card);
@@ -177,19 +188,17 @@ public class TelaDescanso implements Screen {
             card.hpInicialAnim = hpAtual;
             card.hpFinalAnim = hpFinal;
             
-            // Aplica no modelo
             card.aliado.curar((int) hpCura);
         }
     }
 
     @Override
     public void render(float delta) {
-        Gdx.gl.glClearColor(0.05f, 0.03f, 0.01f, 1f); // Black/Dark
+        Gdx.gl.glClearColor(0.05f, 0.03f, 0.01f, 1f);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 
         tempoFogo += delta;
 
-        // Update Animations
         if (curando) {
             tempoCura += delta;
             float progress = Math.min(1f, tempoCura / DURACAO_CURA);
@@ -202,7 +211,6 @@ public class TelaDescanso implements Screen {
 
             if (tempoCura >= DURACAO_CURA + 1f) {
                 curando = false;
-                // Volta ao mapa após a animação e um tempinho
                 gameManager.getMapa().entrarIlha(ilhaAtual);
                 jogo.setScreen(new frontend.TelaMapa(jogo, gameManager));
             }
@@ -211,20 +219,17 @@ public class TelaDescanso implements Screen {
         stage.act(delta);
         stage.draw();
 
-        // Draw Bonfire + Healing Lines
         shapeRenderer.setProjectionMatrix(stage.getCamera().combined);
         
         Gdx.gl.glEnable(GL20.GL_BLEND);
         Gdx.gl.glBlendFunc(GL20.GL_SRC_ALPHA, GL20.GL_ONE_MINUS_SRC_ALPHA);
         shapeRenderer.begin(ShapeRenderer.ShapeType.Filled);
 
-        // Bonfire glowing center and flames
         shapeRenderer.setColor(1f, 0.4f, 0f, 0.3f);
         shapeRenderer.circle(centroFogueira.x, centroFogueira.y, 80 + (float)Math.sin(tempoFogo*8)*15);
         shapeRenderer.setColor(1f, 0.6f, 0f, 0.5f);
         shapeRenderer.circle(centroFogueira.x, centroFogueira.y, 50 + (float)Math.sin(tempoFogo*12)*10);
 
-        // Chama Vermelha/Laranja escuro
         shapeRenderer.setColor(0.9f, 0.2f, 0.05f, 0.9f);
         shapeRenderer.triangle(
             centroFogueira.x - 45, centroFogueira.y - 15,
@@ -232,7 +237,6 @@ public class TelaDescanso implements Screen {
             centroFogueira.x + (float)Math.sin(tempoFogo * 15)*25, centroFogueira.y + 110 + (float)Math.sin(tempoFogo * 20)*20
         );
 
-        // Chama Laranja viva
         shapeRenderer.setColor(1f, 0.5f, 0f, 0.95f);
         shapeRenderer.triangle(
             centroFogueira.x - 30, centroFogueira.y - 15,
@@ -245,7 +249,6 @@ public class TelaDescanso implements Screen {
             centroFogueira.x + 30 + (float)Math.cos(tempoFogo * 14)*15, centroFogueira.y + 75 + (float)Math.sin(tempoFogo * 11)*20
         );
 
-        // Chama Amarela (nucleo)
         shapeRenderer.setColor(1f, 0.9f, 0.1f, 1f);
         shapeRenderer.triangle(
             centroFogueira.x - 18, centroFogueira.y - 15,
@@ -253,7 +256,6 @@ public class TelaDescanso implements Screen {
             centroFogueira.x + (float)Math.sin(tempoFogo * 18)*10, centroFogueira.y + 55 + (float)Math.sin(tempoFogo * 10)*15
         );
 
-        // Healing Lines
         if (curando) {
             float progress = Math.min(1f, tempoCura / DURACAO_CURA);
             float alpha = 1f - progress;
@@ -262,11 +264,9 @@ public class TelaDescanso implements Screen {
             for (CardAliado card : cardsAliados) {
                 Vector2 target = new Vector2(card.getX() + 45, card.getY() + card.getHeight() / 2); // Center of portrait
                 
-                // Draw a thick line using rectLine
-                shapeRenderer.setColor(0.3f, 1f, 0.3f, alpha * 0.8f); // Bright green
+                shapeRenderer.setColor(0.3f, 1f, 0.3f, alpha * 0.8f);
                 shapeRenderer.rectLine(centroFogueira, target, 4f);
                 
-                // Aura around character portrait
                 shapeRenderer.setColor(0.3f, 1f, 0.3f, alpha * 0.4f);
                 shapeRenderer.circle(target.x, target.y, 50);
             }
@@ -298,9 +298,8 @@ public class TelaDescanso implements Screen {
         public CardAliado(Aliado a) {
             this.aliado = a;
             this.setSize(260, 90);
-            this.setBackground(new TextureRegionDrawable(SkinPadrao.textura1x1(0.85f, 0.75f, 0.55f, 0.9f))); // Pergaminho
+            this.setBackground(new TextureRegionDrawable(SkinPadrao.textura1x1(0.85f, 0.75f, 0.55f, 0.9f)));
 
-            // Portrait Box
             Table portraitBox = new Table();
             portraitBox.setBackground(new TextureRegionDrawable(SkinPadrao.textura1x1(0.1f, 0.1f, 0.1f, 1f)));
             
@@ -311,10 +310,8 @@ public class TelaDescanso implements Screen {
                 portraitBox.add(img).expand().fill().pad(2);
             }
             
-            // Round masking or background (we just use a square portrait box to keep it simple, ShapeRenderer draws green aura over it)
             this.add(portraitBox).size(80, 80).padLeft(5).padRight(10);
 
-            // Info Box
             Table info = new Table();
             Label nome = new Label(a.getNome(), skin);
             nome.setColor(Color.BLACK);

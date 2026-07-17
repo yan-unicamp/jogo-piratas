@@ -66,7 +66,6 @@ public class GameManager {
             // Exemplo: adicionando um aliado base
             tripulacao.adicionarAliado(PersonagemFactory.criarLuffy());
             tripulacao.adicionarAliadoAtivo(tripulacao.getAliados().get(0));
-            // Primeiro save
             SaveManager.salvar(this);
         }
 
@@ -246,7 +245,6 @@ public class GameManager {
     }
 
     public void setTelaAtual(com.badlogic.gdx.Screen screen) {
-        // Metodo de compatibilidade se necessario
     }
 
     public boolean gastarOuro(int valor) {

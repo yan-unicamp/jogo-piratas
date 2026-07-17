@@ -32,7 +32,7 @@ public class NoBatalha implements NoMapa {
 
     @Override
     public void entrarNo(GameManager controle) {
-        controle.prepararBatalha(inimigos); // injeta contexto antes de trocar de tela
+        controle.prepararBatalha(inimigos);
         controle.mudarEstado(EstadoJogo.BATALHA);
     }
 

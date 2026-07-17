@@ -32,7 +32,6 @@ public class SaveManager {
             state.etapaAtual = gm.getMapa().getEtapaAtual();
             state.dinheiro = gm.getTripulacao().getDinheiro();
 
-            // Salvar Aliados
             for (Aliado aliado : gm.getTripulacao().getAliados()) {
                 SaveState.AliadoSave as = new SaveState.AliadoSave();
                 as.nome = aliado.getNome();
@@ -48,7 +47,6 @@ public class SaveManager {
                 state.itens.add(item.getNome());
             }
 
-            // Salvar Mapa
             for (Ilha ilha : gm.getMapa().getOpcoesAtuais()) {
                 state.opcoesAtuais.add(ilha.getIdSave());
             }
@@ -105,15 +103,13 @@ public class SaveManager {
             Json json = new Json();
             SaveState state = json.fromJson(SaveState.class, jsonStr);
 
-            // Restaurar Tripulacao
             gm.getTripulacao().getAliados().clear();
             gm.getTripulacao().getAliadosAtivos().clear();
             gm.getTripulacao().getItens().clear();
             
-            // É preciso usar um método que gaste o dinheiro atual ou apenas resetar e dar dinheiro.
             // A Tripulacao não tem setDinheiro, então:
             int dinheiroAtual = gm.getTripulacao().getDinheiro();
-            gm.getTripulacao().gastarDinheiro(dinheiroAtual); // zera
+            gm.getTripulacao().gastarDinheiro(dinheiroAtual);
             gm.getTripulacao().receberDinheiro(state.dinheiro);
 
             for (SaveState.AliadoSave as : state.aliados) {
@@ -125,23 +121,15 @@ public class SaveManager {
                         aliado.subirStatus();
                         // Destravar habilidades do nivel simulado
                         if (aliado.temHabilidadeDesbloqueavelNoNivel(i + 2)) {
-                            // Não precisamos chamar o método de ganhar xp completo,
                             // podemos apenas injetar as habilidades se fosse necessário.
-                            // Mas ganharExperiencia com valor exato de subida resolve:
                         }
                     }
-                    // A melhor forma de forçar o nível/xp:
-                    // Mas ganharExperiencia sobe status, o que afeta vida maxima e defesa
-                    // Vamos apenas restaurar a vida.
-                    // O nivel no Aliado já está 1 ao criar, vamos apenas forcar o XP e ver as habilidades?
                     // PersonagemFactory.criarLuffy() já retorna lvl 1. 
-                    // Se chamarmos ganharExperiencia até as.experiencia ele sobe sozinho!
                     int xpRestante = as.experiencia;
                     if (xpRestante > 0) {
                         aliado.ganharExperiencia(xpRestante);
                     }
                     
-                    // Ajusta a vida
                     aliado.receberDano(aliado.getVidaMaxima() - as.vidaAtual);
                     if (as.vidaAtual <= 0) {
                         aliado.receberDano(999999);
@@ -159,7 +147,6 @@ public class SaveManager {
                 if (item != null) gm.getTripulacao().receberItem(item);
             }
 
-            // Restaurar Mapa
             gm.getMapa().restaurarEstado(state.capitulo, state.etapaAtual, state.opcoesAtuais, state.ilhasMostradas, state.ilhasConcluidas);
             
             System.out.println("Jogo carregado com sucesso!");

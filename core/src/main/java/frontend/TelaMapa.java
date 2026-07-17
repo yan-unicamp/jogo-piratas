@@ -34,6 +34,7 @@ public class TelaMapa implements Screen {
     private Skin skin;
     private Table overlayConfirmacao;
     private Ilha ilhaSelecionada;
+    private Runnable acaoConfirmarIlha = null;
 
     private final Color COR_PERGAMINHO = new Color(0.85f, 0.76f, 0.60f, 1f);
 
@@ -46,6 +47,33 @@ public class TelaMapa implements Screen {
     public void show() {
         stage = new Stage(new FitViewport(1920, 1080));
         Gdx.input.setInputProcessor(stage);
+        
+        stage.addListener(new com.badlogic.gdx.scenes.scene2d.InputListener() {
+            @Override
+            public boolean keyDown(InputEvent event, int keycode) {
+                if (keycode == com.badlogic.gdx.Input.Keys.ENTER) {
+                    if (overlayConfirmacao != null && overlayConfirmacao.isVisible() && acaoConfirmarIlha != null) {
+                        acaoConfirmarIlha.run();
+                        return true;
+                    }
+                } else if (overlayConfirmacao != null && !overlayConfirmacao.isVisible()) {
+                    List<Ilha> opcoes = gameManager.getMapa().getOpcoesAtuais();
+                    if (keycode == com.badlogic.gdx.Input.Keys.LEFT && opcoes.size() > 0) {
+                        mostrarConfirmacao(opcoes.get(0), jogo.assets);
+                        return true;
+                    } else if (keycode == com.badlogic.gdx.Input.Keys.UP && opcoes.size() == 3) {
+                        mostrarConfirmacao(opcoes.get(1), jogo.assets);
+                        return true;
+                    } else if (keycode == com.badlogic.gdx.Input.Keys.RIGHT && opcoes.size() >= 2) {
+                        if (opcoes.size() == 3) mostrarConfirmacao(opcoes.get(2), jogo.assets);
+                        else mostrarConfirmacao(opcoes.get(1), jogo.assets);
+                        return true;
+                    }
+                }
+                return super.keyDown(event, keycode);
+            }
+        });
+        
         skin = SkinPadrao.criar();
         
         sistema.SaveManager.salvar(gameManager);
@@ -59,28 +87,23 @@ public class TelaMapa implements Screen {
         stack.setFillParent(true);
         stage.addActor(stack);
 
-        // Fundo Pergaminho (Textura)
         Texture texPerg = assets.getTextura("backgrounds/pergaminho.png");
         Image bgImg = new Image(new TextureRegionDrawable(new TextureRegion(texPerg)));
         bgImg.setScaling(Scaling.fill);
         bgImg.setColor(0.5f, 0.5f, 0.5f, 1f); // Escurece o pergaminho pela metade para dar contraste
         stack.add(bgImg);
 
-        // Mapa Interativo
         Group mapaGroup = montarMapaGroup(assets, concluidas, opcoes);
         ScrollPane scroll = new ScrollPane(mapaGroup, skin);
         scroll.setFadeScrollBars(false);
         scroll.setScrollingDisabled(true, false);
-        // Rolar para o final (topo do mapa) inicialmente
         scroll.layout();
         scroll.setScrollPercentY(100f);
         
-        // UI Container
         Table ui = new Table();
         ui.setFillParent(true);
         ui.top();
 
-        // Hud e Titulo fixos no topo da tela
         ui.add(montarHud(etapa, 6)).fillX().expandX().row();
         ui.add(scroll).expand().fill().row();
 
@@ -88,7 +111,6 @@ public class TelaMapa implements Screen {
 
 
 
-        // Overlay
         overlayConfirmacao = new Table();
         overlayConfirmacao.setFillParent(true);
         overlayConfirmacao.setVisible(false);
@@ -115,7 +137,6 @@ public class TelaMapa implements Screen {
         float X_OFFSET = 350;
         float currentY = 150;
         
-        // Ponto de partida
         Label lblStart = new Label("[ INICIO ]", skin);
         lblStart.setColor(new Color(0.1f, 0.1f, 0.1f, 1f));
         lblStart.setPosition(X_CENTER - lblStart.getPrefWidth()/2, currentY - 50);
@@ -124,16 +145,17 @@ public class TelaMapa implements Screen {
         float prevX = X_CENTER;
         float prevY = currentY - 30; // base of the first line
 
-        // Concluidas
         for(int i = 0; i < concluidas.size(); i++) {
             Ilha ilha = concluidas.get(i);
-            int etapa = i;
-            int col = (etapa % 3 == 0) ? 1 : Math.abs(ilha.getNome().hashCode()) % 3;
+            int realDepth = (gameManager.getMapa().getCapitulo() == 1) ? i : i + 1;
+            boolean isCenter = (realDepth == 0 || realDepth == 3 || realDepth == 6 || realDepth == 9 || realDepth == 10);
+            int col = isCenter ? 1 : Math.abs(ilha.getNome().hashCode()) % 3;
+            if (!isCenter && col == 1) col = 0; // Evita que ilhas genericas fiquem no centro exato se isCenter for falso
+
             float x = X_CENTER + (col - 1) * X_OFFSET;
             float y = currentY + (i * Y_STEP);
             
-            // Desenha ramificacoes falsas
-            if (etapa % 3 != 0) {
+            if (!isCenter) {
                 for(int c = 0; c < 3; c++) {
                     float fakeX = X_CENTER + (c - 1) * X_OFFSET;
                     if (c != col) {
@@ -147,12 +169,10 @@ public class TelaMapa implements Screen {
                 }
             }
             
-            // Linha principal
             Image linha = criarLinha(prevX, prevY, x, y, new Color(0.1f, 0.1f, 0.1f, 0.85f));
             map.addActor(linha);
             
-            // No real
-            Table no = criarNoIlha(ilha, etapa, true, false, assets);
+            Table no = criarNoIlha(ilha, realDepth, true, false, assets);
             no.setPosition(x - NODE_W/2, y - NODE_W/2);
             map.addActor(no);
             
@@ -160,20 +180,24 @@ public class TelaMapa implements Screen {
             prevY = y;
         }
 
-        // Opcoes Atuais
         int etapaAtual = concluidas.size();
+        int realDepthAt = (gameManager.getMapa().getCapitulo() == 1) ? etapaAtual : etapaAtual + 1;
+        boolean isCenterAt = (realDepthAt == 0 || realDepthAt == 3 || realDepthAt == 6 || realDepthAt == 9 || realDepthAt == 10);
         float y = currentY + (etapaAtual * Y_STEP);
         
-        for(int i = 0; i < opcoes.size(); i++) {
-            Ilha ilha = opcoes.get(i);
-            int col = (opcoes.size() == 1) ? 1 : i;
+        List<Ilha> opcoesAtuais = gameManager.getMapa().getOpcoesAtuais();
+        
+        for(int i = 0; i < opcoesAtuais.size(); i++) {
+            Ilha ilha = opcoesAtuais.get(i);
+            int col = (opcoesAtuais.size() == 1) ? (isCenterAt ? 1 : Math.abs(ilha.getNome().hashCode()) % 3) : i;
+            if (opcoesAtuais.size() == 1 && !isCenterAt && col == 1) col = 0;
+            
             float x = X_CENTER + (col - 1) * X_OFFSET;
             
-            // Linhas para opções atuais
             Image linha = criarLinha(prevX, prevY, x, y, new Color(0.1f, 0.1f, 0.1f, 0.85f));
             map.addActor(linha);
             
-            Table no = criarNoIlha(ilha, etapaAtual, false, true, assets);
+            Table no = criarNoIlha(ilha, realDepthAt, false, true, assets);
             no.setPosition(x - NODE_W/2, y - NODE_W/2);
             map.addActor(no);
         }
@@ -326,30 +350,34 @@ public class TelaMapa implements Screen {
         
         Label desc = new Label("Voce enfrentara " + ilha.getTotalRodadas() + " rodadas de batalha.", skin);
         
+        acaoConfirmarIlha = () -> {
+            Screen proximaTela = null;
+            if (ilha instanceof IlhaDescanso) {
+                proximaTela = new TelaDescanso(jogo, gameManager, ilha);
+            } else if (ilha instanceof IlhaLoja) {
+                proximaTela = new TelaLoja(jogo, gameManager, ilha);
+            } else {
+                progressao.Rodada rodada = ilha.getRodadaAtual();
+                if (rodada != null) {
+                    proximaTela = new TelaBatalha(jogo, gameManager, ilha, rodada);
+                }
+            }
+
+            if (proximaTela != null) {
+                if (ilha.getDescricao() != null && !ilha.getDescricao().isEmpty()) {
+                    jogo.setScreen(new TelaTransicaoIlha(jogo, ilha, proximaTela));
+                } else {
+                    jogo.setScreen(proximaTela);
+                }
+            }
+        };
+
         TextButton btnConfirmar = new TextButton("Confirmar e Entrar", skin);
         btnConfirmar.getLabel().setColor(Color.GREEN);
         btnConfirmar.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
-                Screen proximaTela = null;
-                if (ilha instanceof IlhaDescanso) {
-                    proximaTela = new TelaDescanso(jogo, gameManager, ilha);
-                } else if (ilha instanceof IlhaLoja) {
-                    proximaTela = new TelaLoja(jogo, gameManager, ilha);
-                } else {
-                    progressao.Rodada rodada = ilha.getRodadaAtual();
-                    if (rodada != null) {
-                        proximaTela = new TelaBatalha(jogo, gameManager, ilha, rodada);
-                    }
-                }
-
-                if (proximaTela != null) {
-                    if (ilha.getDescricao() != null && !ilha.getDescricao().isEmpty()) {
-                        jogo.setScreen(new TelaTransicaoIlha(jogo, ilha, proximaTela));
-                    } else {
-                        jogo.setScreen(proximaTela);
-                    }
-                }
+                if (acaoConfirmarIlha != null) acaoConfirmarIlha.run();
             }
         });
         

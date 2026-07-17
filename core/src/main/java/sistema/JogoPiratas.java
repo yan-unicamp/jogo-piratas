@@ -67,7 +67,6 @@ public class JogoPiratas extends Game {
 
     @Override
     public void render() {
-        // Game.render() delega para a Screen ativa automaticamente
         super.render();
     }
 

@@ -18,8 +18,6 @@ public class IlhaFactory {
                 switch (ilhaEnum) {
                         case SHELLS_TOWN:
                                 ilha = criarShellsTown(); break;
-                        case ORANGE_TOWN:
-                                ilha = criarOrangeTown(); break;
                         case VILA_SYRUP:
                                 ilha = criarVilaSyrup(); break;
                         case BARATIE:
@@ -28,42 +26,22 @@ public class IlhaFactory {
                                 ilha = criarArlongPark(); break;
                         case LOGUETOWN:
                                 ilha = criarLoguetown(); break;
-                        case WHISKY_PEAK:
-                                ilha = criarWhiskyPeak(); break;
-                        case LONG_RING_LONG_LAND:
-                                ilha = criarLongRingLongLand(); break;
-                        case LITTLE_GARDEN:
-                                ilha = criarLittleGarden(); break;
                         case ILHA_DRUM:
                                 ilha = criarIlhaDrum(); break;
                         case ALABASTA:
                                 ilha = criarAlabasta(); break;
-                        case JAYA:
-                                ilha = criarJaya(); break;
-                        case SKYPIEA:
-                                ilha = criarSkypiea(); break;
                         case ENIES_LOBBY:
                                 ilha = criarEniesLobby(); break;
                         case THRILLER_BARK:
                                 ilha = criarThrillerBark(); break;
-                        case SABAODY:
-                                ilha = criarSabaody(); break;
-                        case IMPEL_DOWN:
-                                ilha = criarImpelDown(); break;
                         case MARINEFORD:
                                 ilha = criarMarineford(); break;
-                        case ILHA_HOMENS_PEIXE:
-                                ilha = criarIlhaHomeisPeixe(); break;
-                        case PUNK_HAZARD:
-                                ilha = criarPunkHazard(); break;
                         case DRESSROSA:
                                 ilha = criarDressrosa(); break;
                         case WHOLE_CAKE:
                                 ilha = criarWholeCake(); break;
                         case WANO:
                                 ilha = criarWano(); break;
-                        case EGGHEAD:
-                                ilha = criarEgghead(); break;
                         case ELBAPH:
                                 ilha = criarElbaph(); break;
                         default:
@@ -75,6 +53,57 @@ public class IlhaFactory {
         }
 
         public static Ilha criarGenerica(progressao.IlhasGenericasEnum genEnum) {
+                if (genEnum == progressao.IlhasGenericasEnum.ORANGE_TOWN) {
+                        Ilha ilha = criarOrangeTown();
+                        ilha.setIdSave("GENERIC:" + genEnum.name());
+                        return ilha;
+                }
+                if (genEnum == progressao.IlhasGenericasEnum.LITTLE_GARDEN) {
+                        Ilha ilha = criarLittleGarden();
+                        ilha.setIdSave("GENERIC:" + genEnum.name());
+                        return ilha;
+                }
+                if (genEnum == progressao.IlhasGenericasEnum.LONG_RING_LONG_LAND) {
+                        Ilha ilha = criarLongRingLongLand();
+                        ilha.setIdSave("GENERIC:" + genEnum.name());
+                        return ilha;
+                }
+                if (genEnum == progressao.IlhasGenericasEnum.JAYA) {
+                        Ilha ilha = criarJaya();
+                        ilha.setIdSave("GENERIC:" + genEnum.name());
+                        return ilha;
+                }
+                if (genEnum == progressao.IlhasGenericasEnum.SKYPIEA) {
+                        Ilha ilha = criarSkypiea();
+                        ilha.setIdSave("GENERIC:" + genEnum.name());
+                        return ilha;
+                }
+                if (genEnum == progressao.IlhasGenericasEnum.IMPEL_DOWN) {
+                        Ilha ilha = criarImpelDown();
+                        ilha.setIdSave("GENERIC:" + genEnum.name());
+                        return ilha;
+                }
+                if (genEnum == progressao.IlhasGenericasEnum.SABAODY) {
+                        Ilha ilha = criarSabaody();
+                        ilha.setIdSave("GENERIC:" + genEnum.name());
+                        return ilha;
+                }
+                if (genEnum == progressao.IlhasGenericasEnum.ILHA_HOMENS_PEIXE) {
+                        Ilha ilha = criarIlhaHomeisPeixe();
+                        ilha.setIdSave("GENERIC:" + genEnum.name());
+                        return ilha;
+                }
+                if (genEnum == progressao.IlhasGenericasEnum.PUNK_HAZARD) {
+                        Ilha ilha = criarPunkHazard();
+                        ilha.setIdSave("GENERIC:" + genEnum.name());
+                        return ilha;
+                }
+                if (genEnum == progressao.IlhasGenericasEnum.EGGHEAD) {
+                        Ilha ilha = criarEgghead();
+                        ilha.setIdSave("GENERIC:" + genEnum.name());
+                        return ilha;
+                }
+
                 String nome = genEnum.name().replace("_", " ");
                 String[] words = nome.toLowerCase().split(" ");
                 StringBuilder sb = new StringBuilder();
@@ -110,9 +139,7 @@ public class IlhaFactory {
                 return ilha;
         }
 
-        // --------------------------------------------------------------------------
         // Helpers de criacao
-        // --------------------------------------------------------------------------
 
 
 
@@ -120,9 +147,6 @@ public class IlhaFactory {
                 return new Rodada(Arrays.asList(inimigos), isBoss, desc);
         }
 
-        // --------------------------------------------------------------------------
-        // Ilhas
-        // --------------------------------------------------------------------------
 
         private static Ilha criarShellsTown() {
                 return new Ilha("Shells Town", "backgrounds/shells_town.png", Arrays.asList(
@@ -202,17 +226,6 @@ public class IlhaFactory {
                                                 PersonagemFactory.criarBoss("Capitao Smoker", 4, "inimigos/bosses/smoker.png",
                                                                 "Fumaca Branca", 60, "Moku Moku - Pressao Total",
                                                                 75))));
-        }
-
-        private static Ilha criarWhiskyPeak() {
-                return new Ilha("Whisky Peak", "backgrounds/whisky_peak.png", Arrays.asList(
-                                r("Rodada 1 - Cacadores de Recompensa", false,
-                                                PersonagemFactory.criarCapanga("Agente Baroque", 4, "inimigos/capangas/capanga_pirata.png"),
-                                                PersonagemFactory.criarCapanga("Agente Baroque", 4, "inimigos/capangas/capanga_pirata.png"),
-                                                PersonagemFactory.criarCapanga("Agente Baroque", 4, "inimigos/capangas/capanga_pirata.png")),
-                                r("BOSS - Mr. 5 & Miss Valentine", true,
-                                                PersonagemFactory.criarBoss("Mr. 5", 4, "inimigos/minibosses/mr5.png",
-                                                                "Bala Explosiva", 48, "Explosao Corporal", 55))));
         }
 
         private static Ilha criarLongRingLongLand() {

@@ -33,7 +33,6 @@ public class SkinPadrao {
         skin.add("tex-btn-hover",   textura(0.25f, 0.25f, 0.65f, 1f));
         skin.add("tex-btn-pressed", textura(0.08f, 0.08f, 0.28f, 1f));
 
-        // Estilo padrao de TextButton
         TextButton.TextButtonStyle btnStyle = new TextButton.TextButtonStyle();
         btnStyle.font      = font;
         btnStyle.fontColor = Color.WHITE;
@@ -42,13 +41,11 @@ public class SkinPadrao {
         btnStyle.down = new TextureRegionDrawable(skin.get("tex-btn-pressed", Texture.class));
         skin.add("default", btnStyle);
 
-        // Estilo padrao de Label
         Label.LabelStyle labelStyle = new Label.LabelStyle();
         labelStyle.font      = font;
         labelStyle.fontColor = Color.WHITE;
         skin.add("default", labelStyle);
 
-        // Estilo padrao de ScrollPane
         com.badlogic.gdx.scenes.scene2d.ui.ScrollPane.ScrollPaneStyle scrollStyle = new com.badlogic.gdx.scenes.scene2d.ui.ScrollPane.ScrollPaneStyle();
         skin.add("default", scrollStyle);
 

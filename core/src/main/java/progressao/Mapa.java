@@ -11,7 +11,7 @@ import factories.IlhaFactory;
 public class Mapa {
     private int etapaAtual;
     private int capitulo;
-    private final int MAX_ETAPAS_POR_CAPITULO = 9;
+    private final int MAX_ETAPAS_POR_CAPITULO = 10;
     private NoMapa noAtual;
     
     private List<Ilha> ilhasConcluidas;
@@ -39,40 +39,59 @@ public class Mapa {
     public List<Ilha> getIlhasConcluidas() { return ilhasConcluidas; }
     public List<Ilha> getOpcoesAtuais() { return opcoesAtuais; }
 
+    private List<IlhaEnum> canonicasCap1 = new ArrayList<>();
+    private IlhaEnum sortearCanonicaCap1() {
+        if (canonicasCap1.isEmpty()) {
+            canonicasCap1.addAll(java.util.Arrays.asList(IlhaEnum.VILA_SYRUP, IlhaEnum.BARATIE, IlhaEnum.ARLONG_PARK));
+        }
+        int idx = random.nextInt(canonicasCap1.size());
+        return canonicasCap1.remove(idx);
+    }
+
     private List<IlhaEnum> canonicasCap2 = new ArrayList<>();
     private IlhaEnum sortearCanonicaCap2() {
         if (canonicasCap2.isEmpty()) {
-            canonicasCap2.addAll(java.util.Arrays.asList(IlhaEnum.THRILLER_BARK, IlhaEnum.ALABASTA, IlhaEnum.ENIES_LOBBY, IlhaEnum.ILHA_DRUM, IlhaEnum.LONG_RING_LONG_LAND, IlhaEnum.LITTLE_GARDEN, IlhaEnum.JAYA, IlhaEnum.SKYPIEA, IlhaEnum.IMPEL_DOWN));
+            canonicasCap2.addAll(java.util.Arrays.asList(IlhaEnum.THRILLER_BARK, IlhaEnum.ALABASTA, IlhaEnum.ENIES_LOBBY, IlhaEnum.ILHA_DRUM));
         }
         int idx = random.nextInt(canonicasCap2.size());
         return canonicasCap2.remove(idx);
+    }
+
+    private List<IlhaEnum> canonicasCap3 = new ArrayList<>();
+    private IlhaEnum sortearCanonicaCap3() {
+        if (canonicasCap3.isEmpty()) {
+            canonicasCap3.addAll(java.util.Arrays.asList(IlhaEnum.DRESSROSA, IlhaEnum.WHOLE_CAKE, IlhaEnum.WANO));
+        }
+        int idx = random.nextInt(canonicasCap3.size());
+        return canonicasCap3.remove(idx);
     }
 
     public void gerarProximosNos() {
         opcoesAtuais.clear();
 
         if (etapaAtual == 0) {
-            if (capitulo == 1) opcoesAtuais.add(IlhaFactory.criar(IlhaEnum.SHELLS_TOWN));
-            else if (capitulo == 2) opcoesAtuais.add(IlhaFactory.criar(IlhaEnum.WHISKY_PEAK));
-            else if (capitulo == 3) opcoesAtuais.add(IlhaFactory.criar(IlhaEnum.ILHA_HOMENS_PEIXE));
-            else opcoesAtuais.add(IlhaFactory.criar(IlhaEnum.PUNK_HAZARD));
+            opcoesAtuais.add(IlhaFactory.criar(IlhaEnum.SHELLS_TOWN));
         } else if (etapaAtual == 3) {
-            if (capitulo == 1) opcoesAtuais.add(IlhaFactory.criar(IlhaEnum.VILA_SYRUP));
+            if (capitulo == 1) opcoesAtuais.add(IlhaFactory.criar(sortearCanonicaCap1()));
             else if (capitulo == 2) opcoesAtuais.add(IlhaFactory.criar(sortearCanonicaCap2()));
-            else if (capitulo == 3) opcoesAtuais.add(IlhaFactory.criar(IlhaEnum.SABAODY));
+            else if (capitulo == 3) opcoesAtuais.add(IlhaFactory.criar(sortearCanonicaCap3()));
             else opcoesAtuais.add(IlhaFactory.criar(IlhaEnum.WANO));
         } else if (etapaAtual == 6) {
-            if (capitulo == 1) opcoesAtuais.add(IlhaFactory.criar(IlhaEnum.BARATIE));
+            if (capitulo == 1) opcoesAtuais.add(IlhaFactory.criar(sortearCanonicaCap1()));
             else if (capitulo == 2) opcoesAtuais.add(IlhaFactory.criar(sortearCanonicaCap2()));
-            else if (capitulo == 3) opcoesAtuais.add(IlhaFactory.criar(IlhaEnum.DRESSROSA));
-            else opcoesAtuais.add(IlhaFactory.criar(IlhaEnum.EGGHEAD));
+            else if (capitulo == 3) opcoesAtuais.add(IlhaFactory.criar(sortearCanonicaCap3()));
+            else opcoesAtuais.add(IlhaFactory.criar(IlhaEnum.WANO));
         } else if (etapaAtual == 9) {
-            if (capitulo == 1) opcoesAtuais.add(IlhaFactory.criar(IlhaEnum.ARLONG_PARK));
+            if (capitulo == 1) opcoesAtuais.add(IlhaFactory.criar(sortearCanonicaCap1()));
+            else if (capitulo == 2) opcoesAtuais.add(IlhaFactory.criar(sortearCanonicaCap2()));
+            else if (capitulo == 3) opcoesAtuais.add(IlhaFactory.criar(sortearCanonicaCap3()));
+            else opcoesAtuais.add(IlhaFactory.criar(IlhaEnum.WANO));
+        } else if (etapaAtual == 10) {
+            if (capitulo == 1) opcoesAtuais.add(IlhaFactory.criar(IlhaEnum.LOGUETOWN));
             else if (capitulo == 2) opcoesAtuais.add(IlhaFactory.criar(IlhaEnum.MARINEFORD));
-            else if (capitulo == 3) opcoesAtuais.add(IlhaFactory.criar(IlhaEnum.WHOLE_CAKE));
+            else if (capitulo == 3) opcoesAtuais.add(IlhaFactory.criar(IlhaEnum.ELBAPH));
             else opcoesAtuais.add(IlhaFactory.criar(IlhaEnum.ELBAPH));
         } else {
-            // Aleatorio (1, 2, 4, 5, 7, 8)
             int nNodes = 3;
             for (int i = 0; i < nNodes; i++) {
                 int tipo = random.nextInt(10);
@@ -81,7 +100,6 @@ public class Mapa {
                 } else if (tipo < 4) {
                     opcoesAtuais.add(new IlhaDescanso());
                 } else {
-                    // Generica
                     List<IlhasGenericasEnum> disponiveis = new ArrayList<>();
                     for (IlhasGenericasEnum ig : IlhasGenericasEnum.values()) {
                         if ((ig.getCapitulo() == capitulo || ig.getCapitulo() == 0) && !ilhasMostradas.contains(ig)) {
@@ -105,21 +123,20 @@ public class Mapa {
         this.etapaAtual++;
         
         if (this.etapaAtual > MAX_ETAPAS_POR_CAPITULO) {
-            this.etapaAtual = 0;
             this.capitulo++;
+            this.etapaAtual = 1; // Capítulos seguintes começam na etapa 1 (pulam a profundidade 0)
             this.ilhasConcluidas.clear();
         }
 
         gerarProximosNos();
     }
 
-    // Compatibilidade com logica legada de GameManager
     public void avancarParaNo(NoMapa proximo) { 
         this.noAtual = proximo;
         this.etapaAtual++;
         if (this.etapaAtual > MAX_ETAPAS_POR_CAPITULO) {
-            this.etapaAtual = 0;
             this.capitulo++;
+            this.etapaAtual = 1; // Capítulos seguintes começam na etapa 1 (pulam a profundidade 0)
             this.ilhasConcluidas.clear();
         }
     }
@@ -132,7 +149,6 @@ public class Mapa {
         return ilhasMostradas;
     }
 
-    // Retorna a fusao do historico com as opcoes atuais para a TelaMapa legada (se necessario)
     public java.util.List<Ilha> getIlhas() { 
         List<Ilha> todas = new ArrayList<>(ilhasConcluidas);
         todas.addAll(opcoesAtuais);

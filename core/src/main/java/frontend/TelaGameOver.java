@@ -50,23 +50,19 @@ public class TelaGameOver implements Screen {
         raiz.setFillParent(true);
         raiz.center();
 
-        // -- Titulo "Game Over" --
         Label titulo = new Label("GAME OVER", skin);
         titulo.setFontScale(3f);
-        titulo.setColor(new Color(0.85f, 0.1f, 0.1f, 1f)); // vermelho dramatico
+        titulo.setColor(new Color(0.85f, 0.1f, 0.1f, 1f));
 
-        // -- Subtitulo --
         Label subtitulo = new Label("A tripulacao foi derrotada...", skin);
         subtitulo.setColor(new Color(0.7f, 0.7f, 0.7f, 1f));
 
-        // -- Estatisticas da partida --
         Label statEtapa = new Label("Etapas percorridas: " + etapa, skin);
         statEtapa.setColor(Color.LIGHT_GRAY);
 
         Label statOuro = new Label("Ouro acumulado: " + ouro, skin);
         statOuro.setColor(new Color(1f, 0.85f, 0.2f, 1f));
 
-        // -- Botao --
         TextButton btnMenu = new TextButton("  Menu Principal  ", skin);
         btnMenu.addListener(new ClickListener() {
             @Override
@@ -86,7 +82,7 @@ public class TelaGameOver implements Screen {
 
     @Override
     public void render(float delta) {
-        Gdx.gl.glClearColor(0.12f, 0f, 0f, 1f); // vermelho-escuro dramatico
+        Gdx.gl.glClearColor(0.12f, 0f, 0f, 1f);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
         stage.act(delta);
         stage.draw();

@@ -17,8 +17,7 @@ public class PersonagemFactory {
     }
 
     public static Aliado criarLuffy() {
-        Aliado luffy = new Aliado("Luffy", 120, 0.9f, 10, 1, 0, "luffy.png"); // nome, vida, defesa, iniciativa, nivel,
-                                                                              // xp
+        Aliado luffy = new Aliado("Luffy", 120, 0.9f, 10, 1, 0, "luffy.png");
         luffy.adicionarHabilidade(HabilidadeFactory.criarAtaqueBasico(luffy));
         luffy.adicionarHabilidade(HabilidadeFactory.criarDefesaHaki());
         luffy.adicionarHabilidade(HabilidadeFactory.criarEspecialLuffy(luffy));
@@ -248,21 +247,14 @@ public class PersonagemFactory {
     }
 
     public static Inimigo criarMarinheiro(int nivel) { // (ta escalonando com o nivel atual, pode trocar dps)
-        Inimigo marinheiro = new Inimigo("Marinheiro Who", 30 * nivel, 1, 5, 10 * nivel, 5 * nivel, "marinheiro.png");// nome,
-                                                                                                                      // vida,
-                                                                                                                      // defesa,
-                                                                                                                      // iniciativa,
-                                                                                                                      // recompensa
+        Inimigo marinheiro = new Inimigo("Marinheiro Who", 30 * nivel, 1, 5, 10 * nivel, 5 * nivel, "marinheiro.png");
         marinheiro.adicionarHabilidade(HabilidadeFactory.criarAtaqueBasicoInimigo(nivel));
 
         return marinheiro;
     }
 
     public static Inimigo criarPirataInimigo(int nivel) { // (ta escalonando com o nivel atual, pode trocar dps)
-        Inimigo pirata = new Inimigo("Pirata Who", 30 * nivel, 1, 5, 10 * nivel, 5 * nivel, "pirata.png");// nome, vida,
-                                                                                                          // defesa,
-                                                                                                          // iniciativa,
-                                                                                                          // recompensa
+        Inimigo pirata = new Inimigo("Pirata Who", 30 * nivel, 1, 5, 10 * nivel, 5 * nivel, "pirata.png");
         pirata.adicionarHabilidade(HabilidadeFactory.criarAtaqueBasicoInimigo(nivel));
 
         return pirata;

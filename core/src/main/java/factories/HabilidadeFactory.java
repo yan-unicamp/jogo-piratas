@@ -8,12 +8,10 @@ public class HabilidadeFactory {
 
     public static Habilidade criarAtaqueBasico(Aliado p) {
         return new Habilidade("Ataque Base", TipoHabilidade.DANO, 15 + (4 * p.getNivel())); // botei pra variar com o
-                                                                                            // nivel tambem
     }
 
     public static Habilidade criarAtaqueBasicoInimigo(int nivel) {
         return new Habilidade("Ataque Base", TipoHabilidade.DANO, 5 + (2 * nivel)); // botei pra variar com o nivel
-                                                                                    // tambem
     }
 
     public static Habilidade criarDefesaHaki() {
@@ -65,8 +63,6 @@ public class HabilidadeFactory {
 
     public static Habilidade criarCuraChopper(Aliado p) {
         return new Habilidade("Cura do Chopper", TipoHabilidade.CURA, p.getVidaMaxima() * 0.4f); // ele cura equivalente
-                                                                                                 // a 30% da vida maxima
-                                                                                                 // dele
     }
 
     public static Habilidade criarEspecialBrook(Aliado p) {

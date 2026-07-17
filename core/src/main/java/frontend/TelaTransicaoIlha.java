@@ -46,7 +46,6 @@ public class TelaTransicaoIlha implements Screen {
         Table root = new Table();
         root.setFillParent(true);
         
-        // Fundo da ilha esmaecido
         Texture bgTex = jogo.assets.getTextura(ilha.getBgKey());
         Image bgImg = new Image(new TextureRegionDrawable(new TextureRegion(bgTex)));
         bgImg.setScaling(Scaling.fill);
@@ -56,13 +55,11 @@ public class TelaTransicaoIlha implements Screen {
         stage.addActor(bgImg);
         stage.addActor(root);
 
-        // Titulo da Ilha
         Label title = new Label(ilha.getNome().toUpperCase(), skin);
         title.setFontScale(2.5f);
         title.setColor(Color.GOLD);
         title.setAlignment(Align.center);
         
-        // Texto de Lore
         String descricao = ilha.getDescricao() != null ? ilha.getDescricao() : "Uma ilha misteriosa aguarda...";
         Label descLabel = new Label(descricao, skin);
         descLabel.setFontScale(1.3f);
