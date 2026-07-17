@@ -27,6 +27,9 @@ public class JogoPiratas extends Game {
     /** Gerenciador de Assets (texturas) */
     public Assets assets;
 
+    /** Gerenciador de Audio */
+    public AudioManager audio;
+
     /** Gerenciador do estado global do jogo (backend) */
     public GameManager gameManager;
 
@@ -38,7 +41,7 @@ public class JogoPiratas extends Game {
         
         // Filtro linear para a fonte nao ficar pixelada ao esticar
         font.getRegion().getTexture().setFilter(com.badlogic.gdx.graphics.Texture.TextureFilter.Linear, com.badlogic.gdx.graphics.Texture.TextureFilter.Linear);
-        font.getData().setScale(1.4f);
+        font.getData().setScale(1.6f);
         
         // Espacar mais as letras (aumenta a distancia horizontal entre elas)
         for (com.badlogic.gdx.graphics.g2d.BitmapFont.Glyph[] page : font.getData().glyphs) {
@@ -55,6 +58,8 @@ public class JogoPiratas extends Game {
 
         assets = new Assets();
         assets.inicializar();
+
+        audio = new AudioManager();
 
         // Inicia com a tela inicial
         setScreen(new frontend.TelaInicio(this));
@@ -75,6 +80,10 @@ public class JogoPiratas extends Game {
         Screen currentScreen = getScreen();
         if (currentScreen != null) {
             currentScreen.dispose();
+        }
+        
+        if (audio != null) {
+            audio.dispose();
         }
     }
 }

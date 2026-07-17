@@ -51,7 +51,9 @@ public class TelaDescanso implements Screen {
 
     @Override
     public void show() {
-        stage = new Stage(new ScreenViewport());
+        jogo.audio.tocar(sistema.AudioManager.MUSICA_DESCANSO, true);
+        
+        stage = new Stage(new ScreenViewport(), jogo.batch);
         Gdx.input.setInputProcessor(stage);
         skin = SkinPadrao.criar();
 
