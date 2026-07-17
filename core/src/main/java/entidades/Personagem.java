@@ -126,6 +126,7 @@ public abstract class Personagem {
         
         String[] possiblePaths = {
             "personagens/chapeu_de_palha/" + caminhoImagem,
+            "personagens/aliados_especiais/" + caminhoImagem,
             "personagens/" + caminhoImagem,
             "inimigos/" + caminhoImagem,
             "inimigos/capangas/" + caminhoImagem,

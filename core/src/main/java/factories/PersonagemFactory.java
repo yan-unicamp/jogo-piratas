@@ -17,14 +17,15 @@ public class PersonagemFactory {
     }
 
     public static Aliado criarLuffy() {
-        Aliado luffy = new Aliado("Luffy", 120, 0.9f, 10, 1, 0, "luffy.png"); // nome, vida, defesa, iniciativa, nivel, xp
+        Aliado luffy = new Aliado("Luffy", 120, 0.9f, 10, 1, 0, "luffy.png"); // nome, vida, defesa, iniciativa, nivel,
+                                                                              // xp
         luffy.adicionarHabilidade(HabilidadeFactory.criarAtaqueBasico(luffy));
         luffy.adicionarHabilidade(HabilidadeFactory.criarDefesaHaki());
         luffy.adicionarHabilidade(HabilidadeFactory.criarEspecialLuffy(luffy));
-        
+
         luffy.adicionarHabilidadeDesbloqueavel(3, () -> HabilidadeFactory.criarEspecialGatling(luffy));
         luffy.adicionarHabilidadeDesbloqueavel(7, () -> HabilidadeFactory.criarEspecialGearSecond(luffy));
-        
+
         return adicionarHabilidadesDeNivel(luffy);
     }
 
@@ -33,7 +34,7 @@ public class PersonagemFactory {
         zoro.adicionarHabilidade(HabilidadeFactory.criarAtaqueBasico(zoro));
         zoro.adicionarHabilidade(HabilidadeFactory.criarDefesaHaki());
         zoro.adicionarHabilidade(HabilidadeFactory.criarEspecialZoro(zoro));
-        
+
         zoro.adicionarHabilidadeDesbloqueavel(3, () -> HabilidadeFactory.criarSanzenSekai(zoro));
         zoro.adicionarHabilidadeDesbloqueavel(7, () -> HabilidadeFactory.criarAshura(zoro));
         return adicionarHabilidadesDeNivel(zoro);
@@ -44,7 +45,7 @@ public class PersonagemFactory {
         nami.adicionarHabilidade(HabilidadeFactory.criarAtaqueBasico(nami));
         nami.adicionarHabilidade(HabilidadeFactory.criarEspecialNami(nami));
         nami.adicionarHabilidade(HabilidadeFactory.criarCurarAliadosBandagem());
-        
+
         nami.adicionarHabilidadeDesbloqueavel(3, () -> HabilidadeFactory.criarThunderboltTempo(nami));
         nami.adicionarHabilidadeDesbloqueavel(7, () -> HabilidadeFactory.criarMirageTempo(nami));
         return adicionarHabilidadesDeNivel(nami);
@@ -55,7 +56,7 @@ public class PersonagemFactory {
         sanji.adicionarHabilidade(HabilidadeFactory.criarAtaqueBasico(sanji));
         sanji.adicionarHabilidade(HabilidadeFactory.criarDefesaHaki());
         sanji.adicionarHabilidade(HabilidadeFactory.criarEspecialSanji(sanji));
-        
+
         sanji.adicionarHabilidadeDesbloqueavel(3, () -> HabilidadeFactory.criarHellMemories(sanji));
         sanji.adicionarHabilidadeDesbloqueavel(7, () -> HabilidadeFactory.criarSkyWalk(sanji));
         return adicionarHabilidadesDeNivel(sanji);
@@ -65,7 +66,7 @@ public class PersonagemFactory {
         Aliado robin = new Aliado("Nico Robin", 100, 1, 7, 1, 0, "robin.png");
         robin.adicionarHabilidade(HabilidadeFactory.criarAtaqueBasico(robin));
         robin.adicionarHabilidade(HabilidadeFactory.criarEspecialRobin(robin));
-        
+
         robin.adicionarHabilidadeDesbloqueavel(3, () -> HabilidadeFactory.criarCienFleurWing(robin));
         robin.adicionarHabilidadeDesbloqueavel(7, () -> HabilidadeFactory.criarGigantescoMano(robin));
         return adicionarHabilidadesDeNivel(robin);
@@ -75,7 +76,7 @@ public class PersonagemFactory {
         Aliado usopp = new Aliado("Usopp", 90, 1, 5, 1, 0, "usopp.png");
         usopp.adicionarHabilidade(HabilidadeFactory.criarAtaqueBasico(usopp));
         usopp.adicionarHabilidade(HabilidadeFactory.criarEspecialUsopp(usopp));
-        
+
         usopp.adicionarHabilidadeDesbloqueavel(3, () -> HabilidadeFactory.criarFirebirdStar(usopp));
         usopp.adicionarHabilidadeDesbloqueavel(7, () -> HabilidadeFactory.criarImpactWolf(usopp));
         return adicionarHabilidadesDeNivel(usopp);
@@ -86,7 +87,7 @@ public class PersonagemFactory {
         chopper.adicionarHabilidade(HabilidadeFactory.criarAtaqueBasico(chopper));
         chopper.adicionarHabilidade(HabilidadeFactory.criarCuraChopper(chopper));
         chopper.adicionarHabilidade(HabilidadeFactory.criarEspecialChopper(chopper));
-        
+
         chopper.adicionarHabilidadeDesbloqueavel(3, () -> HabilidadeFactory.criarGuardPoint(chopper));
         chopper.adicionarHabilidadeDesbloqueavel(7, () -> HabilidadeFactory.criarBrainPoint(chopper));
         return adicionarHabilidadesDeNivel(chopper);
@@ -96,7 +97,7 @@ public class PersonagemFactory {
         Aliado brook = new Aliado("Brook", 100, 1, 7, 1, 0, "brook.png");
         brook.adicionarHabilidade(HabilidadeFactory.criarAtaqueBasico(brook));
         brook.adicionarHabilidade(HabilidadeFactory.criarEspecialBrook(brook));
-        
+
         brook.adicionarHabilidadeDesbloqueavel(3, () -> HabilidadeFactory.criarYahazuGiri(brook));
         brook.adicionarHabilidadeDesbloqueavel(7, () -> HabilidadeFactory.criarSoulKingLullaby(brook));
         return adicionarHabilidadesDeNivel(brook);
@@ -106,7 +107,7 @@ public class PersonagemFactory {
         Aliado franky = new Aliado("Franky", 110, 1, 7, 1, 0, "franky.png");
         franky.adicionarHabilidade(HabilidadeFactory.criarAtaqueBasico(franky));
         franky.adicionarHabilidade(HabilidadeFactory.criarEspecialFranky(franky));
-        
+
         franky.adicionarHabilidadeDesbloqueavel(3, () -> HabilidadeFactory.criarFrankyRadicalBeam(franky));
         franky.adicionarHabilidadeDesbloqueavel(7, () -> HabilidadeFactory.criarGeneralFranky(franky));
         return adicionarHabilidadesDeNivel(franky);
@@ -117,27 +118,27 @@ public class PersonagemFactory {
         jinbe.adicionarHabilidade(HabilidadeFactory.criarAtaqueBasico(jinbe));
         jinbe.adicionarHabilidade(HabilidadeFactory.criarDefesaHaki());
         jinbe.adicionarHabilidade(HabilidadeFactory.criarEspecialJinbe(jinbe));
-        
+
         jinbe.adicionarHabilidadeDesbloqueavel(3, () -> HabilidadeFactory.criarBuraikan(jinbe));
         jinbe.adicionarHabilidadeDesbloqueavel(7, () -> HabilidadeFactory.criarMizuGokoro(jinbe));
         return adicionarHabilidadesDeNivel(jinbe);
     }
 
-    public static Aliado criarVivi(){
+    public static Aliado criarVivi() {
         Aliado vivi = new Aliado("Vivi", 90, 1, 6, 1, 0, "vivi.png");
         vivi.adicionarHabilidade(HabilidadeFactory.criarAtaqueBasico(vivi));
         vivi.adicionarHabilidade(HabilidadeFactory.criarEspecialVivi(vivi));
-        
+
         vivi.adicionarHabilidadeDesbloqueavel(3, () -> HabilidadeFactory.criarKujakuSlasher(vivi));
         vivi.adicionarHabilidadeDesbloqueavel(7, () -> HabilidadeFactory.criarVozDeAlabasta(vivi));
         return adicionarHabilidadesDeNivel(vivi);
     }
 
-    public static Aliado criarCarrot(){
+    public static Aliado criarCarrot() {
         Aliado carrot = new Aliado("Carrot", 90, 1, 6, 1, 0, "carrot.png");
         carrot.adicionarHabilidade(HabilidadeFactory.criarAtaqueBasico(carrot));
         carrot.adicionarHabilidade(HabilidadeFactory.criarEspecialCarrot(carrot));
-        
+
         carrot.adicionarHabilidadeDesbloqueavel(3, () -> HabilidadeFactory.criarElectro(carrot));
         carrot.adicionarHabilidadeDesbloqueavel(7, () -> HabilidadeFactory.criarSaltoLunar(carrot));
         return adicionarHabilidadesDeNivel(carrot);
@@ -148,99 +149,99 @@ public class PersonagemFactory {
         yamato.adicionarHabilidade(HabilidadeFactory.criarAtaqueBasico(yamato));
         yamato.adicionarHabilidade(HabilidadeFactory.criarDefesaHaki());
         yamato.adicionarHabilidade(HabilidadeFactory.criarEspecialYamato(yamato));
-        
+
         yamato.adicionarHabilidadeDesbloqueavel(3, () -> HabilidadeFactory.criarNarikaburaArrow(yamato));
         yamato.adicionarHabilidadeDesbloqueavel(7, () -> HabilidadeFactory.criarDefesaMakami(yamato));
         return adicionarHabilidadesDeNivel(yamato);
     }
 
-    public static Aliado criarLaw(){
+    public static Aliado criarLaw() {
         Aliado law = new Aliado("Law", 105, 0.95f, 9, 1, 0, "law.png");
         law.adicionarHabilidade(HabilidadeFactory.criarAtaqueBasico(law));
         law.adicionarHabilidade(HabilidadeFactory.criarDefesaHaki());
         law.adicionarHabilidade(HabilidadeFactory.criarEspecialLaw(law));
-        
+
         law.adicionarHabilidadeDesbloqueavel(3, () -> HabilidadeFactory.criarGammaKnife(law));
         law.adicionarHabilidadeDesbloqueavel(7, () -> HabilidadeFactory.criarShambles(law));
         return adicionarHabilidadesDeNivel(law);
     }
 
-    public static Aliado criarRebecca(){
+    public static Aliado criarRebecca() {
         Aliado rebecca = new Aliado("Rebecca", 90, 1, 6, 1, 0, "rebecca.png");
         rebecca.adicionarHabilidade(HabilidadeFactory.criarAtaqueBasico(rebecca));
         rebecca.adicionarHabilidade(HabilidadeFactory.criarEspecialRebecca(rebecca));
-        
+
         rebecca.adicionarHabilidadeDesbloqueavel(3, () -> HabilidadeFactory.criarDancaDasEspadas(rebecca));
         rebecca.adicionarHabilidadeDesbloqueavel(7, () -> HabilidadeFactory.criarGolpeDeDesarme(rebecca));
         return adicionarHabilidadesDeNivel(rebecca);
     }
 
-    public static Aliado criarVegapunk(){
+    public static Aliado criarVegapunk() {
         Aliado vegapunk = new Aliado("Vegapunk", 90, 1, 6, 1, 0, "vegapunk.png");
         vegapunk.adicionarHabilidade(HabilidadeFactory.criarAtaqueBasico(vegapunk));
         vegapunk.adicionarHabilidade(HabilidadeFactory.criarEspecialVegapunk(vegapunk));
-        
+
         vegapunk.adicionarHabilidadeDesbloqueavel(3, () -> HabilidadeFactory.criarLaserPacifista(vegapunk));
         vegapunk.adicionarHabilidadeDesbloqueavel(7, () -> HabilidadeFactory.criarEscudoEletromagnetico(vegapunk));
         return adicionarHabilidadesDeNivel(vegapunk);
     }
 
-    public static Aliado criarMomonosuke(){
+    public static Aliado criarMomonosuke() {
         Aliado momonosuke = new Aliado("Momonosuke", 90, 1, 6, 1, 0, "momonosuke.png");
         momonosuke.adicionarHabilidade(HabilidadeFactory.criarAtaqueBasico(momonosuke));
         momonosuke.adicionarHabilidade(HabilidadeFactory.criarEspecialMomonosuke(momonosuke));
-        
+
         momonosuke.adicionarHabilidadeDesbloqueavel(3, () -> HabilidadeFactory.criarBoloBreath(momonosuke));
         momonosuke.adicionarHabilidadeDesbloqueavel(7, () -> HabilidadeFactory.criarMordidaDeDragao(momonosuke));
         return adicionarHabilidadesDeNivel(momonosuke);
     }
 
-    public static Aliado criarBonClay(){
+    public static Aliado criarBonClay() {
         Aliado bonClay = new Aliado("Bon Clay", 90, 1, 6, 1, 0, "bonclay.png");
         bonClay.adicionarHabilidade(HabilidadeFactory.criarAtaqueBasico(bonClay));
         bonClay.adicionarHabilidade(HabilidadeFactory.criarEspecialBonClay(bonClay));
-        
+
         bonClay.adicionarHabilidadeDesbloqueavel(3, () -> HabilidadeFactory.criarSwanArabesque(bonClay));
         bonClay.adicionarHabilidadeDesbloqueavel(7, () -> HabilidadeFactory.criarManeManeDefense(bonClay));
         return adicionarHabilidadesDeNivel(bonClay);
     }
 
-    public static Aliado criarKoby(){
+    public static Aliado criarKoby() {
         Aliado koby = new Aliado("Koby", 90, 1, 6, 1, 0, "koby.png");
         koby.adicionarHabilidade(HabilidadeFactory.criarAtaqueBasico(koby));
         koby.adicionarHabilidade(HabilidadeFactory.criarEspecialKoby(koby));
-        
+
         koby.adicionarHabilidadeDesbloqueavel(3, () -> HabilidadeFactory.criarHonestyImpact(koby));
         koby.adicionarHabilidadeDesbloqueavel(7, () -> HabilidadeFactory.criarSoru(koby));
         return adicionarHabilidadesDeNivel(koby);
     }
 
-    public static Aliado criarCarue(){
+    public static Aliado criarCarue() {
         Aliado carue = new Aliado("Carue", 90, 1, 6, 1, 0, "carue.png");
         carue.adicionarHabilidade(HabilidadeFactory.criarAtaqueBasico(carue));
         carue.adicionarHabilidade(HabilidadeFactory.criarEspecialCarue(carue));
-        
+
         carue.adicionarHabilidadeDesbloqueavel(3, () -> HabilidadeFactory.criarInvestidaSupersonica(carue));
         carue.adicionarHabilidadeDesbloqueavel(7, () -> HabilidadeFactory.criarAsasDeProtecao(carue));
         return adicionarHabilidadesDeNivel(carue);
     }
 
-    public static Aliado criarAce(){
+    public static Aliado criarAce() {
         Aliado ace = new Aliado("Ace", 90, 1, 6, 1, 0, "ace.png");
         ace.adicionarHabilidade(HabilidadeFactory.criarAtaqueBasico(ace));
         ace.adicionarHabilidade(HabilidadeFactory.criarEspecialAce(ace));
-        
+
         ace.adicionarHabilidadeDesbloqueavel(3, () -> HabilidadeFactory.criarEntei(ace));
         ace.adicionarHabilidadeDesbloqueavel(7, () -> HabilidadeFactory.criarKagero(ace));
         return adicionarHabilidadesDeNivel(ace);
     }
 
-    public static Aliado criarLoki(){
+    public static Aliado criarLoki() {
         Aliado loki = new Aliado("Loki", 140, 0.90f, 10, 1, 0, "loki.png");
         loki.adicionarHabilidade(HabilidadeFactory.criarAtaqueBasico(loki));
         loki.adicionarHabilidade(HabilidadeFactory.criarEspecialLoki(loki));
         loki.adicionarHabilidade(HabilidadeFactory.criarDefesaHaki());
-        
+
         loki.adicionarHabilidadeDesbloqueavel(3, () -> HabilidadeFactory.criarLancaDeElbaf(loki));
         loki.adicionarHabilidadeDesbloqueavel(7, () -> HabilidadeFactory.criarFuriaDoGigante(loki));
         return adicionarHabilidadesDeNivel(loki);
@@ -299,12 +300,12 @@ public class PersonagemFactory {
         return kuro;
     }
 
-    public static Inimigo criarRodyJones(int nivel) {
-        Inimigo rodyJones = new Inimigo("Rody Jones", 300, 0.6f, 20, 500, 200, "rodyjones.png");
-        rodyJones.adicionarHabilidade(HabilidadeFactory.criarAtaqueBasicoInimigo(nivel));
-        rodyJones.adicionarHabilidade(HabilidadeFactory.criarDefesaHaki());
+    public static Inimigo criarHodyJones(int nivel) {
+        Inimigo hodyJones = new Inimigo("Hody Jones", 300, 0.6f, 20, 500, 200, "hody.png");
+        hodyJones.adicionarHabilidade(HabilidadeFactory.criarAtaqueBasicoInimigo(nivel));
+        hodyJones.adicionarHabilidade(HabilidadeFactory.criarDefesaHaki());
 
-        return rodyJones;
+        return hodyJones;
     }
 
     public static Inimigo criarWapol(int nivel) {
@@ -506,11 +507,13 @@ public class PersonagemFactory {
         int inic = 10 + idx;
         Inimigo e = new Inimigo(nome, hp, def, inic,
                 100 + idx * 40, 50 + idx * 20, spriteKey);
-        e.adicionarHabilidade(new entidades.Habilidade(habNome, entidades.TipoHabilidade.DANO, (habPoder / 3) + (idx * 2)));
+        e.adicionarHabilidade(
+                new entidades.Habilidade(habNome, entidades.TipoHabilidade.DANO, (habPoder / 3) + (idx * 2)));
         return e;
     }
 
-    public static Inimigo criarBoss(String nome, int idx, String spriteKey, String hab1, int pod1, String hab2, int pod2) {
+    public static Inimigo criarBoss(String nome, int idx, String spriteKey, String hab1, int pod1, String hab2,
+            int pod2) {
         int hp = 100 + idx * 40;
         float def = 0.8f - (idx * 0.04f);
         if (def < 0.2f)

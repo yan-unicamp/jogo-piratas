@@ -376,7 +376,7 @@ public class IlhaFactory {
                                                 PersonagemFactory.criarCapanga("Vice-Almirante", 14, "inimigos/capangas/capanga_marinha.png"),
                                                 PersonagemFactory.criarCapanga("Vice-Almirante", 14, "inimigos/capangas/capanga_marinha.png")),
                                 r("Rodada 2 - Barba Negra Pos-Marineford", false,
-                                                PersonagemFactory.criarMiniBoss("Marshall D. Teach", 14, "inimigos/bosses/barbanegra.png",
+                                                PersonagemFactory.criarMiniBoss("Marshall D. Teach", 14, "inimigos/minibosses/barbanegra.png",
                                                                 "Poder de Barba Branca", 145)),
                                 r("BOSS - Almirante Akainu!", true,
                                                 PersonagemFactory.criarBoss("Almirante Akainu", 14, "inimigos/bosses/akainu.png",
@@ -394,7 +394,7 @@ public class IlhaFactory {
                                                 PersonagemFactory.criarMiniBoss("Vander Decken IX", 15, "inimigos/minibosses/hody_vandeck.png",
                                                                 "Mark Mark Throw", 148)),
                                 r("BOSS - Hody Jones!", true,
-                                                PersonagemFactory.criarBoss("Hody Jones", 15, "inimigos/bosses/hody.png",
+                                                PersonagemFactory.criarBoss("Hody Jones", 15, "inimigos/bosses/hodyjones.png",
                                                                 "Yabusame - Chuva de Dentes", 195,
                                                                 "Uchimizu - Impacto Aquatico", 218))));
         }
