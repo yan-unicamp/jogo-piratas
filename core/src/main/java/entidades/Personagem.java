@@ -104,6 +104,13 @@ public abstract class Personagem {
     }
 
     public void adicionarHabilidade(Habilidade habilidade) { 
+        if (habilidade.isEspecial()) {
+            for (Habilidade h : this.habilidades) {
+                if (h.isEspecial()) {
+                    h.setEspecial(false);
+                }
+            }
+        }
         this.habilidades.add(habilidade);
     }
     

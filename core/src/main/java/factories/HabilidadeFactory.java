@@ -7,11 +7,13 @@ import entidades.TipoHabilidade;
 public class HabilidadeFactory {
 
     public static Habilidade criarAtaqueBasico(Aliado p) {
-        return new Habilidade("Ataque Base", TipoHabilidade.DANO, 10 + (2 * p.getNivel())); // botei pra variar com o nivel tambem
+        return new Habilidade("Ataque Base", TipoHabilidade.DANO, 10 + (2 * p.getNivel())); // botei pra variar com o
+                                                                                            // nivel tambem
     }
 
     public static Habilidade criarAtaqueBasicoInimigo(int nivel) {
-        return new Habilidade("Ataque Base", TipoHabilidade.DANO, 5 + (2 * nivel)); // botei pra variar com o nivel tambem
+        return new Habilidade("Ataque Base", TipoHabilidade.DANO, 5 + (2 * nivel)); // botei pra variar com o nivel
+                                                                                    // tambem
     }
 
     public static Habilidade criarDefesaHaki() {
@@ -23,15 +25,17 @@ public class HabilidadeFactory {
     }
 
     public static Habilidade criarEspecialLuffy(Aliado p) {
-        return new Habilidade("Gomu Gomu no Pistol", TipoHabilidade.DANO, p.getVidaMaxima() * 0.3f).setEspecial(true);
+        return new Habilidade("Gomu Gomu no Pistol", TipoHabilidade.DANO, 20 + (p.getVidaMaxima() * 0.15f))
+                .setEspecial(true);
     }
 
     public static Habilidade criarEspecialGatling(Aliado p) {
-        return new Habilidade("Gomu Gomu no Gatling", TipoHabilidade.DANO, p.getVidaMaxima() * 0.5f).setEspecial(true);
+        return new Habilidade("Gomu Gomu no Gatling", TipoHabilidade.DANO, 20 + (p.getVidaMaxima() * 0.25f))
+                .setEspecial(true);
     }
 
     public static Habilidade criarEspecialGearSecond(Aliado p) {
-        return new Habilidade("Gear Second", TipoHabilidade.DANO, p.getVidaMaxima() * 0.8f).setEspecial(true);
+        return new Habilidade("Gear Second", TipoHabilidade.DANO, 50 + (p.getVidaMaxima() * 0.4f)).setEspecial(true);
     }
 
     public static Habilidade criarEspecialZoro(Aliado p) {
@@ -51,7 +55,8 @@ public class HabilidadeFactory {
     }
 
     public static Habilidade criarEspecialUsopp(Aliado p) {
-        return new Habilidade("Hissatsu: Midori Boshi", TipoHabilidade.DANO, p.getVidaMaxima() * 0.3f).setEspecial(true);
+        return new Habilidade("Hissatsu: Midori Boshi", TipoHabilidade.DANO, p.getVidaMaxima() * 0.3f)
+                .setEspecial(true);
     }
 
     public static Habilidade criarEspecialChopper(Aliado p) {
@@ -59,7 +64,9 @@ public class HabilidadeFactory {
     }
 
     public static Habilidade criarCuraChopper(Aliado p) {
-        return new Habilidade("Cura do Chopper", TipoHabilidade.CURA, p.getVidaMaxima() * 0.3f); //ele cura equivalente a 30% da vida maxima dele
+        return new Habilidade("Cura do Chopper", TipoHabilidade.CURA, p.getVidaMaxima() * 0.3f); // ele cura equivalente
+                                                                                                 // a 30% da vida maxima
+                                                                                                 // dele
     }
 
     public static Habilidade criarEspecialBrook(Aliado p) {
@@ -71,7 +78,7 @@ public class HabilidadeFactory {
     }
 
     public static Habilidade criarEspecialFranky(Aliado p) {
-        return new Habilidade("Coupe de Vent", TipoHabilidade.DANO, p.getVidaMaxima() * 0.3f).setEspecial(true); 
+        return new Habilidade("Coupe de Vent", TipoHabilidade.DANO, p.getVidaMaxima() * 0.3f).setEspecial(true);
     }
 
     public static Habilidade criarEspecialVivi(Aliado p) {
@@ -113,7 +120,7 @@ public class HabilidadeFactory {
     public static Habilidade criarEspecialAce(Aliado p) {
         return new Habilidade("Hiken", TipoHabilidade.DANO, p.getVidaMaxima() * 0.3f).setEspecial(true);
     }
-    
+
     public static Habilidade criarEspecialLoki(Aliado p) {
         return new Habilidade("Porrada", TipoHabilidade.DANO, p.getVidaMaxima() * 0.3f).setEspecial(true);
     }

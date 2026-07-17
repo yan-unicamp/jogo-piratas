@@ -41,9 +41,9 @@ public class TelaInicio implements Screen {
         root.setFillParent(true);
         stage.addActor(root);
 
-        // Placeholder for future image
-        placeholderImage = SkinPadrao.textura1x1(0.2f, 0.2f, 0.2f, 1f); // Dark gray
-        Image img = new Image(new TextureRegionDrawable(new TextureRegion(placeholderImage)));
+        // Carrega o logo do jogo
+        placeholderImage = new Texture(Gdx.files.internal("logo-onepiece.png"));
+        Image img = new Image(placeholderImage);
         img.setScaling(Scaling.fit);
         
         Label title = new Label("ONE PIECE - JOGO PIRATAS", skin);
