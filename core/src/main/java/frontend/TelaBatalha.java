@@ -80,7 +80,7 @@ public class TelaBatalha implements Screen {
         
         String bgPath = ilhaAtual.getBgKey();
         if (!Gdx.files.internal(bgPath).exists()) {
-            bgPath = "backgrounds/dressrosa.png"; 
+            bgPath = "backgrounds/ilha_generica.png"; 
         }
         bgTexture = new Texture(Gdx.files.internal(bgPath));
         Image bgImage = new Image(bgTexture);
@@ -213,14 +213,26 @@ public class TelaBatalha implements Screen {
         Table leftColumn = new Table();
         Table rightColumn = new Table();
         
+        int vivosAliados = 0;
+        for (Personagem p : aliados) if (p.estaVivo()) vivosAliados++;
+        int vivosInimigos = 0;
+        for (Personagem p : inimigos) if (p.estaVivo()) vivosInimigos++;
+        int maxChars = Math.max(vivosAliados, vivosInimigos);
+        if (maxChars < 1) maxChars = 1;
+        int tamanhoImg = (700 / maxChars) - 70;
+        if (tamanhoImg > 350) tamanhoImg = 350;
+        if (tamanhoImg < 100) tamanhoImg = 100;
+        
         for (Personagem aliado : aliados) {
             if (aliado.estaVivo()) {
                 Table charTable = new Table();
+                Table statsTable = new Table();
+                
                 int nivel = (aliado instanceof Aliado a) ? a.getNivel() : 1;
                 String info = String.format("%s (Lvl: %d)\nDEF: %.1f", aliado.getNome(), nivel, aliado.getDefesa());
                 Label lbl = new Label(info, skin);
                 lbl.setAlignment(Align.center);
-                charTable.add(lbl).padBottom(2).row();
+                statsTable.add(lbl).padBottom(2).row();
                 
                 Table hpTable = new Table();
                 hpTable.add(new Label("HP: ", skin));
@@ -229,21 +241,24 @@ public class TelaBatalha implements Screen {
                 hpBar.setAnimateDuration(0.2f);
                 hpTable.add(hpBar).width(80).height(10).padRight(5);
                 hpTable.add(new Label((int)aliado.getVidaAtual() + "/" + (int)aliado.getVidaMaxima(), skin));
-                charTable.add(hpTable).padBottom(5).row();
+                statsTable.add(hpTable).padBottom(5).row();
                 
                 Group group = groupCache.get(aliado);
                 if (group == null) {
                     Texture tex = aliado.getTextura();
                     Image img = tex != null ? new Image(tex) : new Image(skin.newDrawable("dark"));
                     img.setScaling(com.badlogic.gdx.utils.Scaling.fit);
-                    img.setSize(110, 110);
-                    img.setOrigin(Align.center);
                     group = new Group();
-                    group.setSize(110, 110);
                     group.addActor(img);
                     groupCache.put(aliado, group);
                 }
-                charTable.add(group).size(110, 110).row();
+                group.setSize(tamanhoImg, tamanhoImg);
+                if (group.getChildren().size > 0) {
+                    group.getChildren().get(0).setSize(tamanhoImg, tamanhoImg);
+                    group.getChildren().get(0).setOrigin(Align.center);
+                }
+                charTable.add(group).size(tamanhoImg, tamanhoImg).padRight(10);
+                charTable.add(statsTable).row();
                 
                 int index = aliados.indexOf(aliado);
                 float padL = (index % 2 == 1) ? 0 : 40;
@@ -255,10 +270,12 @@ public class TelaBatalha implements Screen {
         for (Personagem ini : inimigos) {
             if (ini.estaVivo()) {
                 Table charTable = new Table();
+                Table statsTable = new Table();
+                
                 String info = String.format("%s\nDEF: %.1f", ini.getNome(), ini.getDefesa());
                 Label lbl = new Label(info, skin);
                 lbl.setAlignment(Align.center);
-                charTable.add(lbl).padBottom(2).row();
+                statsTable.add(lbl).padBottom(2).row();
                 
                 Table hpTable = new Table();
                 hpTable.add(new Label("HP: ", skin));
@@ -267,21 +284,24 @@ public class TelaBatalha implements Screen {
                 hpBar.setAnimateDuration(0.2f);
                 hpTable.add(hpBar).width(80).height(10).padRight(5);
                 hpTable.add(new Label((int)ini.getVidaAtual() + "/" + (int)ini.getVidaMaxima(), skin));
-                charTable.add(hpTable).padBottom(5).row();
+                statsTable.add(hpTable).padBottom(5).row();
                 
                 Group group = groupCache.get(ini);
                 if (group == null) {
                     Texture tex = ini.getTextura();
                     Image img = tex != null ? new Image(tex) : new Image(skin.newDrawable("dark"));
                     img.setScaling(com.badlogic.gdx.utils.Scaling.fit);
-                    img.setSize(110, 110);
-                    img.setOrigin(Align.center);
                     group = new Group();
-                    group.setSize(110, 110);
                     group.addActor(img);
                     groupCache.put(ini, group);
                 }
-                charTable.add(group).size(110, 110).row();
+                group.setSize(tamanhoImg, tamanhoImg);
+                if (group.getChildren().size > 0) {
+                    group.getChildren().get(0).setSize(tamanhoImg, tamanhoImg);
+                    group.getChildren().get(0).setOrigin(Align.center);
+                }
+                charTable.add(statsTable).padRight(10);
+                charTable.add(group).size(tamanhoImg, tamanhoImg).row();
                 
                 int index = inimigos.indexOf(ini);
                 float padL = (index % 2 == 1) ? 40 : 0;
@@ -471,6 +491,30 @@ public class TelaBatalha implements Screen {
                     Label xpLabel = new Label("Experiencia Ganha: " + gerenciador.getXpGanho(), skin);
                     Label coinLabel = new Label("Moedas Ganhas: " + gerenciador.getDinheiroGanho(), skin);
                     
+                    java.util.List<entidades.Aliado> desbloqueados = gerenciador.getAliadosDesbloqueados();
+                    Table unlockTable = new Table();
+                    for (entidades.Aliado unlocked : desbloqueados) {
+                        Label unlockTitle = new Label("NOVO TRIPULANTE DESBLOQUEADO!", skin);
+                        unlockTitle.setColor(Color.CYAN);
+                        unlockTitle.setFontScale(1.5f);
+                        unlockTable.add(unlockTitle).padBottom(10).row();
+                        
+                        Texture tex = unlocked.getTextura();
+                        Image img = tex != null ? new Image(tex) : new Image(skin.newDrawable("dark"));
+                        img.setScaling(com.badlogic.gdx.utils.Scaling.fit);
+                        unlockTable.add(img).size(250, 250).padBottom(10).row();
+                        
+                        Label nameLabel = new Label(unlocked.getNome(), skin);
+                        nameLabel.setFontScale(2.0f);
+                        nameLabel.setColor(Color.GOLD);
+                        unlockTable.add(nameLabel).padBottom(10).row();
+                        
+                        Label warningLabel = new Label("Equipe este personagem no menu de Selecao de Tripulacao!", skin);
+                        warningLabel.setColor(Color.LIGHT_GRAY);
+                        warningLabel.setFontScale(1.3f);
+                        unlockTable.add(warningLabel).padBottom(30).row();
+                    }
+                    
                     TextButton btnSair = new TextButton("Continuar", skin);
                     btnSair.addListener(new ClickListener() {
                         @Override
@@ -492,9 +536,12 @@ public class TelaBatalha implements Screen {
                         }
                     });
                     
-                    winTable.add(title).padBottom(60).row();
-                    winTable.add(xpLabel).padBottom(20).row();
-                    winTable.add(coinLabel).padBottom(60).row();
+                    winTable.add(title).padBottom(30).row();
+                    if (!desbloqueados.isEmpty()) {
+                        winTable.add(unlockTable).padBottom(20).row();
+                    }
+                    winTable.add(xpLabel).padBottom(10).row();
+                    winTable.add(coinLabel).padBottom(40).row();
                     winTable.add(btnSair).size(400, 80);
                     
                     uiTable.add(winTable).expand().center();

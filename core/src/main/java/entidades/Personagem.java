@@ -112,9 +112,26 @@ public abstract class Personagem {
             }
         }
         
-        String placeholderPath = "personagens/aliados_especiais/placeholder.png";
-        if (com.badlogic.gdx.Gdx.files.internal(placeholderPath).exists()) {
-            texturaCarregada = new com.badlogic.gdx.graphics.Texture(com.badlogic.gdx.Gdx.files.internal(placeholderPath));
+        String fallbackPath = "personagens/aliados_especiais/placeholder.png";
+        
+        if (this instanceof Inimigo) {
+            String n = (nome != null) ? nome.toLowerCase() : "";
+            String i = (caminhoImagem != null) ? caminhoImagem.toLowerCase() : "";
+            if (n.contains("marinh") || i.contains("marinh") || n.contains("smoker") || n.contains("akainu") || n.contains("kizaru") || n.contains("lucci") || n.contains("magellan")) {
+                fallbackPath = "inimigos/capangas/capanga_marinha.png";
+            } else {
+                fallbackPath = "inimigos/capangas/capanga_pirata.png";
+            }
+        }
+        
+        if (com.badlogic.gdx.Gdx.files.internal(fallbackPath).exists()) {
+            texturaCarregada = new com.badlogic.gdx.graphics.Texture(com.badlogic.gdx.Gdx.files.internal(fallbackPath));
+            return texturaCarregada;
+        }
+        
+        String defaultPlaceholder = "personagens/aliados_especiais/placeholder.png";
+        if (com.badlogic.gdx.Gdx.files.internal(defaultPlaceholder).exists()) {
+            texturaCarregada = new com.badlogic.gdx.graphics.Texture(com.badlogic.gdx.Gdx.files.internal(defaultPlaceholder));
             return texturaCarregada;
         }
         return null;

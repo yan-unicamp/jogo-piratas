@@ -231,9 +231,11 @@ public class GerenciadorDeBatalha {
 
     private int xpGanhoBatalha = 0;
     private int dinheiroGanhoBatalha = 0;
+    private java.util.List<entidades.Aliado> aliadosDesbloqueados = new java.util.ArrayList<>();
     
     public int getXpGanho() { return xpGanhoBatalha; }
     public int getDinheiroGanho() { return dinheiroGanhoBatalha; }
+    public java.util.List<entidades.Aliado> getAliadosDesbloqueados() { return aliadosDesbloqueados; }
 
     public void recompensa() {
         int dinheiroTotal = 0;
@@ -249,6 +251,7 @@ public class GerenciadorDeBatalha {
             xpTotal += oponente.getRecompensaExperiencia();
             if (oponente.getRecompensaAliado() != null) {
                 progressao.Recompensa.darAliado(tripulacao, oponente.getRecompensaAliado());
+                aliadosDesbloqueados.add(oponente.getRecompensaAliado());
             }
             if (oponente.getRecompensaItem() != null) {
                 progressao.Recompensa.darItem(tripulacao, oponente.getRecompensaItem());
