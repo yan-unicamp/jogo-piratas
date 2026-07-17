@@ -14,19 +14,22 @@ public class AudioManager {
     private final Map<String, Music> musicas = new HashMap<>();
     private Music musicaAtual;
     private String caminhoAtual;
-    
+
     // Nomes padroes sugeridos (O usuario deve colocar os mp3 na pasta assets/audio)
-    public static final String MUSICA_MENU = "audio/menu.mp3";
-    public static final String MUSICA_MAPA = "audio/mapa.mp3";
-    public static final String MUSICA_BATALHA = "audio/batalha.mp3";
+    public static final String MUSICA_MENU = "audio/SakeBinks.mp3";
+    public static final String MUSICA_MAPA = "audio/SakeBinks.mp3";
+    public static final String MUSICA_BATALHA = "audio/Overtaken.mp3";
     public static final String MUSICA_LOJA = "audio/loja.mp3";
     public static final String MUSICA_DESCANSO = "audio/descanso.mp3";
 
-    public AudioManager() {}
+    public AudioManager() {
+    }
 
     private Music getMusica(String caminho) {
-        if (caminho == null || caminho.isEmpty()) return null;
-        if (musicas.containsKey(caminho)) return musicas.get(caminho);
+        if (caminho == null || caminho.isEmpty())
+            return null;
+        if (musicas.containsKey(caminho))
+            return musicas.get(caminho);
 
         try {
             if (Gdx.files.internal(caminho).exists()) {
@@ -35,9 +38,10 @@ public class AudioManager {
                 return m;
             }
         } catch (Exception e) {
-            Gdx.app.log("AudioManager", "Aviso: Nao foi possivel carregar o arquivo de audio: " + caminho + " - Coloque um arquivo de musica valido nesta pasta para ouvir a trilha!");
+            Gdx.app.log("AudioManager", "Aviso: Nao foi possivel carregar o arquivo de audio: " + caminho
+                    + " - Coloque um arquivo de musica valido nesta pasta para ouvir a trilha!");
         }
-        
+
         musicas.put(caminho, null); // Marca como null para nao tentar carregar de novo
         return null;
     }
@@ -47,7 +51,7 @@ public class AudioManager {
         if (caminhoAtual != null && caminhoAtual.equals(caminho) && musicaAtual != null && musicaAtual.isPlaying()) {
             return;
         }
-        
+
         pararAtual();
 
         Music m = getMusica(caminho);
@@ -59,7 +63,7 @@ public class AudioManager {
             caminhoAtual = caminho;
         }
     }
-    
+
     public void pararAtual() {
         if (musicaAtual != null && musicaAtual.isPlaying()) {
             musicaAtual.stop();
@@ -71,7 +75,8 @@ public class AudioManager {
     public void dispose() {
         pararAtual();
         for (Music m : musicas.values()) {
-            if (m != null) m.dispose();
+            if (m != null)
+                m.dispose();
         }
         musicas.clear();
     }
