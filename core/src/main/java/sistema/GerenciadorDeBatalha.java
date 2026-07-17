@@ -244,6 +244,9 @@ public class GerenciadorDeBatalha {
     public int getXpGanho() { return xpGanhoBatalha; }
     public int getDinheiroGanho() { return dinheiroGanhoBatalha; }
 
+    private java.util.List<String> recompensasExtras = new java.util.ArrayList<>();
+    public java.util.List<String> getRecompensasExtras() { return recompensasExtras; }
+
     public void recompensa() {
         int dinheiroTotal = 0;
         int xpTotal = 0;
@@ -253,14 +256,17 @@ public class GerenciadorDeBatalha {
                 oponentes.add(oponente);
             }
         }
+        recompensasExtras.clear();
         for (Inimigo oponente : oponentes) {
             dinheiroTotal += oponente.getRecompensaDinheiro();
             xpTotal += oponente.getRecompensaExperiencia();
             if (oponente.getRecompensaAliado() != null) {
                 progressao.Recompensa.darAliado(tripulacao, oponente.getRecompensaAliado());
+                recompensasExtras.add("Novo aliado: " + oponente.getRecompensaAliado().getNome());
             }
             if (oponente.getRecompensaItem() != null) {
                 progressao.Recompensa.darItem(tripulacao, oponente.getRecompensaItem());
+                recompensasExtras.add("Novo item: " + oponente.getRecompensaItem().getNome());
             }
         }
 
@@ -276,13 +282,20 @@ public class GerenciadorDeBatalha {
             }
         }
         for (Aliado amigo : amigos) {
+            int nivelAntigo = amigo.getNivel();
             java.util.List<entidades.Habilidade> novas = amigo.ganharExperiencia(xpDividido);
+            int nivelNovo = amigo.getNivel();
+            if (nivelNovo > nivelAntigo) {
+                recompensasExtras.add(amigo.getNome() + " subiu para o nivel " + nivelNovo + "!");
+            }
             for (entidades.Habilidade h : novas) {
                 if (amigo.getHabilidades().size() < 4) {
                     amigo.adicionarHabilidade(h);
                     System.out.println(amigo.getNome() + " aprendeu " + h.getNome() + "!");
+                    recompensasExtras.add(amigo.getNome() + " aprendeu " + h.getNome() + "!");
                 } else {
                     habilidadesPendentes.add(new sistema.HabilidadePendente(amigo, h));
+
                 }
             }
         }

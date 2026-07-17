@@ -21,11 +21,11 @@ run {
 }
 
 // Criar a pasta assets se não existir ao rodar
+def assetsDir = rootProject.file('assets')
 tasks.register('createAssetsDir') {
     doLast {
-        def dir = rootProject.file('assets')
-        if (!dir.exists()) {
-            dir.mkdirs()
+        if (!assetsDir.exists()) {
+            assetsDir.mkdirs()
         }
     }
 }

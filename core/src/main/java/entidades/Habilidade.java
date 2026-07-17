@@ -5,6 +5,7 @@ public class Habilidade {
     private TipoHabilidade tipo;
     private float valorPoder;
     private boolean selfcast;
+    private boolean especial;
 
     public Habilidade(String nome, TipoHabilidade tipo, float valorPoder) {
         this(nome, tipo, valorPoder, false);
@@ -18,6 +19,12 @@ public class Habilidade {
     }
 
     public boolean isSelfcast() { return selfcast; }
+    
+    public boolean isEspecial() { return especial; }
+    public Habilidade setEspecial(boolean especial) {
+        this.especial = especial;
+        return this;
+    }
 
     public void executarAcao(Personagem alvo) {
         switch (tipo) {

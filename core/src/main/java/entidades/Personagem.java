@@ -10,8 +10,9 @@ public abstract class Personagem {
     protected float defesa;
     protected float defesaAtual; 
     protected int iniciativa;
-    protected List<Habilidade> habilidades;
+    protected java.util.List<Habilidade> habilidades;
     protected String caminhoImagem;
+    private int turnosDePausa;
 
     public Personagem(String nome, int vidaMaxima, float defesa, int iniciativa, String caminhoImagem) {
         this.nome = nome;
@@ -22,6 +23,7 @@ public abstract class Personagem {
         this.iniciativa = iniciativa;
         this.habilidades = new ArrayList<>();
         this.caminhoImagem = caminhoImagem;
+        this.turnosDePausa = 0;
     }
 
 
@@ -71,6 +73,20 @@ public abstract class Personagem {
 
     public float getDefesa() {
         return defesaAtual;
+    }
+
+    public int getTurnosDePausa() {
+        return turnosDePausa;
+    }
+
+    public void setTurnosDePausa(int turnosDePausa) {
+        this.turnosDePausa = turnosDePausa;
+    }
+
+    public void decrementarTurnoDePausa() {
+        if (this.turnosDePausa > 0) {
+            this.turnosDePausa--;
+        }
     }
 
     public int getIniciativa() {
