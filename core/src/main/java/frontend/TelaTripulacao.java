@@ -11,7 +11,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.*;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.badlogic.gdx.utils.Align;
-import com.badlogic.gdx.utils.viewport.ScreenViewport;
+import com.badlogic.gdx.utils.viewport.FitViewport;
 
 import entidades.Aliado;
 import entidades.Habilidade;
@@ -37,7 +37,7 @@ public class TelaTripulacao implements Screen {
 
     @Override
     public void show() {
-        stage = new Stage(new ScreenViewport(), jogo.batch);
+        stage = new Stage(new FitViewport(1920, 1080), jogo.batch);
         Gdx.input.setInputProcessor(stage);
         skin = SkinPadrao.criar();
 

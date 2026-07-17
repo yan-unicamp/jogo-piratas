@@ -18,7 +18,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
-import com.badlogic.gdx.utils.viewport.ScreenViewport;
+import com.badlogic.gdx.utils.viewport.FitViewport;
 
 import entidades.Aliado;
 import sistema.EstadoJogo;
@@ -53,7 +53,7 @@ public class TelaDescanso implements Screen {
     public void show() {
         jogo.audio.tocar(sistema.AudioManager.MUSICA_DESCANSO, true);
         
-        stage = new Stage(new ScreenViewport(), jogo.batch);
+        stage = new Stage(new FitViewport(1920, 1080), jogo.batch);
         Gdx.input.setInputProcessor(stage);
         skin = SkinPadrao.criar();
 

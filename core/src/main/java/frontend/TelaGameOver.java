@@ -11,7 +11,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
-import com.badlogic.gdx.utils.viewport.ScreenViewport;
+import com.badlogic.gdx.utils.viewport.FitViewport;
 
 import sistema.EstadoJogo;
 import sistema.GameManager;
@@ -39,7 +39,7 @@ public class TelaGameOver implements Screen {
 
     @Override
     public void show() {
-        stage = new Stage(new ScreenViewport());
+        stage = new Stage(new FitViewport(1920, 1080));
         Gdx.input.setInputProcessor(stage);
         skin = SkinPadrao.criar();
 
