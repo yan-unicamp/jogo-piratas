@@ -54,9 +54,21 @@ public class GameManager {
         System.out.println("Iniciando o jogo...");
         this.jogoRodando = true;
         
-        // Exemplo: adicionando um aliado base
-        tripulacao.adicionarAliado(PersonagemFactory.criarLuffy());
-        tripulacao.adicionarAliadoAtivo(tripulacao.getAliados().get(0));
+        // Se quisermos forcar carregar no iniciarJogo terminal:
+        if (SaveManager.temSave()) {
+            System.out.println("Encontrado save automatico, carregando...");
+            SaveManager.carregar(this);
+        } else {
+            tripulacao.getAliados().clear();
+            tripulacao.getAliadosAtivos().clear();
+            tripulacao.getItens().clear();
+            mapa.resetar();
+            // Exemplo: adicionando um aliado base
+            tripulacao.adicionarAliado(PersonagemFactory.criarLuffy());
+            tripulacao.adicionarAliadoAtivo(tripulacao.getAliados().get(0));
+            // Primeiro save
+            SaveManager.salvar(this);
+        }
 
         loopPrincipal();
     }
@@ -225,6 +237,10 @@ public class GameManager {
 
     public void mudarEstado(EstadoJogo novoEstado) {
         System.out.println("Transicao de estado: " + novoEstado);
+        // Salvar automaticamente ao retornar ao mapa
+        if (novoEstado == EstadoJogo.MAPA) {
+            SaveManager.salvar(this);
+        }
         // Em um sistema puramente terminal, apenas registramos o estado.
         // Quando a GUI voltar, aqui ficaria a troca de Telas.
     }

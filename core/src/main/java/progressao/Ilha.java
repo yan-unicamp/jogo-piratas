@@ -21,6 +21,7 @@ public class Ilha {
 
     private int rodadaAtualIdx = 0;
     private boolean completa   = false;
+    private String idSave; // ID for save/load serialization
 
     public Ilha(String nome, String bgKey, List<Rodada> rodadas) {
         this.nome    = nome;
@@ -30,6 +31,14 @@ public class Ilha {
 
     public void setDescricao(String descricao) {
         this.descricao = descricao;
+    }
+
+    public String getIdSave() {
+        return idSave;
+    }
+
+    public void setIdSave(String idSave) {
+        this.idSave = idSave;
     }
 
     public String getDescricao() {

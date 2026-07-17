@@ -17,6 +17,10 @@ import com.badlogic.gdx.utils.Align;
 import com.badlogic.gdx.utils.Scaling;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
 
+import com.badlogic.gdx.scenes.scene2d.InputEvent;
+import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
+import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
+
 import sistema.GameManager;
 import sistema.JogoPiratas;
 
@@ -46,31 +50,120 @@ public class TelaInicio implements Screen {
         Image img = new Image(placeholderImage);
         img.setScaling(Scaling.fit);
         
-        Label title = new Label("ONE PIECE - JOGO PIRATAS", skin);
-        title.setFontScale(2.0f);
-        title.setColor(Color.GOLD);
-        title.setAlignment(Align.center);
-
-        Label lblEnter = new Label("Pressione ENTER ou CLIQUE para iniciar", skin);
-        lblEnter.setFontScale(1.2f);
-        lblEnter.setAlignment(Align.center);
-
-        root.add(title).padBottom(20).row();
+        // No title label
         root.add(img).width(400).height(300).padBottom(40).row();
-        root.add(lblEnter).row();
+        
+        TextButton btnNovoJogo = new TextButton("  Novo Jogo  ", skin);
+        TextButton btnContinuar = new TextButton("  Continuar  ", skin);
+        TextButton btnSair = new TextButton("     Sair    ", skin);
+
+        Table overlayConfirmacao = new Table();
+        overlayConfirmacao.setFillParent(true);
+        overlayConfirmacao.setVisible(false);
+        stage.addActor(overlayConfirmacao);
+
+        Runnable iniciarNovoJogo = () -> {
+            if (sistema.SaveManager.temSave()) {
+                sistema.SaveManager.deletarSave();
+            }
+            jogo.gameManager = new GameManager();
+            GameManager gm = jogo.gameManager;
+            gm.getTripulacao().getAliados().clear();
+            gm.getTripulacao().getAliadosAtivos().clear();
+            gm.getTripulacao().getItens().clear();
+            gm.getMapa().resetar();
+            gm.getTripulacao().adicionarAliado(factories.PersonagemFactory.criarLuffy());
+            gm.getTripulacao().adicionarAliadoAtivo(gm.getTripulacao().getAliados().get(0));
+            sistema.SaveManager.salvar(gm);
+            
+            jogo.setScreen(new frontend.TelaMapa(jogo, gm));
+        };
+
+        btnNovoJogo.addListener(new ClickListener() {
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
+                if (sistema.SaveManager.temSaveAvancado()) {
+                    overlayConfirmacao.clearChildren();
+                    Table tint = new Table();
+                    tint.setBackground(new TextureRegionDrawable(SkinPadrao.textura1x1(0, 0, 0, 0.85f)));
+                    tint.setFillParent(true);
+                    
+                    Table janela = new Table();
+                    janela.setBackground(new TextureRegionDrawable(SkinPadrao.textura1x1(0.15f, 0.1f, 0.1f, 1f)));
+                    janela.pad(40);
+                    
+                    Label titulo = new Label("Atencao!", skin);
+                    titulo.setFontScale(1.5f);
+                    titulo.setColor(Color.RED);
+                    
+                    Label desc = new Label("Voce possui um save com progresso.\nIniciar um novo jogo ira APAGAR o save anterior.\nDeseja continuar?", skin);
+                    desc.setAlignment(Align.center);
+                    
+                    TextButton btnConfirmar = new TextButton("Sim, apagar save", skin);
+                    btnConfirmar.getLabel().setColor(Color.RED);
+                    btnConfirmar.addListener(new ClickListener() {
+                        @Override
+                        public void clicked(InputEvent event, float x, float y) {
+                            iniciarNovoJogo.run();
+                        }
+                    });
+                    
+                    TextButton btnVoltar = new TextButton("Cancelar", skin);
+                    btnVoltar.addListener(new ClickListener() {
+                        @Override
+                        public void clicked(InputEvent event, float x, float y) {
+                            overlayConfirmacao.setVisible(false);
+                        }
+                    });
+                    
+                    janela.add(titulo).padBottom(20).row();
+                    janela.add(desc).padBottom(40).row();
+                    janela.add(btnConfirmar).width(300).height(50).padBottom(15).row();
+                    janela.add(btnVoltar).width(300).height(50).row();
+                    
+                    tint.add(janela);
+                    overlayConfirmacao.add(tint).expand().fill();
+                    overlayConfirmacao.setVisible(true);
+                } else {
+                    iniciarNovoJogo.run();
+                }
+            }
+        });
+
+        btnContinuar.addListener(new ClickListener() {
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
+                if (!sistema.SaveManager.temSave()) return;
+                jogo.gameManager = new GameManager();
+                sistema.SaveManager.carregar(jogo.gameManager);
+                jogo.setScreen(new frontend.TelaMapa(jogo, jogo.gameManager));
+            }
+        });
+        
+        if (!sistema.SaveManager.temSave()) {
+            btnContinuar.setDisabled(true);
+            btnContinuar.getLabel().setColor(new Color(0.4f, 0.4f, 0.4f, 1f));
+        }
+
+        btnSair.addListener(new ClickListener() {
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
+                Gdx.app.exit();
+            }
+        });
+
+        Table botoesTable = new Table();
+        botoesTable.add(btnContinuar).width(200).height(60).padRight(20);
+        botoesTable.add(btnNovoJogo).width(200).height(60).padRight(20);
+        botoesTable.add(btnSair).width(200).height(60);
+        
+        root.add(botoesTable).row();
         
         jogo.audio.tocar(sistema.AudioManager.MUSICA_MENU, true);
     }
 
     @Override
     public void render(float delta) {
-        // Handle input
-        if (Gdx.input.isKeyJustPressed(Input.Keys.ENTER) || Gdx.input.justTouched()) {
-            jogo.gameManager = new GameManager(); // Always initialize a new game manager
-            jogo.setScreen(new TelaMapa(jogo, jogo.gameManager));
-            return;
-        }
-
         // Draw screen
         Gdx.gl.glClearColor(0.05f, 0.05f, 0.08f, 1f);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);

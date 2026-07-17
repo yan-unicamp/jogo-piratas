@@ -600,6 +600,7 @@ public class TelaBatalha implements Screen {
                 
             case DERROTA:
                 if (delayAcumulado == 0) {
+                    sistema.SaveManager.deletarSave(); // Apaga o save ao morrer
                     logLabel.setText("Sua tripulacao foi derrotada... Game Over.");
                     uiTable.clear();
                     

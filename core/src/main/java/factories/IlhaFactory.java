@@ -70,6 +70,7 @@ public class IlhaFactory {
                                 throw new IllegalArgumentException("Ilha desconhecida: " + ilhaEnum);
                 }
                 ilha.setDescricao(ilhaEnum.getDescricao());
+                ilha.setIdSave("ENUM:" + ilhaEnum.name());
                 return ilha;
         }
 
@@ -105,6 +106,7 @@ public class IlhaFactory {
                         : "backgrounds/" + genEnum.name().toLowerCase() + ".png";
                 Ilha ilha = new Ilha(nome, bgKey, rodadas);
                 ilha.setDescricao("Um local desconhecido nas rotas do oceano. Suas habilidades serão testadas aqui.");
+                ilha.setIdSave("GENERIC:" + genEnum.name());
                 return ilha;
         }
 

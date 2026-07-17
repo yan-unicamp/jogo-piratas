@@ -20,12 +20,19 @@ public class Mapa {
     private Random random;
 
     public Mapa() {
-        this.etapaAtual = 0;
-        this.capitulo = 1;
         this.ilhasConcluidas = new ArrayList<>();
         this.opcoesAtuais = new ArrayList<>();
         this.ilhasMostradas = new HashSet<>();
         this.random = new Random();
+        resetar();
+    }
+
+    public void resetar() {
+        this.etapaAtual = 0;
+        this.capitulo = 1;
+        this.ilhasConcluidas.clear();
+        this.opcoesAtuais.clear();
+        this.ilhasMostradas.clear();
         gerarProximosNos();
     }
 
@@ -120,11 +127,43 @@ public class Mapa {
     public int getEtapaAtual() { return etapaAtual; }
     public int getCapitulo() { return capitulo; }
     public NoMapa getNoAtual() { return noAtual; }
+    
+    public java.util.Set<IlhasGenericasEnum> getIlhasMostradas() {
+        return ilhasMostradas;
+    }
 
     // Retorna a fusao do historico com as opcoes atuais para a TelaMapa legada (se necessario)
     public java.util.List<Ilha> getIlhas() { 
         List<Ilha> todas = new ArrayList<>(ilhasConcluidas);
         todas.addAll(opcoesAtuais);
         return todas;
+    }
+
+    public void restaurarEstado(int capitulo, int etapaAtual, List<String> opcoesIds, List<String> ilhasMostradasNomes, List<String> ilhasConcluidasIds) {
+        this.capitulo = capitulo;
+        this.etapaAtual = etapaAtual;
+        
+        this.ilhasMostradas.clear();
+        for (String igName : ilhasMostradasNomes) {
+            try {
+                this.ilhasMostradas.add(IlhasGenericasEnum.valueOf(igName));
+            } catch (Exception e) {}
+        }
+
+        this.opcoesAtuais.clear();
+        for (String idSave : opcoesIds) {
+            Ilha ilha = sistema.SaveManager.recriarIlhaPeloIdSave(idSave);
+            if (ilha != null) {
+                this.opcoesAtuais.add(ilha);
+            }
+        }
+        
+        this.ilhasConcluidas.clear();
+        for (String idSave : ilhasConcluidasIds) {
+            Ilha ilha = sistema.SaveManager.recriarIlhaPeloIdSave(idSave);
+            if (ilha != null) {
+                this.ilhasConcluidas.add(ilha);
+            }
+        }
     }
 }

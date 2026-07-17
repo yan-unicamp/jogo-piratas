@@ -57,14 +57,33 @@ public class TelaMenu implements Screen {
         Label subtitulo = new Label("Uma aventura no Grand Line", skin);
         subtitulo.setColor(Color.LIGHT_GRAY);
 
-        // Botoes
         TextButton btnNovoJogo = new TextButton("  Novo Jogo  ", skin);
+        TextButton btnContinuar = new TextButton("  Continuar  ", skin);
         TextButton btnSair = new TextButton("     Sair    ", skin);
 
         btnNovoJogo.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
-                gameManager.iniciarJogo();
+                if (sistema.SaveManager.temSave()) {
+                    sistema.SaveManager.deletarSave();
+                }
+                gameManager.getTripulacao().getAliados().clear();
+                gameManager.getTripulacao().getAliadosAtivos().clear();
+                gameManager.getTripulacao().getItens().clear();
+                gameManager.getMapa().resetar();
+                gameManager.getTripulacao().adicionarAliado(factories.PersonagemFactory.criarLuffy());
+                gameManager.getTripulacao().adicionarAliadoAtivo(gameManager.getTripulacao().getAliados().get(0));
+                sistema.SaveManager.salvar(gameManager);
+                
+                jogo.setScreen(new frontend.TelaMapa(jogo, gameManager));
+            }
+        });
+
+        btnContinuar.addListener(new ClickListener() {
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
+                sistema.SaveManager.carregar(gameManager);
+                jogo.setScreen(new frontend.TelaMapa(jogo, gameManager));
             }
         });
 
@@ -78,6 +97,11 @@ public class TelaMenu implements Screen {
         // Montagem da tabela
         tabela.add(titulo).padBottom(10).row();
         tabela.add(subtitulo).padBottom(60).row();
+        
+        if (sistema.SaveManager.temSave()) {
+            tabela.add(btnContinuar).width(240).height(60).padBottom(20).row();
+        }
+        
         tabela.add(btnNovoJogo).width(240).height(60).padBottom(20).row();
         tabela.add(btnSair).width(240).height(60).row();
 

@@ -63,6 +63,9 @@ public class TelaMapa implements Screen {
         stage = new Stage(new ScreenViewport());
         Gdx.input.setInputProcessor(stage);
         skin  = SkinPadrao.criar();
+        
+        // Auto-save whenever we reach the map
+        sistema.SaveManager.salvar(gameManager);
 
         Assets       assets = jogo.assets;
         List<Ilha>   concluidas = gameManager.getMapa().getIlhasConcluidas();
@@ -157,10 +160,21 @@ public class TelaMapa implements Screen {
             }
         });
 
+        TextButton btnSair = new TextButton(" Sair do Jogo ", skin);
+        btnSair.getLabel().setColor(new Color(1f, 0.4f, 0.4f, 1f));
+        btnSair.addListener(new ClickListener() {
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
+                sistema.SaveManager.salvar(gameManager); // Garante o save mais recente
+                Gdx.app.exit();
+            }
+        });
+
         hud.add(lblIlhas).left().expandX();
         hud.add(lblHP).center().expandX();
         hud.add(lblOuro).center().expandX();
-        hud.add(btnTripulacao).right().expandX();
+        hud.add(btnTripulacao).right().padRight(10);
+        hud.add(btnSair).right();
         return hud;
     }
 
