@@ -19,6 +19,9 @@ public class Aliado extends Personagem {
         return habilidadesDesbloqueaveis.containsKey(nivel);
     }
 
+    public java.util.Map<Integer, java.util.function.Supplier<Habilidade>> getHabilidadesDesbloqueaveis() {
+        return habilidadesDesbloqueaveis;
+    }
     public int getNivel() { return nivel; }
     public int getExperiencia() { return experiencia; }
 

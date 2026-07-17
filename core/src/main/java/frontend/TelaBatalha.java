@@ -231,7 +231,7 @@ public class TelaBatalha implements Screen {
                 Table statsTable = new Table();
                 
                 int nivel = (aliado instanceof Aliado a) ? a.getNivel() : 1;
-                String info = String.format("%s (Lvl: %d)\nDEF: %.1f", aliado.getNome(), nivel, aliado.getDefesa());
+                String info = String.format("%s (Lvl: %d)\nDEF: %.2f", aliado.getNome(), nivel, (1.0f - aliado.getDefesa()));
                 Label lbl = new Label(info, skin);
                 lbl.setAlignment(Align.center);
                 statsTable.add(lbl).padBottom(2).row();
@@ -274,7 +274,7 @@ public class TelaBatalha implements Screen {
                 Table charTable = new Table();
                 Table statsTable = new Table();
                 
-                String info = String.format("%s\nDEF: %.1f", ini.getNome(), ini.getDefesa());
+                String info = String.format("%s\nDEF: %.2f", ini.getNome(), (1.0f - ini.getDefesa()));
                 Label lbl = new Label(info, skin);
                 lbl.setAlignment(Align.center);
                 statsTable.add(lbl).padBottom(2).row();

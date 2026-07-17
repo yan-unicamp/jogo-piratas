@@ -104,49 +104,93 @@ public class TelaTripulacao implements Screen {
     private void mostrarDetalhes(final Aliado aliado) {
         painelDetalhes.clear();
         
+        // --- CABECALHO (Imagem e Info) ---
+        Table headerTable = new Table();
+        
+        Texture tex = aliado.getTextura();
+        Image img;
+        if (tex != null) {
+            img = new Image(tex);
+        } else {
+            img = new Image(new TextureRegionDrawable(SkinPadrao.textura1x1(0.3f, 0.3f, 0.3f, 1f)));
+        }
+        img.setScaling(com.badlogic.gdx.utils.Scaling.fit);
+        // Imagem bem maior na esquerda do header
+        headerTable.add(img).size(250, 250).padRight(30).align(Align.center);
+        
+        Table infoTable = new Table();
         Label lblNome = new Label(removerAcentos(aliado.getNome()), skin);
-        lblNome.setFontScale(1.3f);
+        lblNome.setFontScale(1.8f);
         lblNome.setColor(Color.CYAN);
+        infoTable.add(lblNome).padBottom(20).left().row();
         
         int nextXp = 100 * aliado.getNivel();
         Label lblStatus = new Label(
             "Nivel: " + aliado.getNivel() + "\n" +
             "XP: " + aliado.getExperiencia() + " / " + nextXp + "\n" +
             "HP: " + aliado.getVidaAtual() + " / " + aliado.getVidaMaxima() + "\n" +
-            "DEF: " + String.format("%.1f", aliado.getDefesa()), 
+            "DEF: " + String.format("%.2f", (1.0f - aliado.getDefesa())), 
             skin
         );
+        lblStatus.setFontScale(1.2f);
         lblStatus.setAlignment(Align.left);
-
-        painelDetalhes.add(lblNome).padBottom(20).colspan(2).row();
+        infoTable.add(lblStatus).left().row();
         
-        Texture tex = aliado.getTextura();
-        if (tex != null) {
-            Image img = new Image(tex);
-            painelDetalhes.add(img).size(120, 120).padRight(20);
-        } else {
-            Image img = new Image(new TextureRegionDrawable(SkinPadrao.textura1x1(0.3f, 0.3f, 0.3f, 1f)));
-            painelDetalhes.add(img).size(120, 120).padRight(20);
-        }
+        headerTable.add(infoTable).expandX().left();
+        painelDetalhes.add(headerTable).expandX().fillX().padBottom(30).row();
         
-        painelDetalhes.add(lblStatus).expandX().fillX().row();
+        // --- HABILIDADES ---
+        Table skillsTable = new Table();
         
-        Label lblHabilidadesTitulo = new Label("Habilidades:", skin);
-        lblHabilidadesTitulo.setColor(Color.GOLD);
-        painelDetalhes.add(lblHabilidadesTitulo).padTop(20).colspan(2).row();
+        Table currentSkillsTable = new Table();
+        Label lblCurrent = new Label("Habilidades Adquiridas", skin);
+        lblCurrent.setColor(Color.GOLD);
+        lblCurrent.setFontScale(1.4f);
+        currentSkillsTable.add(lblCurrent).padBottom(15).left().row();
         
-        Table habTable = new Table();
         for (Habilidade hab : aliado.getHabilidades()) {
-            String tipo = hab.getTipo().toString();
-            String desc = hab.getNome() + " (" + tipo + " - Poder: " + String.format("%.1f", hab.getValorPoder()) + ")";
+            String desc = "- " + hab.getNome() + " (" + hab.getTipo().toString() + ": " + String.format("%.0f", hab.getValorPoder()) + ")";
             Label lblHab = new Label(removerAcentos(desc), skin);
-            habTable.add(lblHab).left().padBottom(5).row();
+            lblHab.setFontScale(1.2f);
+            currentSkillsTable.add(lblHab).left().padBottom(8).row();
         }
-        painelDetalhes.add(habTable).colspan(2).padTop(10).left().row();
+        
+        Table lockedSkillsTable = new Table();
+        Label lblLocked = new Label("Proximos Desbloqueios", skin);
+        lblLocked.setColor(Color.LIGHT_GRAY);
+        lblLocked.setFontScale(1.4f);
+        lockedSkillsTable.add(lblLocked).padBottom(15).left().row();
+        
+        java.util.Map<Integer, java.util.function.Supplier<Habilidade>> habsDesbl = aliado.getHabilidadesDesbloqueaveis();
+        java.util.List<Integer> niveis = new java.util.ArrayList<>(habsDesbl.keySet());
+        java.util.Collections.sort(niveis);
+        
+        boolean hasLocked = false;
+        for (Integer lvl : niveis) {
+            if (lvl > aliado.getNivel()) {
+                hasLocked = true;
+                Habilidade dummy = habsDesbl.get(lvl).get();
+                String desc = "- Nivel " + lvl + ": " + dummy.getNome() + " [LOCKED]";
+                Label lblHabLocked = new Label(removerAcentos(desc), skin);
+                lblHabLocked.setColor(Color.GRAY);
+                lblHabLocked.setFontScale(1.2f);
+                lockedSkillsTable.add(lblHabLocked).left().padBottom(8).row();
+            }
+        }
+        if (!hasLocked) {
+            Label lblHabLocked = new Label("Todas desbloqueadas!", skin);
+            lblHabLocked.setColor(Color.DARK_GRAY);
+            lblHabLocked.setFontScale(1.2f);
+            lockedSkillsTable.add(lblHabLocked).left().row();
+        }
+        
+        skillsTable.add(currentSkillsTable).expandX().top().left().padRight(40);
+        skillsTable.add(lockedSkillsTable).expandX().top().left();
+        painelDetalhes.add(skillsTable).expand().fill().row();
 
-        // Botao Convocar / Desconvocar
+        // --- BOTAO CONVOCAR / DESCONVOCAR ---
         final boolean isAtivo = gameManager.getTripulacao().getAliadosAtivos().contains(aliado);
-        String txtBotao = isAtivo ? "Desconvocar" : "Convocar";
+        String txtBotao = isAtivo ? "Desconvocar (Na equipe)" : "Convocar (Reserva)";
         TextButton btnConvocar = new TextButton(txtBotao, skin);
         if (isAtivo) {
             btnConvocar.getLabel().setColor(new Color(1f, 0.4f, 0.4f, 1f));
@@ -179,8 +223,8 @@ public class TelaTripulacao implements Screen {
                 }
             }
         });
-        painelDetalhes.add(btnConvocar).colspan(2).padTop(20).width(200).height(45).row();
-        painelDetalhes.add(lblAviso).colspan(2).padTop(10).row();
+        painelDetalhes.add(btnConvocar).colspan(2).padTop(30).width(250).height(50).align(Align.center).row();
+        painelDetalhes.add(lblAviso).colspan(2).padTop(10).align(Align.center).row();
     }
 
     private String removerAcentos(String str) {
