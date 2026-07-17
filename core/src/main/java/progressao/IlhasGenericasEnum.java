@@ -9,7 +9,6 @@ public enum IlhasGenericasEnum {
 
     // Paraiso (Capitulo 2)
     WHISKEY_PEAK(2),
-    LONG_RING_LONG_LAND(2),
     WATER_7(2),
     BATERILLA(2),
     ILHA_BANARO(2),

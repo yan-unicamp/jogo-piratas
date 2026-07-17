@@ -35,7 +35,7 @@ public class Mapa {
     private List<IlhaEnum> canonicasCap2 = new ArrayList<>();
     private IlhaEnum sortearCanonicaCap2() {
         if (canonicasCap2.isEmpty()) {
-            canonicasCap2.addAll(java.util.Arrays.asList(IlhaEnum.THRILLER_BARK, IlhaEnum.ALABASTA, IlhaEnum.ENIES_LOBBY, IlhaEnum.ILHA_DRUM));
+            canonicasCap2.addAll(java.util.Arrays.asList(IlhaEnum.THRILLER_BARK, IlhaEnum.ALABASTA, IlhaEnum.ENIES_LOBBY, IlhaEnum.ILHA_DRUM, IlhaEnum.LONG_RING_LONG_LAND, IlhaEnum.LITTLE_GARDEN, IlhaEnum.JAYA, IlhaEnum.SKYPIEA, IlhaEnum.IMPEL_DOWN));
         }
         int idx = random.nextInt(canonicasCap2.size());
         return canonicasCap2.remove(idx);
@@ -77,14 +77,16 @@ public class Mapa {
                     // Generica
                     List<IlhasGenericasEnum> disponiveis = new ArrayList<>();
                     for (IlhasGenericasEnum ig : IlhasGenericasEnum.values()) {
-                        if (ig.getCapitulo() == capitulo || ig.getCapitulo() == 0) {
+                        if ((ig.getCapitulo() == capitulo || ig.getCapitulo() == 0) && !ilhasMostradas.contains(ig)) {
                             disponiveis.add(ig);
                         }
                     }
                     if (disponiveis.isEmpty()) {
                         opcoesAtuais.add(IlhaFactory.criarGenerica(IlhasGenericasEnum.BARCO_PIRATA_INIMIGO));
                     } else {
-                        opcoesAtuais.add(IlhaFactory.criarGenerica(disponiveis.get(random.nextInt(disponiveis.size()))));
+                        IlhasGenericasEnum sorteada = disponiveis.get(random.nextInt(disponiveis.size()));
+                        ilhasMostradas.add(sorteada);
+                        opcoesAtuais.add(IlhaFactory.criarGenerica(sorteada));
                     }
                 }
             }

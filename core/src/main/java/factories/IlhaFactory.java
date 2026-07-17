@@ -30,6 +30,8 @@ public class IlhaFactory {
                                 ilha = criarLoguetown(); break;
                         case WHISKY_PEAK:
                                 ilha = criarWhiskyPeak(); break;
+                        case LONG_RING_LONG_LAND:
+                                ilha = criarLongRingLongLand(); break;
                         case LITTLE_GARDEN:
                                 ilha = criarLittleGarden(); break;
                         case ILHA_DRUM:
@@ -209,6 +211,19 @@ public class IlhaFactory {
                                 r("BOSS - Mr. 5 & Miss Valentine", true,
                                                 PersonagemFactory.criarBoss("Mr. 5", 4, "inimigos/minibosses/mr5.png",
                                                                 "Bala Explosiva", 48, "Explosao Corporal", 55))));
+        }
+
+        private static Ilha criarLongRingLongLand() {
+                return new Ilha("Long Ring Long Land", "backgrounds/long_ring_long_land.png", Arrays.asList(
+                                r("Rodada 1 - Piratas Foxy", false,
+                                                PersonagemFactory.criarCapanga("Pirata Foxy", 4, "inimigos/capangas/capanga_pirata.png"),
+                                                PersonagemFactory.criarCapanga("Pirata Foxy", 4, "inimigos/capangas/capanga_pirata.png")),
+                                r("Rodada 2 - Hamburg & Porche", false,
+                                                PersonagemFactory.criarMiniBoss("Hamburg", 4, "inimigos/minibosses/hamburg.png", "Porrada", 40),
+                                                PersonagemFactory.criarMiniBoss("Porche", 4, "inimigos/minibosses/porche.png", "Cutie Baton", 40)),
+                                r("BOSS - Foxy, a Raposa Prateada!", true,
+                                                PersonagemFactory.criarBoss("Foxy", 4, "inimigos/bosses/foxy.png",
+                                                                "Noro Noro Beam", 45, "Foxy Rush", 55))));
         }
 
         private static Ilha criarLittleGarden() {
